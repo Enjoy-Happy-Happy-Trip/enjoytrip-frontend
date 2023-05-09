@@ -1,5 +1,6 @@
 <template>
     <div>
+        <nav-view></nav-view>
         <div class="hero hero-inner">
             <div class="container">
                 <div class="row align-items-center">
@@ -53,7 +54,9 @@
                                 <button type="submit" class="btn btn-primary btn-lg btn-block">
                                     Sign In
                                 </button>
-                                <a :href="makeUrl('/member/findpassword.jsp')">Forgot password?</a>
+                                <a :href="this.$backUrl('/member/findpassword.jsp')"
+                                    >Forgot password?</a
+                                >
                             </div>
                         </form>
                         <div class="row justify-content-center">
@@ -76,10 +79,13 @@
 <script>
 import { URL_BACKEND as URL } from "./constant/url";
 import axios from "axios";
+import NavView from "@/components/nav.vue";
 
 export default {
     name: "LoginView",
-    components: {},
+    components: {
+        NavView,
+    },
     data() {
         return {
             message: "",
@@ -91,13 +97,10 @@ export default {
     },
     created() {},
     methods: {
-        makeUrl(api) {
-            return this.url + api;
-        },
         submitForm() {
             axios({
                 method: "POST",
-                url: this.makeUrl("/member/loginaf"),
+                url: this.$backUrl("/member/loginaf"),
                 data: {
                     user_id: this.id,
                     user_password: this.password,
@@ -105,7 +108,7 @@ export default {
             })
                 .then((response) => {
                     this.login(response.data);
-                    this.$router.push("/");
+                    this.$router.replace("/");
                 })
                 .catch((error) => {
                     if (error.response.status === 401) {
