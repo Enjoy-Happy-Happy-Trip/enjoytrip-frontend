@@ -197,6 +197,7 @@ export default {
     data() {
         return {
             images: [],
+            timer: null,
         };
     },
     methods: {
@@ -243,7 +244,7 @@ export default {
         });
 
         let imageIdx = 0;
-        setInterval(() => {
+        this.timer = setInterval(() => {
             console.log(imageIdx);
             const image = heroImages[imageIdx];
 
@@ -253,6 +254,11 @@ export default {
                 heroImages[imageIdx].classList.add("active");
             }
         }, 5000);
+    },
+    beforeRouteLeave(to, from, next) {
+        clearTimeout(this.timer);
+        console.log(this.timer);
+        next();
     },
 };
 </script>
