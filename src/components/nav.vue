@@ -39,7 +39,9 @@
                                 this.$store.state.user.user_id !== 'admin'
                             "
                         >
-                            <a href="${root}/myplan.html">My Plans</a>
+                            <router-link to="/plan">
+                                <a>My Plans</a>
+                            </router-link>
                         </li>
                         <li
                             v-if="
