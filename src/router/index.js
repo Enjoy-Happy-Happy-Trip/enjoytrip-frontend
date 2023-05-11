@@ -1,6 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import HomeView from "@/views/HomeView.vue";
+import MyScheduleView from '@/views/MyScheduleView.vue'
+import ScheduleDetail from '@/components/ScheduleDetail.vue'
+import ScheduleList from '@/components/ScheduleList.vue'
 
 Vue.use(VueRouter);
 
@@ -19,9 +22,22 @@ const routes = [
         component: () => import(/* webpackChunkName: "about" */ "../views/LoginView.vue"),
     },
     {
-        path: "/myplan",
-        name: "MyPlanView",
-        component: MyPlanView,
+        path: "/plan",
+        name: "plan",
+        component: MyScheduleView,
+        redirect: "/plan/list",
+        children: [
+            {
+                path: 'list',
+                name: 'list',
+                component: ScheduleList,
+            },
+            {
+                path: 'detail/:schedule_id',
+                name: 'detail',
+                component: ScheduleDetail,
+            },
+        ]
     },
 ];
 
