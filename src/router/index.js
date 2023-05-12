@@ -29,12 +29,12 @@ const routes = [
         children: [
             {
                 path: 'list',
-                name: 'list',
+                name: 'scheduleList',
                 component: ScheduleList,
             },
             {
                 path: 'detail/:schedule_id',
-                name: 'detail',
+                name: 'scheduleDetail',
                 component: ScheduleDetail,
             },
         ]
