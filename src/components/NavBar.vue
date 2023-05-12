@@ -13,7 +13,9 @@
         <nav class="site-nav">
             <div class="container">
                 <div class="site-navigation">
-                    <a href="/" class="logo m-0">Enjoy Trip <span class="text-primary"></span></a>
+                    <router-link to="/">
+                        <a href="#none" class="logo m-0">Enjoy Trip <span class="text-primary"></span></a>
+                    </router-link>
                     <ul
                         class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right"
                     >
@@ -49,7 +51,8 @@
                                 this.$store.state.user.user_id !== 'admin'
                             "
                         >
-                            <a href="${root}/reviews.html">Reviews</a>
+                            <router-link to="/review">Reviews</router-link>
+                            <!-- <a href="${root}/reviews.html">Reviews</a> -->
                         </li>
 
                         <!-- 관리자 로그인이 되어 있을 때 : admin page-->
