@@ -10,7 +10,7 @@
             <div class="site-mobile-menu-body"></div>
         </div>
 
-        <nav class="site-nav">
+        <nav class="site-nav" style="background-color: #6998AB;">
             <div class="container">
                 <div class="site-navigation">
                     <router-link to="/">
@@ -25,8 +25,8 @@
                         </li>
 
                         <!-- 공통 : Board, TourInfo -->
-                        <li><a href="${root}/board/boardlist">Board</a></li>
-                        <li><a href="${root}/tourinfo.html">TourInfo</a></li>
+                        <li><router-link to="/board">Board</router-link></li>
+                        <li><router-link to="/tourinfo">TourInfo</router-link></li>
 
                         <!-- 로그인이 안되어 있을 때 : SignIn-->
                         <li v-if="!this.$store.state.isLoggedIn">
