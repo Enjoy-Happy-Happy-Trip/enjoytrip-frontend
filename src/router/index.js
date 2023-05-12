@@ -7,6 +7,10 @@ import ScheduleList from '@/components/ScheduleList.vue'
 import ReviewView from '@/views/ReviewView.vue'
 import ReviewList from '@/components/ReviewList.vue'
 import ReviewDetail from '@/components/ReviewDetail.vue'
+import TourInfoView from '@/views/TourInfoView.vue'
+import BoardView from '@/views/BoardView.vue'
+import BoardList from '@/components/BoardList.vue'
+import boardDetail from '@/components/BoardDetail.vue'
 
 Vue.use(VueRouter);
 
@@ -15,6 +19,29 @@ const routes = [
         path: "/",
         name: "HomeView",
         component: HomeView,
+    },
+    {
+        path: "/board",
+        name: "BoardView",
+        component: BoardView,
+        redirect: "/board/list",
+        children: [
+            {
+                path: 'list',
+                name: 'boardList',
+                component: BoardList,
+            },
+            {
+                path: 'detail/:article_no',
+                name: 'boardDetail',
+                component: boardDetail,
+            },
+        ]
+    },
+    {
+        path: "/tourinfo",
+        name: "TourInfoView",
+        component: TourInfoView,
     },
     {
         path: "/login",

@@ -7,7 +7,9 @@
                         <div class="intro-wrap">
                             <h1 class="mb-5">
                                 <span>Let's </span>
-                                <span class="d-block font-weight-bolder">Enjoy Your Trip</span>
+                                <span class="d-block font-weight-bolder"
+                                    >Enjoy Your Trip</span
+                                >
                                 In
                                 <span class="typed-words"></span>
                             </h1>
@@ -49,7 +51,9 @@
             <div class="container">
                 <div class="row text-center justify-content-center mb-5">
                     <div class="col-lg-7">
-                        <h2 class="section-title text-center">Popular Destination</h2>
+                        <h2 class="section-title text-center">
+                            Popular Destination
+                        </h2>
                     </div>
                 </div>
 
@@ -211,7 +215,15 @@ export default {
         });
 
         const typed = new Typed(".typed-words", {
-            strings: [" 순천.", " 서울.", " 경주.", " 부산.", " 여수.", " 제주.", " 속초."],
+            strings: [
+                " 순천.",
+                " 서울.",
+                " 경주.",
+                " 부산.",
+                " 여수.",
+                " 제주.",
+                " 속초.",
+            ],
             typeSpeed: 80,
             backSpeed: 80,
             backDelay: 4000,
@@ -221,7 +233,9 @@ export default {
             preStringTyped: (arrayPos, self) => {
                 arrayPos++;
                 // console.log(arrayPos);
-                this.images.forEach((image) => image.classList.remove("active"));
+                this.images.forEach((image) =>
+                    image.classList.remove("active")
+                );
                 this.images[arrayPos - 1].classList.add("active");
             },
         });
@@ -238,9 +252,10 @@ export default {
         });
 
         let imageIdx = 0;
+
         this.timer = setInterval(() => {
             console.log(imageIdx);
-            const image = heroImages[imageIdx];
+            let image = heroImages[imageIdx];
 
             if (image.classList.contains("active")) {
                 image.classList.remove("active");
