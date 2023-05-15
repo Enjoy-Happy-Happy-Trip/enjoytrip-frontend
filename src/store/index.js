@@ -7,6 +7,7 @@ export default new Vuex.Store({
     state: {
         isLoggedIn: false,
         user: null,
+        serviceKey: "6S81wQZhfXWZ0lgHeKcaWdAooQ0GgpZ56AITXQFvqCPbhy3QyYeQOFGqMyRL83KAAiokMjjq4f9xuH4SUpy8Vg%3D%3D",
     },
     getters: {},
     mutations: {
