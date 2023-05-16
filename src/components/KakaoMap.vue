@@ -58,7 +58,7 @@ export default {
                     this.markers[i].setMap(null);
                 }
             }
-            
+
             for (let i = 0; i < positions.length; i++) {
                 // 마커를 생성합니다
                 let marker = new window.kakao.maps.Marker({
@@ -100,55 +100,27 @@ export default {
         },
         loadMap() {
             let myLocation = new window.kakao.maps.LatLng(
-                33.450701,
-                126.570667
+                36.2094351238961,
+                127.804966782346
             );
 
-            // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
-            if (navigator.geolocation) {
-                // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-                navigator.geolocation.getCurrentPosition(
-                    function (position) {
-                        var lat = position.coords.latitude, // 위도
-                            lon = position.coords.longitude; // 경도
+            const container = document.getElementById("map");
+            const options = {
+                center: myLocation,
+                level: 13,
+            };
 
-                        myLocation = new window.kakao.maps.LatLng(lat, lon);
+            this.map = new window.kakao.maps.Map(container, options);
 
-                        const container = document.getElementById("map");
-                        const options = {
-                            center: myLocation,
-                            level: 3,
-                        };
+            // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+            var zoomControl = new window.kakao.maps.ZoomControl();
+            this.map.addControl(
+                zoomControl,
+                window.kakao.maps.ControlPosition.RIGHT
+            );
 
-                        this.map = new window.kakao.maps.Map(
-                            container,
-                            options
-                        );
-
-                        // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
-                        var zoomControl = new window.kakao.maps.ZoomControl();
-                        this.map.addControl(
-                            zoomControl,
-                            window.kakao.maps.ControlPosition.RIGHT
-                        );
-
-                        if (this.markers.length > 0) {
-                            this.displayMarker(this.positions);
-                        }
-                    }.bind(this)
-                );
-            } else {
-                const container = document.getElementById("map");
-                const options = {
-                    center: myLocation,
-                    level: 3,
-                };
-
-                this.map = new window.kakao.maps.Map(container, options);
-
-                if (this.markers.length > 0) {
-                    this.displayMarker(this.positions);
-                }
+            if (this.markers.length > 0) {
+                this.displayMarker(this.positions);
             }
         },
     },
