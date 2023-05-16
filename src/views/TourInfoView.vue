@@ -46,7 +46,11 @@
                 </form>
 
                 <!-- kakao map start -->
-                <div id="map"></div>
+                <kakao-map
+                    ref="map"
+                    :positions="positions"
+                    @map-updated="updateMap"
+                ></kakao-map>
                 <!-- kakao map end -->
                 <div class="row">
                     <table class="table table-striped" style="display: none">
@@ -59,7 +63,16 @@
                                 <th>Review 쓰기</th>
                             </tr>
                         </thead>
-                        <tbody id="trip-list"></tbody>
+                        <tbody id="trip-list">
+                            <result-list
+                                v-for="(place, index) in placesData"
+                                :place="place"
+                                :key="place.contentId"
+                                :index="index"
+                                @move-center="moveCenter"
+                            >
+                            </result-list>
+                        </tbody>
                     </table>
                 </div>
                 <!-- 관광지 검색 end -->
@@ -118,6 +131,8 @@
 
 <script>
 import AddPlanlist from "@/components/AddPlanlist.vue";
+import KakaoMap from "@/components/KakaoMap.vue";
+import ResultList from "@/components/ResultList.vue";
 import http from "@/api/http";
 
 export default {
@@ -126,6 +141,7 @@ export default {
         return {
             planListFlag: false,
             map: null,
+            placesData: Object,
             userSelection: [],
             positions: [],
             markers: [],
@@ -135,129 +151,51 @@ export default {
             cnt: 1,
         };
     },
-    mounted() {
-        if (window.kakao && window.kakao.maps) {
-            this.loadMap();
-        } else {
-            this.loadScript();
-        }
-    },
-    created() {
-        this.getApisData();
-    },
     components: {
         AddPlanlist,
+        KakaoMap,
+        ResultList,
     },
     methods: {
-        /*
-        공지사항
-        롤 부여
-        여행 계획 -> 순서 변경
-        후기 작성
-        */
-        getApisData() {
-            // index page 로딩 후 전국의 시도 설정.
-            let areaUrl =
-                "https://apis.data.go.kr/B551011/KorService1/areaCode1?serviceKey=" +
-                this.$store.state.serviceKey +
-                "&numOfRows=20&pageNo=1&MobileOS=ETC&MobileApp=AppTest&_type=json";
-
-            http.get(areaUrl)
-                .then(({ data }) => this.makeOption(data))
-                .catch((error) => {
-                    console.log(error);
-                });
-        },
-        moveCenter(lat, lng) {
-            this.map.setCenter(new window.kakao.maps.LatLng(lat, lng));
-        },
-        makeOption(data) {
-            let areas = data.response.body.items.item;
-            // console.log(areas);
-            let sel = document.getElementById("search-area");
-            areas.forEach((area) => {
-                let opt = document.createElement("option");
-                opt.setAttribute("value", area.code);
-                opt.appendChild(document.createTextNode(area.name));
-
-                sel.appendChild(opt);
-            });
-        },
-        loadScript() {
-            const script = document.createElement("script");
-            script.src =
-                "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=a064e831e69034e8ae072ff565553863&libraries=services,clusterer,drawing";
-            script.onload = () => window.kakao.maps.load(this.loadMap);
-
-            document.head.appendChild(script);
-        },
-        loadMap() {
-            let myLocation = new window.kakao.maps.LatLng(
-                33.450701,
-                126.570667
-            );
-            // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
-            if (navigator.geolocation) {
-                // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-                navigator.geolocation.getCurrentPosition(
-                    function (position) {
-                        var lat = position.coords.latitude, // 위도
-                            lon = position.coords.longitude; // 경도
-
-                        myLocation = new window.kakao.maps.LatLng(lat, lon);
-
-                        const container = document.getElementById("map");
-                        const options = {
-                            center: myLocation,
-                            level: 3,
-                        };
-
-                        this.map = new window.kakao.maps.Map(
-                            container,
-                            options
-                        );
-                    }.bind(this)
-                );
-            }
-
-            const container = document.getElementById("map");
-            const options = {
-                center: myLocation,
-                level: 3,
-            };
-
-            this.map = new window.kakao.maps.Map(container, options);
+        moveCenter(latitude, longitude) {
+            this.map.setCenter(new window.kakao.maps.LatLng(latitude, longitude));
         },
         createPlanList() {
             this.planListFlag = true;
         },
+        updatePositions(newPositions) {
+            this.positions = newPositions;
+        },
         searchDataByKeyword() {
+            this.positions = [];
+            document.querySelector("table").setAttribute("style", "display: ;");
+
+            console.log(this.positions);
+
             let searchUrl = this.makeSearchUrl();
 
             http.get(searchUrl).then(({ data }) => {
-                this.makeList(data);
-            });
-        },
-        displayMarker() {
-            // 마커 이미지의 이미지 주소입니다
-            // var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
-            var bounds = new window.kakao.maps.LatLngBounds();
+                this.placesData = data;
 
-            for (var i = 0; i < this.positions.length; i++) {
-                // 마커를 생성합니다
-                let marker = new window.kakao.maps.Marker({
-                    map: this.map, // 마커를 표시할 지도
-                    position: this.positions[i].latlng, // 마커를 표시할 위치
-                    title: this.positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-                    text: "marker",
+                data.forEach((area) => {
+                    let markerInfo = {
+                        title: area.title,
+                        contenttypeid: area.contentTypeId,
+                        latlng: new window.kakao.maps.LatLng(
+                            area.latitude,
+                            area.longitude
+                        ),
+                    };
+                    this.positions.push(markerInfo);
                 });
 
-                this.markers.push(marker);
-                bounds.extend(this.positions[i].latlng);
-            }
+                this.$refs.map.displayMarker(this.positions);
 
-            // 생성된 마커들의 위치를 기준으로 맵을 움직입니다.
-            this.map.setBounds(bounds);
+                // this.makeList(data);
+            });
+        },
+        updateMap(map) {
+            this.map = map;
         },
         makeSearchUrl() {
             let areaCode = document.getElementById("search-area").value;
@@ -280,11 +218,6 @@ export default {
 
             document.querySelector("table").setAttribute("style", "display: ;");
             let tripList = ``;
-            if (this.markers != null) {
-                for (let i = 0; i < this.markers.length; i++) {
-                    this.markers[i].setMap(null);
-                }
-            }
 
             this.markers = [];
             this.positions = [];
@@ -301,21 +234,9 @@ export default {
 			  <td><button class="review-btn btn btn-warning scrollto">Reivew 쓰기</button></td>
             </tr>
           `;
-
-                let markerInfo = {
-                    title: area.title,
-                    contenttypeid: area.contentTypeId,
-                    latlng: new window.kakao.maps.LatLng(
-                        area.latitude,
-                        area.longitude
-                    ),
-                };
-                //<button id="btn-select" class="btn btn-outline-success" type="button">선택</button>
-                this.positions.push(markerInfo);
             });
 
             document.getElementById("trip-list").innerHTML = tripList;
-            this.displayMarker();
 
             // 지도에 표시할 선을 생성합니다
             var polyline = new window.kakao.maps.Polyline({
@@ -410,5 +331,4 @@ export default {
 .hidden {
     display: none;
 }
-
 </style>
