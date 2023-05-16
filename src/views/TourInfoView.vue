@@ -9,11 +9,7 @@
             <!-- 중앙 center content end -->
             <div class="col-md-6">
                 <!-- 관광지 검색 start -->
-                <form
-                    class="d-flex my-3"
-                    onsubmit="return false;"
-                    role="search"
-                >
+                <form class="d-flex my-3" onsubmit="return false;" role="search">
                     <select id="search-area" class="form-select me-2">
                         <option value="0" selected>검색 할 지역 선택</option>
                     </select>
@@ -46,11 +42,7 @@
                 </form>
 
                 <!-- kakao map start -->
-                <kakao-map
-                    ref="map"
-                    :positions="positions"
-                    @map-updated="updateMap"
-                ></kakao-map>
+                <kakao-map ref="map" :positions="positions" @map-updated="updateMap"></kakao-map>
                 <!-- kakao map end -->
                 <div class="row">
                     <table class="table table-striped" style="display: none">
@@ -70,6 +62,7 @@
                                 :key="place.contentId"
                                 :index="index"
                                 @move-center="moveCenter"
+                                @show-modal="showModal"
                             >
                             </result-list>
                         </tbody>
@@ -95,37 +88,10 @@
         </div>
         <!-- 중앙 content end -->
 
-        <!-- 모달 창을 위한 HTML 코드 START-->
-        <div id="review-modal" class="hidden custom-modal">
-            <div class="modal-background"></div>
-            <div class="modal-content">
-                <div id="modal-content-id" class="hidden"></div>
-                <h2 id="modal-content-title"></h2>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <div id="modal-content-id" style="display: none"></div>
-                        <div id="modal-content-title"></div>
-                        <label for="loginid" class="form-label"
-                            >리뷰 쓰기</label
-                        >
-                        <input
-                            type="text"
-                            class="form-control"
-                            id=""
-                            placeholder="간단한 리뷰를 써주세요"
-                        />
-                    </div>
-                </div>
-                <div>
-                    <button id="review-submit-btn" class="btn btn-primary">
-                        리뷰 등록
-                    </button>
-                    <button id="modal-close" class="btn btn-danger">
-                        Close
-                    </button>
-                </div>
-            </div>
-        </div>
+        <!-- Modal -->
+        <b-modal id="review-modal" title="리뷰 쓰기">
+            <tour-review-modal :title="modalTitle"></tour-review-modal>
+        </b-modal>
     </div>
 </template>
 
@@ -134,6 +100,7 @@ import AddPlanlist from "@/components/AddPlanlist.vue";
 import KakaoMap from "@/components/KakaoMap.vue";
 import ResultList from "@/components/ResultList.vue";
 import http from "@/api/http";
+import TourReviewModal from "@/components/TourReviewModal.vue";
 
 export default {
     name: "TourInfoView",
@@ -149,12 +116,14 @@ export default {
             places: [],
             visited: [],
             cnt: 1,
+            modalTitle: null,
         };
     },
     components: {
         AddPlanlist,
         KakaoMap,
         ResultList,
+        TourReviewModal,
     },
     methods: {
         moveCenter(latitude, longitude) {
@@ -181,10 +150,7 @@ export default {
                     let markerInfo = {
                         title: area.title,
                         contenttypeid: area.contentTypeId,
-                        latlng: new window.kakao.maps.LatLng(
-                            area.latitude,
-                            area.longitude
-                        ),
+                        latlng: new window.kakao.maps.LatLng(area.latitude, area.longitude),
                     };
                     this.positions.push(markerInfo);
                 });
@@ -199,8 +165,7 @@ export default {
         },
         makeSearchUrl() {
             let areaCode = document.getElementById("search-area").value;
-            let contentTypeId =
-                document.getElementById("search-content-id").value;
+            let contentTypeId = document.getElementById("search-content-id").value;
             let keyword = document.getElementById("search-keyword").value;
             let searchUrl = "/attraction/attractionlist?";
 
@@ -208,10 +173,6 @@ export default {
             searchUrl += "&contentTypeId=" + contentTypeId;
             searchUrl += "&keyword=" + keyword;
             return searchUrl;
-        },
-        displayModal() {
-            const modal = document.querySelector("#review-modal");
-            modal.classList.toggle("hidden");
         },
         makeList(data) {
             var count = 0;
@@ -231,7 +192,7 @@ export default {
               <td id="areaTitle${count}">${area.title}</td>
               <td>${area.addr}</td>
               <td><button id=${count++} class="add-btn btn btn-warning">추가</button></td>
-			  <td><button class="review-btn btn btn-warning scrollto">Reivew 쓰기</button></td>
+			  <td><b-button v-b-modal.review-modal class="btn btn-warning">Reivew 쓰기</b-button></td>
             </tr>
           `;
             });
@@ -266,9 +227,7 @@ export default {
                         if (visited[i] == 0) {
                             visited[i] = 1;
 
-                            let areaTitle = document.getElementById(
-                                "areaTitle" + i
-                            ).innerHTML;
+                            let areaTitle = document.getElementById("areaTitle" + i).innerHTML;
 
                             this.places.push(areaTitle);
 
@@ -285,50 +244,12 @@ export default {
                 );
             }
         },
+        showModal(title) {
+            this.modalTitle = title;
+            this.$bvModal.show("review-modal");
+        },
     },
 };
 </script>
 
-<style scoped>
-#map {
-    width: 100%;
-    height: 500px;
-    z-index: 1;
-}
-
-#review-modal {
-    z-index: 2;
-}
-
-.custom-modal {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.modal-background {
-    background-color: rgba(0, 0, 0, 0.6);
-    width: 100%;
-    height: 100%;
-    position: absolute;
-}
-
-.modal-content {
-    text-align: center;
-    position: relative;
-    background-color: white;
-    border-radius: 10px;
-    top: 0;
-    padding: 10px 25px;
-    width: 80%;
-}
-
-.hidden {
-    display: none;
-}
-</style>
+<style scoped></style>
