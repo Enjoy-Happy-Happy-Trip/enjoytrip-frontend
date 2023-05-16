@@ -8,9 +8,7 @@
             <button :id="index" class="add-btn btn btn-warning">추가</button>
         </td>
         <td>
-            <button class="review-btn btn btn-warning scrollto">
-                Reivew 쓰기
-            </button>
+            <button @click="showModal(place.title)" class="btn btn-warning">Reivew 쓰기</button>
         </td>
     </tr>
 </template>
@@ -30,7 +28,10 @@ export default {
     methods: {
         moveCenter(latitude, longitude) {
             this.$emit("move-center", latitude, longitude);
-        }
+        },
+        showModal(title) {
+            this.$emit("show-modal", title);
+        },
     },
 };
 </script>

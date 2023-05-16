@@ -58,7 +58,7 @@ export default {
                     this.markers[i].setMap(null);
                 }
             }
-            
+
             for (let i = 0; i < positions.length; i++) {
                 // 마커를 생성합니다
                 let marker = new window.kakao.maps.Marker({
@@ -99,10 +99,7 @@ export default {
             document.head.appendChild(script);
         },
         loadMap() {
-            let myLocation = new window.kakao.maps.LatLng(
-                33.450701,
-                126.570667
-            );
+            let myLocation = new window.kakao.maps.LatLng(33.450701, 126.570667);
 
             // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
             if (navigator.geolocation) {
@@ -120,17 +117,11 @@ export default {
                             level: 3,
                         };
 
-                        this.map = new window.kakao.maps.Map(
-                            container,
-                            options
-                        );
+                        this.map = new window.kakao.maps.Map(container, options);
 
                         // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
                         var zoomControl = new window.kakao.maps.ZoomControl();
-                        this.map.addControl(
-                            zoomControl,
-                            window.kakao.maps.ControlPosition.RIGHT
-                        );
+                        this.map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
 
                         if (this.markers.length > 0) {
                             this.displayMarker(this.positions);
@@ -159,5 +150,6 @@ export default {
 #map {
     width: 100%;
     height: 500px;
+    z-index: 1;
 }
 </style>

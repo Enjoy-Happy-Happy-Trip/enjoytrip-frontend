@@ -1,6 +1,7 @@
 <template>
     <!-- 모달 창을 위한 HTML 코드 START-->
     <div>
+        <h3>관광지 : {{ title }}</h3>
         <div class="modal-background"></div>
         <div class="modal-content">
             <div id="modal-content-id" class="hidden"></div>
@@ -29,6 +30,9 @@
 <script>
 export default {
     components: {},
+    props: {
+        title: String,
+    },
     data() {
         return {
             message: "",
@@ -40,7 +44,7 @@ export default {
 </script>
 
 <style scoped>
-#review-modal {
+/* #review-modal {
     z-index: 2;
 }
 
@@ -74,5 +78,5 @@ export default {
 
 .hidden {
     display: none;
-}
+} */
 </style>
