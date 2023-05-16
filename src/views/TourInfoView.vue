@@ -98,7 +98,7 @@
                         <input
                             type="text"
                             class="form-control"
-                            id="review"
+                            id=""
                             placeholder="간단한 리뷰를 써주세요"
                         />
                     </div>
@@ -127,8 +127,8 @@ export default {
             planListFlag: false,
             map: null,
             userSelection: [],
-            markers: [],
             positions: [],
+            markers: [],
             linePath: [],
             places: [],
             visited: [],
@@ -186,34 +186,47 @@ export default {
         loadScript() {
             const script = document.createElement("script");
             script.src =
-                "//dapi.kakao.com/v2/maps/sdk.js?appkey=a064e831e69034e8ae072ff565553863&libraries=services,clusterer,drawing&autoload=false";
+                "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=a064e831e69034e8ae072ff565553863&libraries=services,clusterer,drawing";
             script.onload = () => window.kakao.maps.load(this.loadMap);
 
             document.head.appendChild(script);
         },
         loadMap() {
+            let myLocation = new window.kakao.maps.LatLng(
+                33.450701,
+                126.570667
+            );
+            // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
+            if (navigator.geolocation) {
+                // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        var lat = position.coords.latitude, // 위도
+                            lon = position.coords.longitude; // 경도
+
+                        myLocation = new window.kakao.maps.LatLng(lat, lon);
+
+                        const container = document.getElementById("map");
+                        const options = {
+                            center: myLocation,
+                            level: 3,
+                        };
+
+                        this.map = new window.kakao.maps.Map(
+                            container,
+                            options
+                        );
+                    }.bind(this)
+                );
+            }
+
             const container = document.getElementById("map");
             const options = {
-                center: new window.kakao.maps.LatLng(33.450701, 126.570667),
+                center: myLocation,
                 level: 3,
             };
 
             this.map = new window.kakao.maps.Map(container, options);
-            var locPosition = null;
-
-            // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
-            if (navigator.geolocation) {
-                // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    var lat = position.coords.latitude, // 위도
-                        lon = position.coords.longitude; // 경도
-
-                    locPosition = new window.kakao.maps.LatLng(lat, lon); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다            this.map.setCenter(locPosition);
-                    alert(locPosition);
-
-                    this.map.setCenter(locPosition);
-                });
-            }
         },
         createPlanList() {
             this.planListFlag = true;
@@ -300,7 +313,7 @@ export default {
                 //<button id="btn-select" class="btn btn-outline-success" type="button">선택</button>
                 this.positions.push(markerInfo);
             });
-            
+
             document.getElementById("trip-list").innerHTML = tripList;
             this.displayMarker();
 
@@ -326,26 +339,29 @@ export default {
             }
 
             for (let i = 0; i < userSelection.length; i++) {
-                userSelection[i].addEventListener("click", function () {
-                    if (visited[i] == 0) {
-                        visited[i] = 1;
+                userSelection[i].addEventListener(
+                    "click",
+                    function () {
+                        if (visited[i] == 0) {
+                            visited[i] = 1;
 
-                        let areaTitle = document.getElementById(
-                            "areaTitle" + i
-                        ).innerHTML;
+                            let areaTitle = document.getElementById(
+                                "areaTitle" + i
+                            ).innerHTML;
 
-                        this.places.push(areaTitle);
+                            this.places.push(areaTitle);
 
-                        let content = "";
-                        content += this.cnt++;
-                        content += ". ";
-                        content += areaTitle;
-                        content += "<br>";
+                            let content = "";
+                            content += this.cnt++;
+                            content += ". ";
+                            content += areaTitle;
+                            content += "<br>";
 
-                        planListDetail.innerHTML += content;
-                        console.log(areaTitle);
-                    }
-                });
+                            planListDetail.innerHTML += content;
+                            console.log(areaTitle);
+                        }
+                    }.bind(this)
+                );
             }
         },
     },
@@ -356,5 +372,43 @@ export default {
 #map {
     width: 100%;
     height: 500px;
+    z-index: 1;
 }
+
+#review-modal {
+    z-index: 2;
+}
+
+.custom-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.modal-background {
+    background-color: rgba(0, 0, 0, 0.6);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.modal-content {
+    text-align: center;
+    position: relative;
+    background-color: white;
+    border-radius: 10px;
+    top: 0;
+    padding: 10px 25px;
+    width: 80%;
+}
+
+.hidden {
+    display: none;
+}
+
 </style>
