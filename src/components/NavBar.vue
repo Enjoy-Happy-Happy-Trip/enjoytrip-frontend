@@ -23,15 +23,11 @@
                     >
                         <!-- 공통 로그인이 되어 있을 때 : 닉네임 메시지 -->
                         <li v-if="userInfo">
-                            <a
-                                >{{ userInfo.user_name }}({{
-                                    userInfo.user_id
-                                }})님 환영합니다</a
-                            >
+                            <a>{{ userInfo.user_name }}({{ userInfo.user_id }})님 환영합니다</a>
                         </li>
 
                         <!-- 공통 : Board, TourInfo -->
-                        <li><router-link to="/board">Board</router-link></li>
+                        <li><router-link to="/plan">Plans</router-link></li>
                         <li>
                             <router-link to="/tourinfo">TourInfo</router-link>
                         </li>
@@ -44,7 +40,7 @@
 
                         <!-- 일반 사용자 로그인이 되어 있을 때 : MyPlans, Reviews-->
                         <li v-if="userInfo && userInfo.user_id !== 'admin'">
-                            <router-link to="/plan">
+                            <router-link to="/schedule">
                                 <a>My Schedule</a>
                             </router-link>
                         </li>
@@ -63,9 +59,7 @@
                             <!-- <a @click.prevent="signout" :href="this.$backUrl('/member/signout')"
                                 >Sign Out</a
                             > -->
-                            <a @click.prevent="onClickLogout" href="#none"
-                                >Sign Out</a
-                            >
+                            <a @click.prevent="onClickLogout" href="#none">Sign Out</a>
                         </li>
                     </ul>
 
@@ -117,8 +111,7 @@ export default {
             this.userLogout(this.userInfo.userid);
             sessionStorage.removeItem("access-token"); //저장된 토큰 없애기
             sessionStorage.removeItem("refresh-token"); //저장된 토큰 없애기
-            if (this.$route.path != "/")
-                this.$router.push({ name: "HomeView" });
+            if (this.$route.path != "/") this.$router.push({ name: "HomeView" });
         },
     },
 };
