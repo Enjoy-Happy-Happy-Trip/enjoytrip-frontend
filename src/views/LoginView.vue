@@ -18,42 +18,57 @@
                     <div>
                         <form
                             class="signin-form"
-                            @submit.prevent="submitForm"
                             data-aos="fade-up"
                             data-aos-delay="200"
                         >
                             <div class="row justify-content-center">
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label class="text-black" for="user_id">ID</label>
+                                        <label class="text-black" for="user_id"
+                                            >ID</label
+                                        >
                                         <input
                                             type="text"
                                             class="form-control"
                                             id="user_id"
-                                            v-model="id"
+                                            v-model="user.user_id"
                                         />
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label class="text-black" for="user_password"
+                                        <label
+                                            class="text-black"
+                                            for="user_password"
                                             >Password</label
                                         >
                                         <input
                                             type="password"
                                             class="form-control"
                                             id="user_password"
-                                            v-model="password"
+                                            v-model="user.user_password"
+                                            @keyup.enter="confirm"
                                         />
                                     </div>
                                 </div>
-                                <p class="login-error-msg">{{ this.loginErrorMsg }}</p>
+                                <p class="login-error-msg">
+                                    {{ this.loginErrorMsg }}
+                                </p>
 
                                 <!-- 버튼을 누르면 input에 있는 데이터들이 back으로 가 로그인 요청을 하고 로그인이 된다면 home vue로 가야 함 -->
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                <button
+                                    type="button"
+                                    @click="confirm"
+                                    class="btn btn-primary btn-lg btn-block"
+                                >
                                     Sign In
                                 </button>
-                                <a :href="this.$backUrl('/member/findpassword.jsp')"
+                                <a
+                                    :href="
+                                        this.$backUrl(
+                                            '/member/findpassword.jsp'
+                                        )
+                                    "
                                     >Forgot password?</a
                                 >
                             </div>
@@ -76,45 +91,68 @@
 </template>
 
 <script>
-import { URL_BACKEND as URL } from "./constant/url";
-import axios from "axios";
+// import http from "@/api/http";
+import { mapState, mapActions } from "vuex";
+
+const memberStore = "memberStore";
 
 export default {
     name: "LoginView",
     data() {
         return {
-            message: "",
-            url: URL,
-            id: "",
-            password: "",
+            user: {
+                user_id: null,
+                user_password: null,
+            },
             loginErrorMsg: "",
         };
     },
-    created() {},
+    computed: {
+        ...mapState(memberStore, ["isLogin", "isLoginError", "userInfo"]),
+    },
     methods: {
-        submitForm() {
-            axios({
-                method: "POST",
-                url: this.$backUrl("/member/loginaf"),
-                data: {
-                    user_id: this.id,
-                    user_password: this.password,
-                },
-            })
-                .then((response) => {
-                    this.login(response.data);
-                    this.$router.replace("/");
-                })
-                .catch((error) => {
-                    if (error.response.status === 401) {
-                        console.log("잘못된 ID 또는 password를 입력하셨습니다.");
-                        this.loginErrorMsg = "잘못된 ID 또는 password를 입력하셨습니다.";
-                    }
-                });
+        ...mapActions(memberStore, ["userConfirm", "getUserInfo"]),
+
+        async confirm() {
+            await this.userConfirm(this.user);
+            let token = sessionStorage.getItem("access-token");
+            if(this.isLogin) {
+                await this.getUserInfo(token);
+                this.$router.push({name: "HomeView"});
+            } else {
+                console.log(
+                            "잘못된 ID 또는 password를 입력하셨습니다."
+                        );
+                        this.loginErrorMsg =
+                            "잘못된 ID 또는 password를 입력하셨습니다.";
+            }
         },
-        login(user) {
-            this.$store.commit("LOGIN", user);
-        },
+        // submitForm() {       
+        //     axios({
+        //         method: "POST",
+        //         url: this.$backUrl("/member/loginaf"),
+        //         data: {
+        //             user_id: this.id,
+        //             user_password: this.password,
+        //         },
+        //     })
+        //         .then((response) => {
+        //             this.login(response.data);
+        //             this.$router.replace("/");
+        //         })
+        //         .catch((error) => {
+        //             if (error.response.status === 401) {
+        //                 console.log(
+        //                     "잘못된 ID 또는 password를 입력하셨습니다."
+        //                 );
+        //                 this.loginErrorMsg =
+        //                     "잘못된 ID 또는 password를 입력하셨습니다.";
+        //             }
+        //         });
+        // },
+        // login(user) {
+        //     this.$store.commit("LOGIN", user);
+        // },
     },
 };
 </script>

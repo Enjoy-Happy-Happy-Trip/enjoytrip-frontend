@@ -16,7 +16,7 @@
                         </div>
                     </div>
                     <div class="col-lg-5">
-                        <div class="slides" ref="hero-slide">
+                        <div class="slides" ref="heroSlide">
                             <img
                                 src="../../public/assets/resource/template_resource/images/hero-slider-1.jpg"
                                 alt="Image"
@@ -195,13 +195,11 @@ export default {
     data() {
         return {
             images: [],
+            typedText: "",
+            heroImages: [],
+            activeHeroImageIndex: 0,
             timer: null,
         };
-    },
-    methods: {
-        GoToLogin() {
-            this.$router.replace("/login");
-        },
     },
     mounted() {
         const slides = this.$refs.slides;
@@ -240,34 +238,46 @@ export default {
             },
         });
 
-        const heroSlide = this.$refs["hero-slide"];
-        const heroImages = heroSlide.querySelectorAll("img");
+        this.startTyping();
 
-        heroImages.forEach((image, index) => {
-            if (index === 0) {
-                image.classList.add("active");
-            } else {
-                image.classList.remove("active");
-            }
-        });
+        const heroSlide = this.$refs.heroSlide;
+        this.heroImages = heroSlide.querySelectorAll("img");
+        this.heroImages[this.activeHeroImageIndex].classList.add("active");
 
-        let imageIdx = 0;
-
-        this.timer = setInterval(() => {
-            console.log(imageIdx);
-            let image = heroImages[imageIdx];
-
-            if (image.classList.contains("active")) {
-                image.classList.remove("active");
-                imageIdx = (imageIdx + 1) % heroImages.length;
-                heroImages[imageIdx].classList.add("active");
-            }
-        }, 5000);
+        this.timer = setInterval(this.rotateHeroImages, 5000);
     },
     beforeRouteLeave(to, from, next) {
         clearTimeout(this.timer);
-        console.log(this.timer);
+        // console.log(this.timer);
         next();
+    },
+    methods: {
+        startTyping() {
+            let currentIndex = 0;
+
+            this.images[currentIndex].classList.add("active");
+            currentIndex = (currentIndex + 1) % 7;
+
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % 7;
+
+                this.images.forEach((image) =>
+                    image.classList.remove("active")
+                );
+                this.images[currentIndex].classList.add("active");
+            }, 5000);
+        },
+        rotateHeroImages() {
+            this.heroImages[this.activeHeroImageIndex].classList.remove(
+                "active"
+            );
+            this.activeHeroImageIndex =
+                (this.activeHeroImageIndex + 1) % this.heroImages.length;
+            this.heroImages[this.activeHeroImageIndex].classList.add("active");
+        },
+        GoToLogin() {
+            this.$router.replace("/login");
+        },
     },
 };
 </script>
