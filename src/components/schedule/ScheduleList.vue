@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import MySchedule from './MySchedule.vue';
+import MySchedule from '@/components/schedule/MySchedule';
 import { apiInstance } from '@/api/http';
 import { mapState, mapGetters } from "vuex";
 

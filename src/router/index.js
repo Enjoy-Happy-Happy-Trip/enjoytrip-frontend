@@ -2,15 +2,15 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import MyScheduleView from '@/views/MyScheduleView.vue'
-import ScheduleDetail from '@/components/ScheduleDetail.vue'
-import ScheduleList from '@/components/ScheduleList.vue'
 import ReviewView from '@/views/ReviewView.vue'
-import ReviewList from '@/components/ReviewList.vue'
-import ReviewDetail from '@/components/ReviewDetail.vue'
 import TourInfoView from '@/views/TourInfoView.vue'
 import BoardView from '@/views/BoardView.vue'
-import BoardList from '@/components/BoardList.vue'
-import boardDetail from '@/components/BoardDetail.vue'
+import ScheduleDetail from '@/components/schedule/ScheduleDetail.vue'
+import ScheduleList from '@/components/schedule/ScheduleList.vue'
+import ReviewList from '@/components/review/ReviewList.vue'
+import ReviewDetail from '@/components/review/ReviewDetail.vue'
+import BoardList from '@/components/plan/BoardList.vue'
+import boardDetail from '@/components/plan/BoardDetail.vue'
 
 Vue.use(VueRouter);
 
