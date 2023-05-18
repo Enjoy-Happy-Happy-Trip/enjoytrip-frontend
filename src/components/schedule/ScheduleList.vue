@@ -16,11 +16,7 @@
                                     action="${root}/board"
                                     method="post"
                                 >
-                                    <input
-                                        type="hidden"
-                                        name="action"
-                                        value="filter"
-                                    />
+                                    <input type="hidden" name="action" value="filter" />
                                     <select
                                         name="key"
                                         id="key"
@@ -45,10 +41,7 @@
                                 </form>
                                 <br />
 
-                                <table
-                                    class="table table-bordered"
-                                    id="myPlanList"
-                                >
+                                <table class="table table-bordered" id="myPlanList">
                                     <tbody>
                                         <col width="10%" />
                                         <col width="50%" />
@@ -60,9 +53,7 @@
                                             <th>시작일</th>
                                             <th>종료일</th>
                                         </tr>
-                                        <template
-                                            v-for="(article, index) in articles"
-                                        >
+                                        <template v-for="(article, index) in articles">
                                             <my-schedule
                                                 :article="article"
                                                 :index="index"
@@ -81,10 +72,43 @@
 </template>
 
 <script>
-import MySchedule from '@/components/schedule/MySchedule';
+import MySchedule from "./MySchedule.vue";
 import HeroSection from "@/components/HeroSection.vue";
-import { apiInstance } from '@/api/http';
+import { apiInstance } from "@/api/http";
 import { mapState, mapGetters } from "vuex";
 
 const api = apiInstance();
 const memberStore = "memberStore";
+
+export default {
+    name: "ScheduleList",
+    components: {
+        MySchedule,
+        HeroSection,
+    },
+    computed: {
+        ...mapState(memberStore, ["isLogin", "userInfo"]),
+        ...mapGetters(["checkUserInfo"]),
+    },
+    data() {
+        return {
+            articles: [],
+        };
+    },
+    created() {
+        this.planList(this.userInfo.user_id);
+    },
+    methods: {
+        planList(user_id) {
+            api.get(`/plan/getmyplan/${user_id}`)
+                .then(({ data }) => {
+                    console.log(data);
+                    this.articles = data;
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+    },
+};
+</script>
