@@ -99,8 +99,10 @@
 import AddPlanlist from "@/components/AddPlanlist.vue";
 import KakaoMap from "@/components/KakaoMap.vue";
 import ResultList from "@/components/ResultList.vue";
-import http from "@/api/http";
 import TourReviewModal from "@/components/TourReviewModal.vue";
+import { apiInstance } from '@/api/http';
+
+const api = apiInstance();
 
 export default {
     name: "TourInfoView",
@@ -143,7 +145,7 @@ export default {
 
             let searchUrl = this.makeSearchUrl();
 
-            http.get(searchUrl).then(({ data }) => {
+            api.get(searchUrl).then(({ data }) => {
                 this.placesData = data;
 
                 data.forEach((area) => {

@@ -3,7 +3,9 @@
 </template>
 
 <script>
-import http from "@/api/http";
+import { apiInstance } from '@/api/http';
+
+const api = apiInstance();
 
 export default {
     name: "KakaoMap",
@@ -37,13 +39,10 @@ export default {
 			*/
         getApisData() {
             // index page 로딩 후 전국의 시도 설정.
-            let areaUrl =
-                "https://apis.data.go.kr/B551011/KorService1/areaCode1?serviceKey=" +
-                process.env.VUE_APP_TRIP_INFO_API_KEY + 
-                "&numOfRows=20&pageNo=1&MobileOS=ETC&MobileApp=AppTest&_type=json";
-
-            http.get(areaUrl)
-                .then(({ data }) => this.makeOption(data))
+            api.get(`/tour/sido`)
+                .then(({ data }) => {
+                    this.makeOption(data);
+                })
                 .catch((error) => {
                     console.log(error);
                 });
@@ -79,13 +78,12 @@ export default {
             this.map.setCenter(new window.kakao.maps.LatLng(lat, lng));
         },
         makeOption(data) {
-            let areas = data.response.body.items.item;
             // console.log(areas);
             let sel = document.getElementById("search-area");
-            areas.forEach((area) => {
+            data.forEach((area) => {
                 let opt = document.createElement("option");
-                opt.setAttribute("value", area.code);
-                opt.appendChild(document.createTextNode(area.name));
+                opt.setAttribute("value", area.sido_code);
+                opt.appendChild(document.createTextNode(area.sido_name));
 
                 sel.appendChild(opt);
             });
