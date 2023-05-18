@@ -39,7 +39,7 @@ export default {
             // index page 로딩 후 전국의 시도 설정.
             let areaUrl =
                 "https://apis.data.go.kr/B551011/KorService1/areaCode1?serviceKey=" +
-                this.$store.state.serviceKey +
+                process.env.VUE_APP_TRIP_INFO_API_KEY + 
                 "&numOfRows=20&pageNo=1&MobileOS=ETC&MobileApp=AppTest&_type=json";
 
             http.get(areaUrl)

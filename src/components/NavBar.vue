@@ -10,67 +10,62 @@
             <div class="site-mobile-menu-body"></div>
         </div>
 
-        <nav class="site-nav" style="background-color: #6998AB;">
+        <nav class="site-nav" style="background-color: #6998ab">
             <div class="container">
                 <div class="site-navigation">
                     <router-link to="/">
-                        <a href="#none" class="logo m-0">Enjoy Trip <span class="text-primary"></span></a>
+                        <a href="#none" class="logo m-0"
+                            >Enjoy Trip <span class="text-primary"></span
+                        ></a>
                     </router-link>
                     <ul
                         class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right"
                     >
-                         <!-- 공통 로그인이 되어 있을 때 : 닉네임 메시지 -->
-                         <li v-if="this.$store.state.isLoggedIn">
-                            <a>{{ this.$store.state.user.user_name }}님 안녕하세요</a>
+                        <!-- 공통 로그인이 되어 있을 때 : 닉네임 메시지 -->
+                        <li v-if="userInfo">
+                            <a
+                                >{{ userInfo.user_name }}({{
+                                    userInfo.user_id
+                                }})님 환영합니다</a
+                            >
                         </li>
 
                         <!-- 공통 : Board, TourInfo -->
                         <li><router-link to="/board">Board</router-link></li>
-                        <li><router-link to="/tourinfo">TourInfo</router-link></li>
+                        <li>
+                            <router-link to="/tourinfo">TourInfo</router-link>
+                        </li>
 
                         <!-- 로그인이 안되어 있을 때 : SignIn-->
-                        <li v-if="!this.$store.state.isLoggedIn">
+                        <li v-if="!userInfo">
                             <router-link to="/login">Sign In</router-link>
                             <!-- <a href="/login">Sign In</a> -->
                         </li>
 
                         <!-- 일반 사용자 로그인이 되어 있을 때 : MyPlans, Reviews-->
-                        <li
-                            v-if="
-                                this.$store.state.isLoggedIn &&
-                                this.$store.state.user.user_id !== 'admin'
-                            "
-                        >
+                        <li v-if="userInfo && userInfo.user_id !== 'admin'">
                             <router-link to="/plan">
                                 <a>My Schedule</a>
                             </router-link>
                         </li>
-                        <li
-                            v-if="
-                                this.$store.state.isLoggedIn &&
-                                this.$store.state.user.user_id !== 'admin'
-                            "
-                        >
+                        <li v-if="userInfo && userInfo.user_id !== 'admin'">
                             <router-link to="/review">Reviews</router-link>
                             <!-- <a href="${root}/reviews.html">Reviews</a> -->
                         </li>
 
                         <!-- 관리자 로그인이 되어 있을 때 : admin page-->
-                        <li
-                            v-if="
-                                this.$store.state.isLoggedIn &&
-                                this.$store.state.user.user_id === 'admin'
-                            "
-                        >
+                        <li v-if="userInfo && userInfo.user_id === 'admin'">
                             <a href="${root}/member/memberlist">Admin Page</a>
                         </li>
 
                         <!-- 공통 로그인이 되어 있을 때 (마지막): 로그아웃 -->
-                        <li v-if="this.$store.state.isLoggedIn">
+                        <li v-if="userInfo">
                             <!-- <a @click.prevent="signout" :href="this.$backUrl('/member/signout')"
                                 >Sign Out</a
                             > -->
-                            <a @click.prevent="signout" href="#none">Sign Out</a>
+                            <a @click.prevent="onClickLogout" href="#none"
+                                >Sign Out</a
+                            >
                         </li>
                     </ul>
 
@@ -90,6 +85,9 @@
 
 <script>
 // import axios from "axios";
+import { mapState, mapGetters, mapActions } from "vuex";
+
+const memberStore = "memberStore";
 
 export default {
     name: "NavBar",
@@ -99,15 +97,28 @@ export default {
             message: "",
         };
     },
+    computed: {
+        ...mapState(memberStore, ["isLogin", "userInfo"]),
+        ...mapGetters(["checkUserInfo"]),
+    },
     created() {},
     methods: {
-        signout() {
-            this.$store.commit("LOGOUT");
-            this.$router.replace("/");
-            // axios.get(this.$backUrl("/member/signout")).then((response) => {
-            //     console.log(response);
-            //     this.$route.replace("/");
-            // });
+        ...mapActions(memberStore, ["userLogout"]),
+        // ...mapMutations(memberStore, ["SET_IS_LOGIN", "SET_USER_INFO"]),
+        onClickLogout() {
+            // this.SET_IS_LOGIN(false);
+            // this.SET_USER_INFO(null);
+            // sessionStorage.removeItem("access-token");
+            // if (this.$route.path != "/") this.$router.push({ name: "main" });
+            console.log(this.userInfo.userid);
+            //vuex actions에서 userLogout 실행(Backend에 저장 된 리프레시 토큰 없애기
+            //+ satate에 isLogin, userInfo 정보 변경)
+            // this.$store.dispatch("userLogout", this.userInfo.userid);
+            this.userLogout(this.userInfo.userid);
+            sessionStorage.removeItem("access-token"); //저장된 토큰 없애기
+            sessionStorage.removeItem("refresh-token"); //저장된 토큰 없애기
+            if (this.$route.path != "/")
+                this.$router.push({ name: "HomeView" });
         },
     },
 };

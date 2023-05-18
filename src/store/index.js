@@ -1,25 +1,18 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import createPersistedState from "vuex-persistedstate";
+
+import memberStore from "@/store/modules/memberStore";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-    state: {
-        isLoggedIn: false,
-        user: null,
-        serviceKey: "6S81wQZhfXWZ0lgHeKcaWdAooQ0GgpZ56AITXQFvqCPbhy3QyYeQOFGqMyRL83KAAiokMjjq4f9xuH4SUpy8Vg%3D%3D",
+    modules: {
+        memberStore,
     },
-    getters: {},
-    mutations: {
-        LOGIN(state, user) {
-            state.isLoggedIn = true;
-            state.user = user;
-        },
-        LOGOUT(state) {
-            state.isLoggedIn = false;
-            state.user = null;
-        },
-    },
-    actions: {},
-    modules: {},
+    plugins: [
+        createPersistedState({
+            storage: sessionStorage,
+        })
+    ],
 });
