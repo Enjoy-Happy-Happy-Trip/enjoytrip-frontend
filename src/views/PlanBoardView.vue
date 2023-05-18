@@ -6,6 +6,6 @@
 
 <script>
 export default {
-    name: "BoardView",
-}
+    name: "PlanBoardView",
+};
 </script>

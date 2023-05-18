@@ -1,16 +1,6 @@
 <template>
     <div>
-        <div class="hero hero-inner">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-6 mx-auto text-center">
-                        <div class="intro-wrap">
-                            <h1 class="mb-0">내 여행 계획</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <hero-section title="내 여행 계획"></hero-section>
 
         <div class="untree_co-section">
             <div class="container my-5">
@@ -26,11 +16,7 @@
                                     action="${root}/board"
                                     method="post"
                                 >
-                                    <input
-                                        type="hidden"
-                                        name="action"
-                                        value="filter"
-                                    />
+                                    <input type="hidden" name="action" value="filter" />
                                     <select
                                         name="key"
                                         id="key"
@@ -55,10 +41,7 @@
                                 </form>
                                 <br />
 
-                                <table
-                                    class="table table-bordered"
-                                    id="myPlanList"
-                                >
+                                <table class="table table-bordered" id="myPlanList">
                                     <tbody>
                                         <col width="10%" />
                                         <col width="50%" />
@@ -70,9 +53,7 @@
                                             <th>시작일</th>
                                             <th>종료일</th>
                                         </tr>
-                                        <template
-                                            v-for="(article, index) in articles"
-                                        >
+                                        <template v-for="(article, index) in articles">
                                             <my-schedule
                                                 :article="article"
                                                 :index="index"
@@ -91,8 +72,9 @@
 </template>
 
 <script>
-import MySchedule from './MySchedule.vue';
-import { apiInstance } from '@/api/http';
+import MySchedule from "./MySchedule.vue";
+import HeroSection from "@/components/HeroSection.vue";
+import { apiInstance } from "@/api/http";
 import { mapState, mapGetters } from "vuex";
 
 const api = apiInstance();
@@ -102,6 +84,7 @@ export default {
     name: "ScheduleList",
     components: {
         MySchedule,
+        HeroSection,
     },
     computed: {
         ...mapState(memberStore, ["isLogin", "userInfo"]),
