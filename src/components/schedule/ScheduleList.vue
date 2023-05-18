@@ -1,16 +1,6 @@
 <template>
     <div>
-        <div class="hero hero-inner">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-6 mx-auto text-center">
-                        <div class="intro-wrap">
-                            <h1 class="mb-0">자유 게시판</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <hero-section title="내 여행 계획"></hero-section>
 
         <div class="untree_co-section">
             <div class="container my-5">
@@ -66,18 +56,18 @@
                                         <col width="20%" />
                                         <tr>
                                             <th>번호</th>
-                                            <th>아이디</th>
                                             <th>제목</th>
-                                            <th>등록일</th>
+                                            <th>시작일</th>
+                                            <th>종료일</th>
                                         </tr>
                                         <template
                                             v-for="(article, index) in articles"
                                         >
-                                            <board-article
+                                            <my-schedule
                                                 :article="article"
                                                 :index="index"
-                                                :key="article.article_no"
-                                            ></board-article>
+                                                :key="article.plan_title"
+                                            ></my-schedule>
                                         </template>
                                     </tbody>
                                 </table>
@@ -91,35 +81,10 @@
 </template>
 
 <script>
-import BoardArticle from '@/components/BoardArticle.vue';
+import MySchedule from '@/components/schedule/MySchedule';
+import HeroSection from "@/components/HeroSection.vue";
 import { apiInstance } from '@/api/http';
+import { mapState, mapGetters } from "vuex";
 
 const api = apiInstance();
-
-export default {
-    name: "BoardList",
-    components: {
-        BoardArticle,
-    },
-    data() {
-        return {
-            articles: [],
-        };
-    },
-    created() {
-        this.boardList();
-    },
-    methods: {
-        boardList() {
-            api.get(`/board/boardlist`)
-                .then(({ data }) => {
-                    console.log(data);
-                    this.articles = data;
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        },
-    },
-};
-</script>
+const memberStore = "memberStore";

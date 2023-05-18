@@ -9,9 +9,25 @@
             <!-- 중앙 center content end -->
             <div class="col-md-6">
                 <!-- 관광지 검색 start -->
-                <form class="d-flex my-3" onsubmit="return false;" role="search">
-                    <select id="search-area" class="form-select me-2">
-                        <option value="0" selected>검색 할 지역 선택</option>
+                <form
+                    class="d-flex my-3"
+                    onsubmit="return false;"
+                    role="search"
+                >
+                    <select
+                        v-model="sido"
+                        @change="getGugun"
+                        id="search-area"
+                        class="form-select me-2"
+                    >
+                        <option value="0">시/도 선택</option>
+                    </select>
+                    <select
+                        v-model="gugun"
+                        id="search-gugun"
+                        class="form-select me-2"
+                    >
+                        <option value="0">구/군 선택</option>
                     </select>
                     <select id="search-content-id" class="form-select me-2">
                         <option value="0" selected>관광지 유형</option>
@@ -42,32 +58,66 @@
                 </form>
 
                 <!-- kakao map start -->
-                <kakao-map ref="map" :positions="positions" @map-updated="updateMap"></kakao-map>
+                <kakao-map
+                    ref="map"
+                    :positions="positions"
+                    @map-updated="updateMap"
+                ></kakao-map>
                 <!-- kakao map end -->
-                <div class="row">
-                    <table class="table table-striped" style="display: none">
-                        <thead>
-                            <tr>
-                                <th>대표이미지</th>
-                                <th>관광지명</th>
-                                <th>주소</th>
-                                <th></th>
-                                <th>Review 쓰기</th>
-                            </tr>
-                        </thead>
-                        <tbody id="trip-list">
-                            <result-list
-                                v-for="(place, index) in placesData"
-                                :place="place"
-                                :key="place.contentId"
-                                :index="index"
-                                @move-center="moveCenter"
-                                @show-modal="showModal"
-                            >
-                            </result-list>
-                        </tbody>
-                    </table>
-                </div>
+
+                <b-table
+                    striped
+                    responsive
+                    :items="placesData"
+                    :fields="fields"
+                    :per-page="perPage"
+                    :current-page="currentPage"
+                    :filter="filter"
+                >
+                    <template #cell(image)="row">
+                        <img
+                            :src="
+                                row.item.firstImage
+                                    ? row.item.firstImage
+                                    : require('@/assets/No_image_available.png')
+                            "
+                            ref="cursorImage"
+                            width="100px"
+                            style="cursor: pointer"
+                            @click="
+                                callMoveCenter(
+                                    row.item.latitude,
+                                    row.item.longitude
+                                )
+                            "
+                        />
+                    </template>
+                    <template #cell(name)="row">
+                        {{ row.item.title }}
+                    </template>
+                    <template #cell(address)="row">
+                        {{ row.item.addr }}
+                    </template>
+                    <template #cell(actions)="row">
+                        <button class="btn btn-warning">추가</button>
+                    </template>
+                    <template #cell(review)="row">
+                        <button
+                            @click="showModal(row.item.title)"
+                            class="btn btn-warning scrollto"
+                        >
+                            Review 쓰기
+                        </button>
+                    </template>
+                </b-table>
+
+                <b-pagination
+                    v-model="currentPage"
+                    :total-rows="placesData.length"
+                    :per-page="perPage"
+                    align="center"
+                ></b-pagination>
+
                 <!-- 관광지 검색 end -->
                 <!-- 중앙 center content end -->
             </div>
@@ -96,11 +146,10 @@
 </template>
 
 <script>
-import AddPlanlist from "@/components/AddPlanlist.vue";
-import KakaoMap from "@/components/KakaoMap.vue";
-import ResultList from "@/components/ResultList.vue";
-import TourReviewModal from "@/components/TourReviewModal.vue";
-import { apiInstance } from '@/api/http';
+import AddPlanlist from "@/components/tour/AddPlanlist.vue";
+import KakaoMap from "@/components/tour/KakaoMap.vue";
+import TourReviewModal from "@/components/tour/TourReviewModal.vue";
+import { apiInstance } from "@/api/http";
 
 const api = apiInstance();
 
@@ -108,9 +157,19 @@ export default {
     name: "TourInfoView",
     data() {
         return {
+            placesData: [], // Your data array containing the place objects
+            fields: [
+                { key: "image", label: "대표이미지" },
+                { key: "name", label: "관광지명" },
+                { key: "address", label: "주소" },
+                { key: "actions", label: "", sortable: false },
+                { key: "review", label: "Review 쓰기", sortable: false },
+            ],
+            perPage: 10, // Number of items to display per page
+            currentPage: 1, // Current page number
+            filter: null, // Filter for search functionality (optional)
             planListFlag: false,
             map: null,
-            placesData: Object,
             userSelection: [],
             positions: [],
             markers: [],
@@ -119,17 +178,73 @@ export default {
             visited: [],
             cnt: 1,
             modalTitle: null,
+            sido: "0",
+            gugun: "0",
         };
+    },
+    created() {
+        this.getSido();
     },
     components: {
         AddPlanlist,
         KakaoMap,
-        ResultList,
         TourReviewModal,
     },
     methods: {
+        setCursorPointer() {
+            this.$refs.cursorImage.style.cursor = "pointer";
+        },
+        callMoveCenter(lat, lon) {
+            const kakaoMap = this.$refs.map;
+            kakaoMap.moveCenter(lat, lon);
+        },
+        makeOption(data) {
+            let sel = document.getElementById("search-area");
+            data.forEach((area) => {
+                let opt = document.createElement("option");
+                opt.setAttribute("value", area.sido_code);
+                opt.appendChild(document.createTextNode(area.sido_name));
+
+                sel.appendChild(opt);
+            });
+        },
+        makeOptionGugun(data) {
+            let sel = document.getElementById("search-gugun");
+            sel.innerHTML = '<option value="0" selected>구/군 선택</option>';
+
+            data.forEach((area) => {
+                let opt = document.createElement("option");
+                opt.setAttribute("value", area.gugun_code);
+                opt.appendChild(document.createTextNode(area.gugun_name));
+
+                sel.appendChild(opt);
+            });
+        },
+        getSido() {
+            // index page 로딩 후 전국의 시도 설정.
+            api.get(`/tour/sido`)
+                .then(({ data }) => {
+                    this.makeOption(data);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        getGugun() {
+            api.get(`/tour/gugun`, {
+                params: { sido: this.sido },
+            })
+                .then(({ data }) => {
+                    this.makeOptionGugun(data);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
         moveCenter(latitude, longitude) {
-            this.map.setCenter(new window.kakao.maps.LatLng(latitude, longitude));
+            this.map.setCenter(
+                new window.kakao.maps.LatLng(latitude, longitude)
+            );
         },
         createPlanList() {
             this.planListFlag = true;
@@ -152,26 +267,30 @@ export default {
                     let markerInfo = {
                         title: area.title,
                         contenttypeid: area.contentTypeId,
-                        latlng: new window.kakao.maps.LatLng(area.latitude, area.longitude),
+                        latlng: new window.kakao.maps.LatLng(
+                            area.latitude,
+                            area.longitude
+                        ),
                     };
                     this.positions.push(markerInfo);
                 });
 
                 this.$refs.map.displayMarker(this.positions);
-
-                // this.makeList(data);
             });
         },
         updateMap(map) {
             this.map = map;
         },
         makeSearchUrl() {
-            let areaCode = document.getElementById("search-area").value;
-            let contentTypeId = document.getElementById("search-content-id").value;
+            let areaCode = this.sido;
+            let gugunCode = this.gugun;
+            let contentTypeId =
+                document.getElementById("search-content-id").value;
             let keyword = document.getElementById("search-keyword").value;
             let searchUrl = "/attraction/attractionlist?";
 
             searchUrl += "sidoCode=" + areaCode;
+            searchUrl += "&gugunCode=" + gugunCode;
             searchUrl += "&contentTypeId=" + contentTypeId;
             searchUrl += "&keyword=" + keyword;
             return searchUrl;
@@ -229,7 +348,9 @@ export default {
                         if (visited[i] == 0) {
                             visited[i] = 1;
 
-                            let areaTitle = document.getElementById("areaTitle" + i).innerHTML;
+                            let areaTitle = document.getElementById(
+                                "areaTitle" + i
+                            ).innerHTML;
 
                             this.places.push(areaTitle);
 

@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import ReviewArticle from '@/components/ReviewArticle.vue';
+import ReviewArticle from '@/components/review/ReviewArticle.vue';
 import { apiInstance } from '@/api/http';
 
 const api = apiInstance();

@@ -1,6 +1,16 @@
 <template>
     <div>
-        <hero-section title="내 여행 계획"></hero-section>
+        <div class="hero hero-inner">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 mx-auto text-center">
+                        <div class="intro-wrap">
+                            <h1 class="mb-0">자유 게시판</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="untree_co-section">
             <div class="container my-5">
@@ -16,7 +26,11 @@
                                     action="${root}/board"
                                     method="post"
                                 >
-                                    <input type="hidden" name="action" value="filter" />
+                                    <input
+                                        type="hidden"
+                                        name="action"
+                                        value="filter"
+                                    />
                                     <select
                                         name="key"
                                         id="key"
@@ -41,7 +55,10 @@
                                 </form>
                                 <br />
 
-                                <table class="table table-bordered" id="myPlanList">
+                                <table
+                                    class="table table-bordered"
+                                    id="myPlanList"
+                                >
                                     <tbody>
                                         <col width="10%" />
                                         <col width="50%" />
@@ -49,16 +66,18 @@
                                         <col width="20%" />
                                         <tr>
                                             <th>번호</th>
+                                            <th>아이디</th>
                                             <th>제목</th>
-                                            <th>시작일</th>
-                                            <th>종료일</th>
+                                            <th>등록일</th>
                                         </tr>
-                                        <template v-for="(article, index) in articles">
-                                            <my-schedule
+                                        <template
+                                            v-for="(article, index) in articles"
+                                        >
+                                            <board-article
                                                 :article="article"
                                                 :index="index"
-                                                :key="article.plan_title"
-                                            ></my-schedule>
+                                                :key="article.article_no"
+                                            ></board-article>
                                         </template>
                                     </tbody>
                                 </table>
@@ -72,23 +91,15 @@
 </template>
 
 <script>
-import MySchedule from "./MySchedule.vue";
-import HeroSection from "@/components/HeroSection.vue";
-import { apiInstance } from "@/api/http";
-import { mapState, mapGetters } from "vuex";
+import BoardArticle from '@/components/plan/BoardArticle.vue';
+import { apiInstance } from '@/api/http';
 
 const api = apiInstance();
-const memberStore = "memberStore";
 
 export default {
-    name: "ScheduleList",
+    name: "BoardList",
     components: {
-        MySchedule,
-        HeroSection,
-    },
-    computed: {
-        ...mapState(memberStore, ["isLogin", "userInfo"]),
-        ...mapGetters(["checkUserInfo"]),
+        BoardArticle,
     },
     data() {
         return {
@@ -96,11 +107,11 @@ export default {
         };
     },
     created() {
-        this.planList(this.userInfo.user_id);
+        this.boardList();
     },
     methods: {
-        planList(user_id) {
-            api.get(`/plan/getmyplan/${user_id}`)
+        boardList() {
+            api.get(`/board/boardlist`)
                 .then(({ data }) => {
                     console.log(data);
                     this.articles = data;
