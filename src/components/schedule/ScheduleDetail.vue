@@ -53,7 +53,7 @@
 
 <script>
 import { apiInstance } from '@/api/http';
-import ScheduleAttraction from '@/components/ScheduleAttraction.vue';
+import ScheduleAttraction from '@/components/schedule/ScheduleAttraction.vue';
 
 const api = apiInstance();
 

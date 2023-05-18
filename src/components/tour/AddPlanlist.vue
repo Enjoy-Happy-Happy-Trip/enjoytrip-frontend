@@ -3,6 +3,10 @@
 </template>
 
 <script>
+import { apiInstance } from '@/api/http';
+
+const api = apiInstance();
+
 export default {
     name: "AddPlanlist",
     data() {
@@ -61,13 +65,14 @@ export default {
             this.places.push(start_date);
             this.places.push(end_date);
 
-            fetch("/tour/saveplan", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(this.places),
-            }).then((window.location.href = "/"));
+            api.post("/tour/saveplan", this.places)
+                .then(() => {
+                    alert("여행 계획 저장 성공!");
+                    this.$router.push({name: "HomeView"});
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         });
     },
 };
