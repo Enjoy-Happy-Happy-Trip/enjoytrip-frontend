@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import BoardArticle from '@/components/BoardArticle.vue';
+import BoardArticle from '@/components/plan/BoardArticle.vue';
 import { apiInstance } from '@/api/http';
 
 const api = apiInstance();

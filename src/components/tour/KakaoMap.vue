@@ -3,10 +3,6 @@
 </template>
 
 <script>
-import { apiInstance } from '@/api/http';
-
-const api = apiInstance();
-
 export default {
     name: "KakaoMap",
     props: {
@@ -27,9 +23,6 @@ export default {
 
         this.$emit("map-updated", this.map);
     },
-    created() {
-        this.getApisData();
-    },
     methods: {
         /*
 			공지사항
@@ -37,16 +30,7 @@ export default {
 			여행 계획 -> 순서 변경
 			후기 작성
 			*/
-        getApisData() {
-            // index page 로딩 후 전국의 시도 설정.
-            api.get(`/tour/sido`)
-                .then(({ data }) => {
-                    this.makeOption(data);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        },
+        
         displayMarker(positions) {
             // 마커 이미지의 이미지 주소입니다
             // var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
@@ -76,17 +60,7 @@ export default {
         },
         moveCenter(lat, lng) {
             this.map.setCenter(new window.kakao.maps.LatLng(lat, lng));
-        },
-        makeOption(data) {
-            // console.log(areas);
-            let sel = document.getElementById("search-area");
-            data.forEach((area) => {
-                let opt = document.createElement("option");
-                opt.setAttribute("value", area.sido_code);
-                opt.appendChild(document.createTextNode(area.sido_name));
-
-                sel.appendChild(opt);
-            });
+            this.map.setLevel(4);
         },
         loadScript() {
             const script = document.createElement("script");
