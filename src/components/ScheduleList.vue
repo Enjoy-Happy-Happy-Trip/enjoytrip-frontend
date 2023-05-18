@@ -76,7 +76,6 @@ import MySchedule from "./MySchedule.vue";
 import HeroSection from "@/components/HeroSection.vue";
 import { apiInstance } from "@/api/http";
 import { mapState, mapGetters } from "vuex";
-import HeroSectionVue from "./HeroSection.vue";
 
 const api = apiInstance();
 const memberStore = "memberStore";
