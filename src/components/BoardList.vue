@@ -92,7 +92,9 @@
 
 <script>
 import BoardArticle from '@/components/BoardArticle.vue';
-import http from '@/api/http';
+import { apiInstance } from '@/api/http';
+
+const api = apiInstance();
 
 export default {
     name: "BoardList",
@@ -109,7 +111,7 @@ export default {
     },
     methods: {
         boardList() {
-            http.get(`/board/boardlist`)
+            api.get(`/board/boardlist`)
                 .then(({ data }) => {
                     console.log(data);
                     this.articles = data;

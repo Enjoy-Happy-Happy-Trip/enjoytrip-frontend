@@ -92,12 +92,20 @@
 
 <script>
 import MySchedule from './MySchedule.vue';
-import http from '@/api/http';
+import { apiInstance } from '@/api/http';
+import { mapState, mapGetters } from "vuex";
+
+const api = apiInstance();
+const memberStore = "memberStore";
 
 export default {
     name: "ScheduleList",
     components: {
         MySchedule,
+    },
+    computed: {
+        ...mapState(memberStore, ["isLogin", "userInfo"]),
+        ...mapGetters(["checkUserInfo"]),
     },
     data() {
         return {
@@ -105,11 +113,11 @@ export default {
         };
     },
     created() {
-        this.planList(this.$store.state.user.user_id);
+        this.planList(this.userInfo.user_id);
     },
     methods: {
         planList(user_id) {
-            http.get(`/plan/getmyplan/${user_id}`)
+            api.get(`/plan/getmyplan/${user_id}`)
                 .then(({ data }) => {
                     console.log(data);
                     this.articles = data;

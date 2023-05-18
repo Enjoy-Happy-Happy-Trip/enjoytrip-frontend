@@ -92,7 +92,9 @@
 
 <script>
 import ReviewArticle from '@/components/ReviewArticle.vue';
-import http from '@/api/http';
+import { apiInstance } from '@/api/http';
+
+const api = apiInstance();
 
 export default {
     name: "ReviewList",
@@ -109,7 +111,7 @@ export default {
     },
     methods: {
         reviewList() {
-            http.get(`/place/reviewlist`)
+            api.get(`/place/reviewlist`)
                 .then(({ data }) => {
                     console.log(data);
                     this.articles = data;

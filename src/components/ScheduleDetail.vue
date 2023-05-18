@@ -52,8 +52,11 @@
 </template>
 
 <script>
-import http from "@/api/http.js";
+import { apiInstance } from '@/api/http';
 import ScheduleAttraction from '@/components/ScheduleAttraction.vue';
+
+const api = apiInstance();
+
 // import Vue from "vue";
 // Vue.prototype.$EventBus = new Vue();
 
@@ -71,7 +74,7 @@ export default {
     created() {
         let schedule_id = this.$route.params.schedule_id;
 
-        http.get(`/plan/detail/${schedule_id}`)
+        api.get(`/plan/detail/${schedule_id}`)
             .then(({ data }) => {
                 console.log(data);
                 this.article = data;

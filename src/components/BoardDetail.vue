@@ -33,7 +33,9 @@
 </template>
 
 <script>
-import http from "@/api/http.js";
+import { apiInstance } from '@/api/http';
+
+const api = apiInstance();
 // import Vue from "vue";
 // Vue.prototype.$EventBus = new Vue();
 
@@ -48,7 +50,7 @@ export default {
     created() {
         let article_no = this.$route.params.article_no;
 
-        http.get(`/board/detail/${article_no}`)
+        api.get(`/board/detail/${article_no}`)
             .then(({ data }) => {
                 console.log(data);
                 this.article = data;
