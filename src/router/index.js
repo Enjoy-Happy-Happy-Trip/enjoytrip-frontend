@@ -11,6 +11,7 @@ import TourInfoView from "@/views/TourInfoView.vue";
 import PlanBoardView from "@/views/PlanBoardView.vue";
 import PlanList from "@/components/plan/PlanList.vue";
 import PlanDetail from "@/components/plan/PlanDetail.vue";
+import PlanShare from "@/components/plan/PlanShare.vue";
 
 import store from "@/store";
 
@@ -56,6 +57,12 @@ const routes = [
                 name: "planDetail",
                 beforeEnter: onlyAuthUser,
                 component: PlanDetail,
+            },
+            {
+                path: "share",
+                name: "planShare",
+                beforeEnter: onlyAuthUser,
+                component: PlanShare,
             },
         ],
     },

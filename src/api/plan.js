@@ -14,4 +14,8 @@ function findPlanDetailsById(planId, success, fail) {
     api.get(`/plan/detail/${planId}`).then(success).catch(fail);
 }
 
-export { getAllPlans, findPlanById, findPlanDetailsById };
+function findUnSharedSchedulesByUserId(userId, success, fail) {
+    api.get(`/plan/getmyplan/${userId}?onlyShared=true`).then(success).catch(fail);
+}
+
+export { getAllPlans, findPlanById, findPlanDetailsById, findUnSharedSchedulesByUserId };

@@ -127,32 +127,6 @@ export default {
                             "잘못된 ID 또는 password를 입력하셨습니다.";
             }
         },
-        // submitForm() {       
-        //     axios({
-        //         method: "POST",
-        //         url: this.$backUrl("/member/loginaf"),
-        //         data: {
-        //             user_id: this.id,
-        //             user_password: this.password,
-        //         },
-        //     })
-        //         .then((response) => {
-        //             this.login(response.data);
-        //             this.$router.replace("/");
-        //         })
-        //         .catch((error) => {
-        //             if (error.response.status === 401) {
-        //                 console.log(
-        //                     "잘못된 ID 또는 password를 입력하셨습니다."
-        //                 );
-        //                 this.loginErrorMsg =
-        //                     "잘못된 ID 또는 password를 입력하셨습니다.";
-        //             }
-        //         });
-        // },
-        // login(user) {
-        //     this.$store.commit("LOGIN", user);
-        // },
     },
 };
 </script>
