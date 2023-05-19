@@ -55,7 +55,7 @@ const routes = [
                 component: PlanList,
             },
             {
-                path: "detail/:plan_id",
+                path: "detail/:planId",
                 name: "planDetail",
                 beforeEnter: onlyAuthUser,
                 component: PlanDetail,
