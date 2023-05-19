@@ -1,7 +1,11 @@
 <template>
     <div>
         <hero-section title="여행 계획 게시판"></hero-section>
-        <b-container>
+        <b-container class="dc-container">
+            <!-- 검색 및 글쓰기 버튼이 들어갈 box -->
+            <div>
+                <b-button variant="outline-primary" @click="gotoPlanShare">계획 공유하기</b-button>
+            </div>
             <b-table
                 striped
                 hover
@@ -49,6 +53,9 @@ export default {
         },
         showDetail(item) {
             this.$router.push(`/plan/detail/${item.plan_id}`);
+        },
+        gotoPlanShare() {
+            this.$router.push(`/plan/share`);
         },
     },
 };
