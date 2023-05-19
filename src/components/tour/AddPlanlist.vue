@@ -13,13 +13,14 @@
             v-model="planTitle"
         >
         </b-form-input>
-        <form class="d-flex my-3" onsubmit="return false;" role="search">
+        <form class="d-flex my-3" onsubmit="return false;">
             <b-form-input
                 class="form-input me-2"
                 type="date"
                 id="start_date"
                 name="start_date"
                 v-model="startDate"
+                :min="minStartDate"
             ></b-form-input>
             <b-form-input
                 class="form-input me-2"
@@ -27,6 +28,7 @@
                 id="end_date"
                 name="end_date"
                 v-model="endDate"
+                :min="minEndDate"
             ></b-form-input>
             <div id="planListDetail"></div>
         </form>
@@ -92,13 +94,31 @@ export default {
             startDate: "",
             endDate: "",
             plans: [],
+            contentIds: [],
+            minStartDate: "",
         };
     },
     computed: {
         ...mapState(memberStore, ["isLogin", "userInfo"]),
         ...mapGetters(["checkUserInfo"]),
+
+        minEndDate() {
+            if (this.startDate) {
+                const minEndDate = new Date(this.startDate);
+                return minEndDate.toISOString().split("T")[0];
+            }
+
+            const today = new Date();
+            return today.toISOString().split("T")[0];
+        },
     },
-    created() {},
+    mounted() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const day = String(today.getDate()).padStart(2, "0");
+        this.minStartDate = `${year}-${month}-${day}`;
+    },
     methods: {
         deletePlan(idx) {
             this.plans.splice(idx, 1);
@@ -106,7 +126,7 @@ export default {
         resetPlan() {
             this.plans = [];
         },
-        addPlan(placeTitle) {
+        addPlan(placeTitle, contentId) {
             if (this.plans.length < 10) {
                 for (let i = 0; i < this.plans.length; i++) {
                     if (placeTitle === this.plans[i]) {
@@ -115,12 +135,13 @@ export default {
                     }
                 }
                 this.plans.push(placeTitle);
+                this.contentIds.push(contentId);
             } else {
                 alert("더이상 추가할 수 없습니다");
             }
         },
         savePlan() {
-            if(!this.userInfo) {
+            if (!this.userInfo) {
                 alert("로그인 필요!!");
                 this.$router.push({ name: "LoginView" });
                 return;
@@ -139,14 +160,14 @@ export default {
                 return;
             }
 
-            this.plans.push(this.planTitle);
-            this.plans.push(this.startDate);
-            this.plans.push(this.endDate);
-
             const param = {
                 plan: this.plans,
-                user_id: this.userInfo.user_id
-            }
+                content_ids: this.contentIds,
+                user_id: this.userInfo.user_id,
+                planTitle: this.planTitle,
+                startDate: this.startDate,
+                endDate: this.endDate,
+            };
 
             api.post(`/tour/saveplan`, param)
                 .then(() => {

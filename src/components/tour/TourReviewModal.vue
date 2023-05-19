@@ -16,6 +16,7 @@
                         class="form-control"
                         id=""
                         placeholder="간단한 리뷰를 써주세요"
+                        v-model="reviewText"
                     />
                 </div>
             </div>
@@ -31,11 +32,15 @@ export default {
     },
     data() {
         return {
-            message: "",
+            reviewText: "",
         };
     },
     created() {},
-    methods: {},
+    methods: {
+        getReview() {
+            return this.reviewText;
+        }
+    },
 };
 </script>
 

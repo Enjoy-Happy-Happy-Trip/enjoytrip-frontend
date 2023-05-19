@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-md-1"></div>
                 <!-- 중앙 center content end -->
-                <div class="col-md-8">
+                <div :class="userInfo ? 'col-md-7' : 'col-md-10'">
                     <!-- 관광지 검색 start -->
                     <form
                         class="d-flex my-3"
@@ -100,16 +100,30 @@
                         <template #cell(address)="row">
                             {{ row.item.addr }}
                         </template>
-                        <template #cell(actions)="row">
-                            <button @click="callAddPlan(row.item.title)" class="btn btn-warning" style="width:80px">
+                        <template #cell(actions)="row" v-if="userInfo">
+                            <button
+                                @click="
+                                    callAddPlan(
+                                        row.item.title,
+                                        row.item.contentId
+                                    )
+                                "
+                                class="btn btn-warning"
+                                style="width: 80px"
+                            >
                                 추가
                             </button>
                         </template>
-                        <template #cell(review)="row">
+                        <template #cell(review)="row" v-if="userInfo">
                             <button
-                                @click="showModal(row.item.title)"
+                                @click="
+                                    showModal(
+                                        row.item.title,
+                                        row.item.contentId
+                                    )
+                                "
                                 class="btn btn-warning scrollto"
-                                style="width:120px"
+                                style="width: 120px"
                             >
                                 Review 쓰기
                             </button>
@@ -128,18 +142,34 @@
                     <!-- 중앙 center content end -->
                 </div>
                 <!-- 중앙 right content start -->
-                <div id="rightContent" class="col-md-3">
+                <div id="rightContent" class="col-md-3" v-show="userInfo">
                     <div>
                         <add-planlist ref="planList"></add-planlist>
                     </div>
                 </div>
+                <div class="col-md-1"></div>
                 <!-- 중앙 right content end -->
             </div>
             <!-- 중앙 content end -->
 
             <!-- Modal -->
             <b-modal id="review-modal" title="리뷰 쓰기">
-                <tour-review-modal :title="modalTitle"></tour-review-modal>
+                <tour-review-modal
+                    :title="modalTitle"
+                    ref="reviewModal"
+                ></tour-review-modal>
+                <template #modal-footer="{ submitReview, cancel }">
+                    <b-button size="sm" variant="danger" @click="cancel()">
+                        취소
+                    </b-button>
+                    <b-button
+                        size="sm"
+                        variant="success"
+                        @click="submitReview"
+                    >
+                        등록
+                    </b-button>
+                </template>
             </b-modal>
         </div>
     </div>
@@ -150,8 +180,10 @@ import AddPlanlist from "@/components/tour/AddPlanlist.vue";
 import KakaoMap from "@/components/tour/KakaoMap.vue";
 import TourReviewModal from "@/components/tour/TourReviewModal.vue";
 import HeroSection from "@/components/HeroSection.vue";
+import { mapState, mapGetters } from "vuex";
 import { apiInstance } from "@/api/http";
 
+const memberStore = "memberStore";
 const api = apiInstance();
 
 export default {
@@ -160,11 +192,11 @@ export default {
         return {
             placesData: [], // Your data array containing the place objects
             fields: [
-                { key: "image", label: "대표이미지"},
-                { key: "name", label: "관광지명"},
-                { key: "address", label: "주소"},
-                { key: "actions", label: "추가", sortable: false},
-                { key: "review", label: "리뷰", sortable: false},
+                { key: "image", label: "대표이미지" },
+                { key: "name", label: "관광지명" },
+                { key: "address", label: "주소" },
+                { key: "actions", label: "", sortable: false },
+                { key: "review", label: "", sortable: false },
             ],
             perPage: 10, // Number of items to display per page
             currentPage: 1, // Current page number
@@ -176,6 +208,7 @@ export default {
             visited: [],
             cnt: 1,
             modalTitle: null,
+            modalContendId: null,
             sido: "0",
             gugun: "0",
             hideTable: false,
@@ -184,6 +217,10 @@ export default {
     created() {
         this.getSido();
     },
+    computed: {
+        ...mapState(memberStore, ["isLogin", "userInfo"]),
+        ...mapGetters(["checkUserInfo"]),
+    },
     components: {
         AddPlanlist,
         KakaoMap,
@@ -191,8 +228,25 @@ export default {
         HeroSection,
     },
     methods: {
-        callAddPlan(title) {
-            this.$refs.planList.addPlan(title);
+        submitReview() {
+            const userReview = {
+                content_id: this.modalContendId,
+                user_review: this.$refs.reviewModal.getReview(),
+            };
+
+            console.log(userReview.user_review);
+
+            api.post(`/place/writereview`, userReview)
+                .then(() => {
+                    alert("리뷰 등록 성공!!");
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        callAddPlan(title, contentId) {
+            this.$refs.planList.addPlan(title, contentId);
         },
         setCursorPointer() {
             this.$refs.cursorImage.style.cursor = "pointer";
@@ -249,8 +303,6 @@ export default {
             this.positions = [];
             document.querySelector("table").setAttribute("style", "display: ;");
 
-            console.log(this.positions);
-
             let searchUrl = this.makeSearchUrl();
 
             api.get(searchUrl).then(({ data }) => {
@@ -288,31 +340,6 @@ export default {
             searchUrl += "&keyword=" + keyword;
             return searchUrl;
         },
-        // makeList(data) {
-        //     var count = 0;
-
-        //     document.querySelector("table").setAttribute("style", "display: ;");
-        //     let tripList = ``;
-
-        //     this.markers = [];
-        //     this.positions = [];
-        //     this.linePath = [];
-
-        //     data.forEach((area) => {
-        //         tripList += `
-        //     <tr @click="moveCenter(${area.latitude}, ${area.longitude});">
-        // 		<td class="content-id" style="display:none">${area.contentId}</td>
-        //       <td><img src="${area.firstImage}" width="100px"></td>
-        //       <td id="areaTitle${count}">${area.title}</td>
-        //       <td>${area.addr}</td>
-        //       <td><button id=${count++} class="add-btn btn btn-warning">추가</button></td>
-        // 	  <td><b-button v-b-modal.review-modal class="btn btn-warning">Reivew 쓰기</b-button></td>
-        //     </tr>
-        //   `;
-        //     });
-
-        //     document.getElementById("trip-list").innerHTML = tripList;
-
         //     // 지도에 표시할 선을 생성합니다
         //     var polyline = new window.kakao.maps.Polyline({
         //         path: this.linePath, // 선을 구성하는 좌표배열 입니다
@@ -323,45 +350,9 @@ export default {
         //     });
 
         //     polyline.setMap(this.map);
-
-        //     var userSelection = document.getElementsByClassName("add-btn");
-
-        //     var planListDetail = document.getElementById("planListDetail");
-
-        //     var visited = [];
-
-        //     for (let i = 0; i < userSelection.length; i++) {
-        //         visited.push(0);
-        //     }
-
-        //     for (let i = 0; i < userSelection.length; i++) {
-        //         userSelection[i].addEventListener(
-        //             "click",
-        //             function () {
-        //                 if (visited[i] == 0) {
-        //                     visited[i] = 1;
-
-        //                     let areaTitle = document.getElementById(
-        //                         "areaTitle" + i
-        //                     ).innerHTML;
-
-        //                     this.places.push(areaTitle);
-
-        //                     let content = "";
-        //                     content += this.cnt++;
-        //                     content += ". ";
-        //                     content += areaTitle;
-        //                     content += "<br>";
-
-        //                     planListDetail.innerHTML += content;
-        //                     console.log(areaTitle);
-        //                 }
-        //             }.bind(this)
-        //         );
-        //     }
-        // },
-        showModal(title) {
+        showModal(title, contentId) {
             this.modalTitle = title;
+            this.modalContendId = contentId;
             this.$bvModal.show("review-modal");
         },
     },
