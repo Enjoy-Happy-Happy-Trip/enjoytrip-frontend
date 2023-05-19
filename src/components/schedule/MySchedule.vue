@@ -20,7 +20,7 @@ export default {
     },
     methods: {
         showPlan(schedule_id) {
-            this.$router.push(`/plan/detail/${schedule_id}`);
+            this.$router.push(`/schedule/detail/${schedule_id}`);
         }
     }
 };

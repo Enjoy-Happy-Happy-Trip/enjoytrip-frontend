@@ -19,10 +19,6 @@
                     />
                 </div>
             </div>
-            <div>
-                <button id="review-submit-btn" class="btn btn-primary">리뷰 등록</button>
-                <button id="modal-close" class="btn btn-danger">Close</button>
-            </div>
         </div>
     </div>
 </template>

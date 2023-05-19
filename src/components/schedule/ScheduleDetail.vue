@@ -30,7 +30,7 @@
             </tr>
             <tr>
                 <th>종료일</th>
-                <td>{{ article.start_date }}</td>
+                <td>{{ article.end_date }}</td>
             </tr>
         </table>
         <table style="margin-top: 40px;">
@@ -74,7 +74,7 @@ export default {
     created() {
         let schedule_id = this.$route.params.schedule_id;
 
-        api.get(`/plan/detail/${schedule_id}`)
+        api.get(`/plan/mydetail/${schedule_id}`)
             .then(({ data }) => {
                 console.log(data);
                 this.article = data;
