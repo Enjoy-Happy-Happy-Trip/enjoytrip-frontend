@@ -158,7 +158,7 @@
                     :title="modalTitle"
                     ref="reviewModal"
                 ></tour-review-modal>
-                <template #modal-footer="{ submitReview, cancel }">
+                <template #modal-footer="{ cancel }">
                     <b-button size="sm" variant="danger" @click="cancel()">
                         취소
                     </b-button>
@@ -232,10 +232,12 @@ export default {
             const userReview = {
                 content_id: this.modalContendId,
                 user_review: this.$refs.reviewModal.getReview(),
+                user_id: this.userInfo.user_id,
             };
 
             console.log(userReview.user_review);
-
+            console.log(userReview.user_review);
+            
             api.post(`/place/writereview`, userReview)
                 .then(() => {
                     alert("리뷰 등록 성공!!");
