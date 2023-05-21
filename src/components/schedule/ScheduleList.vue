@@ -16,7 +16,11 @@
                                     action="${root}/board"
                                     method="post"
                                 >
-                                    <input type="hidden" name="action" value="filter" />
+                                    <input
+                                        type="hidden"
+                                        name="action"
+                                        value="filter"
+                                    />
                                     <select
                                         name="key"
                                         id="key"
@@ -41,7 +45,10 @@
                                 </form>
                                 <br />
 
-                                <table class="table table-bordered" id="myPlanList">
+                                <table
+                                    class="table table-bordered"
+                                    id="myPlanList"
+                                >
                                     <tbody>
                                         <col width="10%" />
                                         <col width="50%" />
@@ -53,11 +60,13 @@
                                             <th>시작일</th>
                                             <th>종료일</th>
                                         </tr>
-                                        <template v-for="(article, index) in articles">
+                                        <template
+                                            v-for="(article, index) in articles"
+                                        >
                                             <my-schedule
                                                 :article="article"
                                                 :index="index"
-                                                :key="article.plan_title"
+                                                :key="article.schedule_id"
                                             ></my-schedule>
                                         </template>
                                     </tbody>
