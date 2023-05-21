@@ -18,4 +18,8 @@ function findUnSharedSchedulesByUserId(userId, success, fail) {
     api.get(`/plan/getmyplan/${userId}?onlyShared=true`).then(success).catch(fail);
 }
 
-export { getAllPlans, findPlanById, findPlanDetailsById, findUnSharedSchedulesByUserId };
+function savePlan(plan, success, fail) {
+    api.put(`/plan/${plan.plan_id}`, plan).then(success).catch(fail);
+}
+
+export { getAllPlans, findPlanById, findPlanDetailsById, findUnSharedSchedulesByUserId, savePlan };
