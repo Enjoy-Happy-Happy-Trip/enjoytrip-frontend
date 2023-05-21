@@ -100,6 +100,7 @@ import { findUnSharedSchedulesByUserId } from "@/api/plan.js";
 import { mapState } from "vuex";
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
+import { savePlan } from "@/api/plan.js";
 
 export default {
     mixins: [validationMixin],
@@ -163,6 +164,17 @@ export default {
             if (this.$v.$invalid) {
                 return;
             }
+            this.planForm.user_id = this.userInfo.user_id;
+            savePlan(
+                this.planForm,
+                (response) => {
+                    console.log(response);
+                    this.$router.push({ name: "planList" });
+                },
+                (error) => {
+                    console.log(error);
+                }
+            );
         },
         offValidationErrorMsg() {
             this.showValidationErrorMsg = false;
