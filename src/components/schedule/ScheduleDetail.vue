@@ -22,7 +22,7 @@
             </tr>
             <tr>
                 <th>제목</th>
-                <td>{{ article.plan_title }}</td>
+                <td>{{ article.schedule_title }}</td>
             </tr>
             <tr>
                 <th>시작일</th>
@@ -33,16 +33,18 @@
                 <td>{{ article.end_date }}</td>
             </tr>
         </table>
-        <table style="margin-top: 40px;">
+        <table style="margin-top: 40px">
             <thead>
-                <td colspan="2" style="text-align: center; font-size: x-large;">장소</td>
+                <td colspan="2" style="text-align: center; font-size: x-large">
+                    장소
+                </td>
             </thead>
             <tbody>
-                <template v-for="(attraction, index) in attractions" >
+                <template v-for="(attraction, index) in attractions">
                     <schedule-attraction
-                        :attraction = "attraction"
-                        :index = "index"
-                        :key = "attraction.contentId"
+                        :attraction="attraction"
+                        :index="index"
+                        :key="attraction.contentId"
                     >
                     </schedule-attraction>
                 </template>
@@ -52,8 +54,8 @@
 </template>
 
 <script>
-import { apiInstance } from '@/api/http';
-import ScheduleAttraction from '@/components/schedule/ScheduleAttraction.vue';
+import { apiInstance } from "@/api/http";
+import ScheduleAttraction from "@/components/schedule/ScheduleAttraction.vue";
 
 const api = apiInstance();
 
@@ -87,5 +89,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
