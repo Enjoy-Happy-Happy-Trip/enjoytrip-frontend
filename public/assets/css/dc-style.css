@@ -1,3 +1,7 @@
 .dc-container {
     margin: 5% auto;
 }
+
+.dc-error-msg {
+    color: red;
+}
