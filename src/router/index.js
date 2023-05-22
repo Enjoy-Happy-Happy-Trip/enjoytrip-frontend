@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import HomeView from "@/views/HomeView.vue";
+import RegisterView from "@/views/RegisterView.vue";
 import MyScheduleView from "@/views/MyScheduleView.vue";
 import ScheduleDetail from "@/components/schedule/ScheduleDetail.vue";
 import ScheduleList from "@/components/schedule/ScheduleList.vue";
@@ -39,6 +40,11 @@ const routes = [
         path: "/",
         name: "HomeView",
         component: HomeView,
+    },
+    {
+        path: "/register",
+        name: "RegisterView",
+        component: RegisterView,
     },
     {
         path: "/plan",
