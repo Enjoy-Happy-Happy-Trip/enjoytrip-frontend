@@ -1,7 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import HomeView from "@/views/HomeView.vue";
-import RegisterView from "@/views/RegisterView.vue";
+import LoginView from "@/views/LoginView.vue";
+import Login from "@/components/authentication/Login.vue";
+import RegisterMember from "@/components/authentication/Register.vue";
 import MyScheduleView from "@/views/MyScheduleView.vue";
 import ScheduleDetail from "@/components/schedule/ScheduleDetail.vue";
 import ScheduleList from "@/components/schedule/ScheduleList.vue";
@@ -42,9 +44,26 @@ const routes = [
         component: HomeView,
     },
     {
-        path: "/register",
-        name: "RegisterView",
-        component: RegisterView,
+        path: "/authentication",
+        name: "LoginView",
+        component: LoginView,
+        children: [
+            {
+                path: "login",
+                name: "login",
+                component: Login,
+            },
+            {
+                path: "/register",
+                name: "RegisterMember",
+                component: RegisterMember,
+            },
+            // {
+            //     path: "/findPwd",
+            //     name: "FindPwdView",
+            //     component: FindPwdView,
+            // },
+        ],
     },
     {
         path: "/plan",

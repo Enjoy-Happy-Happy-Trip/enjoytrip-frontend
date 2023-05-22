@@ -34,7 +34,7 @@
 
                         <!-- 로그인이 안되어 있을 때 : SignIn-->
                         <li v-if="!userInfo">
-                            <router-link to="/login">Sign In</router-link>
+                            <router-link to="/authentication/login">Sign In</router-link>
                             <!-- <a href="/login">Sign In</a> -->
                         </li>
 
