@@ -133,7 +133,6 @@ export default {
         ...mapState("memberStore", ["userInfo"]),
     },
     created() {
-        console.log(this.userInfo.user_id);
         findUnSharedSchedulesByUserId(
             this.userInfo.user_id,
             ({ data }) => {

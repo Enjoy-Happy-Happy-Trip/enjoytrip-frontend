@@ -17,4 +17,9 @@ export default {
     },
 };
 </script>
-<style></style>
+
+<style>
+    #app {
+        font-family: 'TAEBAEKmilkyway', sans-serif;
+    }
+</style>

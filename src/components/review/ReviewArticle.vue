@@ -72,8 +72,8 @@ export default {
             fields: [
                 { key: "index", label: "No" },
                 { key: "user_id", label: "작성자" },
-                { key: "title", label: "장소 이름", sortable: true },
-                { key: "user_review", label: "리뷰 내용", sortable: true },
+                { key: "title", label: "장소 이름" },
+                { key: "user_review", label: "리뷰 내용" },
                 { key: "register_time", label: "등록일", sortable: true },
             ],
             article_index: 1,
@@ -99,7 +99,7 @@ export default {
         filteredFields() {
             return this.fields.filter(
                 (field) =>
-                    field.key !== "index" && field.key !== "register_time" && field !== "index"
+                    field.key !== "index" && field.key !== "register_time"
             );
         },
     },

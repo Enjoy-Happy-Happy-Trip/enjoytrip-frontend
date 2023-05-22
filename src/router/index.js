@@ -8,6 +8,7 @@ import MyScheduleView from "@/views/MyScheduleView.vue";
 import ScheduleDetail from "@/components/schedule/ScheduleDetail.vue";
 import ScheduleList from "@/components/schedule/ScheduleList.vue";
 import ReviewView from "@/views/ReviewView.vue";
+import HotPlaceView from "@/views/HotPlaceView.vue";
 import ReviewList from "@/components/review/ReviewList.vue";
 import ReviewDetail from "@/components/review/ReviewDetail.vue";
 import TourInfoView from "@/views/TourInfoView.vue";
@@ -15,6 +16,7 @@ import PlanBoardView from "@/views/PlanBoardView.vue";
 import PlanList from "@/components/plan/PlanList.vue";
 import PlanDetail from "@/components/plan/PlanDetail.vue";
 import PlanShare from "@/components/plan/PlanShare.vue";
+import HotPlaceList from "@/components/hotplace/HotPlaceList.vue"
 
 import store from "@/store";
 
@@ -88,6 +90,19 @@ const routes = [
                 name: "planShare",
                 beforeEnter: onlyAuthUser,
                 component: PlanShare,
+            },
+        ],
+    },
+    {
+        path: "/hotplace",
+        name: "HotPlaceView",
+        component: HotPlaceView,
+        redirect: "/hotplace/list",
+        children: [
+            {
+                path: "list",
+                name: "hotPlaceList",
+                component: HotPlaceList,
             },
         ],
     },

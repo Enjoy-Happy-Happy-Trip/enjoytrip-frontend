@@ -27,10 +27,12 @@
                         </li>
 
                         <!-- 공통 : Board, TourInfo -->
-                        <li><router-link to="/plan">Plans</router-link></li>
                         <li>
                             <router-link to="/tourinfo">TourInfo</router-link>
                         </li>
+                        <li>
+                            <router-link to="/hotplace">HotPlace</router-link>
+                        </li>                        
 
                         <!-- 로그인이 안되어 있을 때 : SignIn-->
                         <li v-if="!userInfo">
@@ -40,10 +42,17 @@
 
                         <!-- 일반 사용자 로그인이 되어 있을 때 : MyPlans, Reviews-->
                         <li v-if="userInfo && userInfo.user_id !== 'admin'">
+                            <router-link to="/plan">
+                                <a>Plans</a>
+                            </router-link>
+                        </li>
+                        
+                        <li v-if="userInfo && userInfo.user_id !== 'admin'">
                             <router-link to="/schedule">
                                 <a>My Schedule</a>
                             </router-link>
                         </li>
+
                         <li v-if="userInfo && userInfo.user_id !== 'admin'">
                             <router-link to="/review">Reviews</router-link>
                             <!-- <a href="${root}/reviews.html">Reviews</a> -->
