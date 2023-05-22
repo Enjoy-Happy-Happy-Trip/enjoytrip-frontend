@@ -25,7 +25,7 @@ async function register(registerForm, success, fail) {
 }
 
 async function confirmUserToFindPwd(findForm, success, fail) {
-    await api.post(`/member/findPwd`, findForm).then(success).catch(fail);
+    await api.post(`/member/resetPwd`, findForm).then(success).catch(fail);
 }
 
 export { login, findById, tokenRegeneration, logout, register, confirmUserToFindPwd };

@@ -3,6 +3,8 @@ import VueRouter from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import Login from "@/components/authentication/Login.vue";
+import FindPwd from "@/components/authentication/FindPwd.vue";
+import ResetPwd from "@/components/authentication/ResetPwd.vue"
 import RegisterMember from "@/components/authentication/Register.vue";
 import MyScheduleView from "@/views/MyScheduleView.vue";
 import ScheduleDetail from "@/components/schedule/ScheduleDetail.vue";
@@ -52,7 +54,7 @@ const routes = [
         children: [
             {
                 path: "login",
-                name: "login",
+                name: "Login",
                 component: Login,
             },
             {
@@ -64,6 +66,11 @@ const routes = [
                 path: "/findPwd",
                 name: "FindPwd",
                 component: FindPwd,
+            },
+            {
+                path: "resetPwd",
+                name: "ResetPwd",
+                component: ResetPwd,
             },
         ],
     },
