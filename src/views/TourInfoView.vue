@@ -47,6 +47,7 @@
                             type="search"
                             placeholder="검색어"
                             aria-label="검색어"
+                            @keyup.enter="searchDataByKeyword"
                         ></b-form-input>
                         <button
                             id="btn-search"
@@ -74,6 +75,7 @@
                         :fields="fields"
                         :per-page="perPage"
                         :current-page="currentPage"
+                        @row-clicked="callMoveCenter"
                     >
                         <template #cell(image)="row">
                             <img
@@ -86,12 +88,6 @@
                                 width="100px"
                                 height="100px"
                                 style="cursor: pointer"
-                                @click="
-                                    callMoveCenter(
-                                        row.item.latitude,
-                                        row.item.longitude
-                                    )
-                                "
                             />
                         </template>
                         <template #cell(name)="row">
@@ -162,11 +158,7 @@
                     <b-button size="sm" variant="danger" @click="cancel()">
                         취소
                     </b-button>
-                    <b-button
-                        size="sm"
-                        variant="success"
-                        @click="submitReview"
-                    >
+                    <b-button size="sm" variant="success" @click="submitReview">
                         등록
                     </b-button>
                 </template>
@@ -235,9 +227,6 @@ export default {
                 user_id: this.userInfo.user_id,
             };
 
-            console.log(userReview.user_review);
-            console.log(userReview.user_review);
-            
             api.post(`/place/writereview`, userReview)
                 .then(() => {
                     alert("리뷰 등록 성공!!");
@@ -253,9 +242,9 @@ export default {
         setCursorPointer() {
             this.$refs.cursorImage.style.cursor = "pointer";
         },
-        callMoveCenter(lat, lon) {
+        callMoveCenter(item) {
             const kakaoMap = this.$refs.map;
-            kakaoMap.moveCenter(lat, lon);
+            kakaoMap.moveCenter(item.latitude, item.longitude);
         },
         makeOption(data) {
             let sel = document.getElementById("search-area");

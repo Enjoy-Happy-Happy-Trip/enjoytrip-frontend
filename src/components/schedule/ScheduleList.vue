@@ -44,33 +44,7 @@
                                     </div>
                                 </form>
                                 <br />
-
-                                <table
-                                    class="table table-bordered"
-                                    id="myPlanList"
-                                >
-                                    <tbody>
-                                        <col width="10%" />
-                                        <col width="50%" />
-                                        <col width="20%" />
-                                        <col width="20%" />
-                                        <tr>
-                                            <th>번호</th>
-                                            <th>제목</th>
-                                            <th>시작일</th>
-                                            <th>종료일</th>
-                                        </tr>
-                                        <template
-                                            v-for="(article, index) in articles"
-                                        >
-                                            <my-schedule
-                                                :article="article"
-                                                :index="index"
-                                                :key="article.schedule_id"
-                                            ></my-schedule>
-                                        </template>
-                                    </tbody>
-                                </table>
+                                <my-schedule :articles="articles"></my-schedule>
                             </div>
                         </div>
                     </div>
@@ -111,7 +85,6 @@ export default {
         planList(user_id) {
             api.get(`/plan/getmyplan/${user_id}`)
                 .then(({ data }) => {
-                    console.log(data);
                     this.articles = data;
                 })
                 .catch((error) => {
