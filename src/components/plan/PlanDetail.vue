@@ -51,7 +51,7 @@ export default {
                     thClass: "w90",
                 },
             ],
-            plan: null,
+            plan: {},
             attractions: [],
         };
     },

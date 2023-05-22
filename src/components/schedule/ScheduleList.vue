@@ -8,42 +8,22 @@
                     <div class="col-sm-10">
                         <div class="row mb-5">
                             <div class="table-responsive" style="width: 100%">
-                                <h1>글목록</h1>
-
-                                <form
-                                    class="d-flex"
-                                    id="form-search"
-                                    action="${root}/board"
-                                    method="post"
-                                >
-                                    <input
-                                        type="hidden"
-                                        name="action"
-                                        value="filter"
-                                    />
-                                    <select
-                                        name="key"
-                                        id="key"
-                                        class="form-select form-select-sm ms-5 me-1 w-50"
-                                        aria-label="검색조건"
+                                <b-button-group class="button mb-3">
+                                    <b-button
+                                        v-if="selectedOption === 0"
+                                        @click="planList"
+                                        variant="primary"
                                     >
-                                        <option selected>검색조건</option>
-                                        <option value="subject">제목</option>
-                                        <option value="user_id">작성자</option>
-                                        <option value="content">글내용</option>
-                                    </select>
-                                    <div class="input-group input-group-sm">
-                                        <input
-                                            type="text"
-                                            name="word"
-                                            id="word"
-                                            class="form-control"
-                                            placeholder="검색어..."
-                                        />
-                                        <input type="submit" value="검색" />
-                                    </div>
-                                </form>
-                                <br />
+                                        예정된 일정
+                                    </b-button>
+                                    <b-button
+                                        v-else
+                                        @click="planList"
+                                        variant="success"
+                                    >
+                                        완료된 일정
+                                    </b-button>
+                                </b-button-group>
                                 <my-schedule :articles="articles"></my-schedule>
                             </div>
                         </div>
@@ -76,14 +56,21 @@ export default {
     data() {
         return {
             articles: [],
+            selectedOption: 1,
         };
     },
     created() {
-        this.planList(this.userInfo.user_id);
+        this.planList();
     },
     methods: {
-        planList(user_id) {
-            api.get(`/plan/getmyplan/${user_id}`)
+        planList() {
+            if(this.selectedOption === 0) {
+                this.selectedOption = 1;
+            } else {
+                this.selectedOption = 0;
+            }
+
+            api.get(`/plan/getplans/${this.userInfo.user_id}?time=${this.selectedOption}`)
                 .then(({ data }) => {
                     this.articles = data;
                 })

@@ -113,7 +113,6 @@ export default {
         boardList() {
             api.get(`/board/boardlist`)
                 .then(({ data }) => {
-                    console.log(data);
                     this.articles = data;
                 })
                 .catch((error) => {

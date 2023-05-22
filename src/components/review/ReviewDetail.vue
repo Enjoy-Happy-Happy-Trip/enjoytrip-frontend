@@ -57,7 +57,6 @@ export default {
 
         api.get(`/place/detail/${review_id}`)
             .then(({ data }) => {
-                console.log(data);
                 this.article = data;
             })
             .catch((error) => {
