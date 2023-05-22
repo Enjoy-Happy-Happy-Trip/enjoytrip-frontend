@@ -7,11 +7,7 @@
                 <!-- 중앙 center content end -->
                 <div :class="userInfo ? 'col-md-7' : 'col-md-10'">
                     <!-- 관광지 검색 start -->
-                    <form
-                        class="d-flex my-3"
-                        onsubmit="return false;"
-                        role="search"
-                    >
+                    <form class="d-flex my-3" onsubmit="return false;" role="search">
                         <select
                             v-model="sido"
                             @change="getGugun"
@@ -27,10 +23,7 @@
                         >
                             <option value="0">구/군 선택</option>
                         </select>
-                        <select
-                            id="search-content-id"
-                            class="userselect form-select me-2"
-                        >
+                        <select id="search-content-id" class="userselect form-select me-2">
                             <option value="0" selected>관광지 유형</option>
                             <option value="12">관광지</option>
                             <option value="14">문화시설</option>
@@ -73,8 +66,6 @@
                         responsive
                         :items="placesData"
                         :fields="fields"
-                        :per-page="perPage"
-                        :current-page="currentPage"
                         @row-clicked="callMoveCenter"
                     >
                         <template #cell(image)="row">
@@ -98,12 +89,7 @@
                         </template>
                         <template #cell(actions)="row" v-if="userInfo">
                             <button
-                                @click="
-                                    callAddPlan(
-                                        row.item.title,
-                                        row.item.contentId
-                                    )
-                                "
+                                @click="callAddPlan(row.item.title, row.item.contentId)"
                                 class="btn btn-warning"
                                 style="width: 80px"
                             >
@@ -112,12 +98,7 @@
                         </template>
                         <template #cell(review)="row" v-if="userInfo">
                             <button
-                                @click="
-                                    showModal(
-                                        row.item.title,
-                                        row.item.contentId
-                                    )
-                                "
+                                @click="showModal(row.item.title, row.item.contentId)"
                                 class="btn btn-warning scrollto"
                                 style="width: 120px"
                             >
@@ -128,9 +109,11 @@
 
                     <b-pagination
                         v-show="hideTable"
-                        v-model="currentPage"
-                        :total-rows="placesData.length"
-                        :per-page="perPage"
+                        v-model="pageNavInfo.currentPage"
+                        :total-rows="pageNavInfo.totalCount"
+                        :per-page="pageNavInfo.countPerPage"
+                        hide-ellipsis
+                        @change="changePage"
                         align="center"
                     ></b-pagination>
 
@@ -150,10 +133,7 @@
 
             <!-- Modal -->
             <b-modal id="review-modal" title="리뷰 쓰기">
-                <tour-review-modal
-                    :title="modalTitle"
-                    ref="reviewModal"
-                ></tour-review-modal>
+                <tour-review-modal :title="modalTitle" ref="reviewModal"></tour-review-modal>
                 <template #modal-footer="{ cancel }">
                     <b-button size="sm" variant="danger" @click="cancel()">
                         취소
@@ -190,8 +170,16 @@ export default {
                 { key: "actions", label: "", sortable: false },
                 { key: "review", label: "", sortable: false },
             ],
-            perPage: 10, // Number of items to display per page
-            currentPage: 1, // Current page number
+            pageNavInfo: {
+                currentPage: 1,
+                startPage: -1,
+                totalCount: -1,
+                totalPageCount: -1,
+                naviSize: 5,
+                countPerPage: 10,
+                hasPrevNav: false,
+                hasNextNav: false,
+            },
             map: null,
             userSelection: [],
             positions: [],
@@ -291,44 +279,26 @@ export default {
         },
         searchDataByKeyword() {
             this.hideTable = true;
-            this.positions = [];
             document.querySelector("table").setAttribute("style", "display: ;");
 
-            let searchUrl = this.makeSearchUrl();
-
-            api.get(searchUrl).then(({ data }) => {
-                this.placesData = data;
-
-                data.forEach((area) => {
-                    let markerInfo = {
-                        title: area.title,
-                        contenttypeid: area.contentTypeId,
-                        latlng: new window.kakao.maps.LatLng(
-                            area.latitude,
-                            area.longitude
-                        ),
-                    };
-                    this.positions.push(markerInfo);
-                });
-
-                this.$refs.map.displayMarker(this.positions);
-            });
+            this.pageNavInfo.currentPage = 1;
+            this.changePage(this.pageNavInfo.currentPage);
         },
         updateMap(map) {
             this.map = map;
         },
-        makeSearchUrl() {
+        makeSearchUrl(page) {
             let areaCode = this.sido;
             let gugunCode = this.gugun;
-            let contentTypeId =
-                document.getElementById("search-content-id").value;
+            let contentTypeId = document.getElementById("search-content-id").value;
             let keyword = document.getElementById("search-keyword").value;
-            let searchUrl = "/attraction/attractionlist?";
+            let searchUrl = "/attraction/?";
 
             searchUrl += "sidoCode=" + areaCode;
             searchUrl += "&gugunCode=" + gugunCode;
             searchUrl += "&contentTypeId=" + contentTypeId;
             searchUrl += "&keyword=" + keyword;
+            searchUrl += "&pageNo=" + page;
             return searchUrl;
         },
         //     // 지도에 표시할 선을 생성합니다
@@ -345,6 +315,26 @@ export default {
             this.modalTitle = title;
             this.modalContendId = contentId;
             this.$bvModal.show("review-modal");
+        },
+        changePage(page) {
+            let searchUrl = this.makeSearchUrl(page);
+
+            this.positions = [];
+            api.get(searchUrl).then(({ data }) => {
+                this.placesData = data.attractionList;
+                this.pageNavInfo = data.pageNav;
+
+                data.attractionList.forEach((area) => {
+                    let markerInfo = {
+                        title: area.title,
+                        contenttypeid: area.contentTypeId,
+                        latlng: new window.kakao.maps.LatLng(area.latitude, area.longitude),
+                    };
+                    this.positions.push(markerInfo);
+                });
+
+                this.$refs.map.displayMarker(this.positions);
+            });
         },
     },
 };
