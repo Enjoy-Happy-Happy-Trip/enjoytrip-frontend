@@ -16,7 +16,7 @@ import PlanBoardView from "@/views/PlanBoardView.vue";
 import PlanList from "@/components/plan/PlanList.vue";
 import PlanDetail from "@/components/plan/PlanDetail.vue";
 import PlanShare from "@/components/plan/PlanShare.vue";
-import HotPlaceList from "@/components/hotplace/HotPlaceList.vue"
+import HotPlaceList from "@/components/hotplace/HotPlaceList.vue";
 
 import store from "@/store";
 
@@ -60,11 +60,11 @@ const routes = [
                 name: "RegisterMember",
                 component: RegisterMember,
             },
-            // {
-            //     path: "/findPwd",
-            //     name: "FindPwdView",
-            //     component: FindPwdView,
-            // },
+            {
+                path: "/findPwd",
+                name: "FindPwd",
+                component: FindPwd,
+            },
         ],
     },
     {
