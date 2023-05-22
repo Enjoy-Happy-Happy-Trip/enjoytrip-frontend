@@ -123,11 +123,6 @@
                 </div>
             </b-form>
         </b-container>
-
-        <div>
-            {{ form }}
-            confirm : {{ confirm_password }}
-        </div>
     </div>
 </template>
 
