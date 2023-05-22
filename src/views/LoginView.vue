@@ -1,32 +1,16 @@
 <template>
     <div>
-        <div class="hero hero-inner">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-6 mx-auto text-center">
-                        <div class="intro-wrap">
-                            <h1 class="mb-0">Sign In And Get Started!</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <hero-section title="Sign In And Get Started!"></hero-section>
 
         <div class="untree_co-section">
             <div class="container">
                 <div class="row justify-content-center">
                     <div>
-                        <form
-                            class="signin-form"
-                            data-aos="fade-up"
-                            data-aos-delay="200"
-                        >
+                        <form class="signin-form" data-aos="fade-up" data-aos-delay="200">
                             <div class="row justify-content-center">
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label class="text-black" for="user_id"
-                                            >ID</label
-                                        >
+                                        <label class="text-black" for="user_id">ID</label>
                                         <input
                                             type="text"
                                             class="form-control"
@@ -37,9 +21,7 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label
-                                            class="text-black"
-                                            for="user_password"
+                                        <label class="text-black" for="user_password"
                                             >Password</label
                                         >
                                         <input
@@ -63,25 +45,17 @@
                                 >
                                     Sign In
                                 </button>
-                                <a
-                                    :href="
-                                        this.$backUrl(
-                                            '/member/findpassword.jsp'
-                                        )
-                                    "
+                                <a :href="this.$backUrl('/member/findpassword.jsp')"
                                     >Forgot password?</a
                                 >
                             </div>
                         </form>
                         <div class="row justify-content-center">
                             <p class="text-black mt-5">Not a member yet?</p>
-                            <button
-                                type="button"
-                                class="btn btn-primary btn-lg btn-block"
-                                onclick="location.href='${root}/member?action=registry'"
+                            <router-link to="/register" class="btn btn-primary btn-lg btn-block"
+                                >Register</router-link
                             >
-                                Register
-                            </button>
+                            <!-- <b-button variant="primary" class="btn-lg">Register</b-button> -->
                         </div>
                     </div>
                 </div>
@@ -91,13 +65,16 @@
 </template>
 
 <script>
-// import http from "@/api/http";
 import { mapState, mapActions } from "vuex";
+import HeroSection from "@/components/HeroSection.vue";
 
 const memberStore = "memberStore";
 
 export default {
     name: "LoginView",
+    components: {
+        HeroSection,
+    },
     data() {
         return {
             user: {
@@ -116,15 +93,12 @@ export default {
         async confirm() {
             await this.userConfirm(this.user);
             let token = sessionStorage.getItem("access-token");
-            if(this.isLogin) {
+            if (this.isLogin) {
                 await this.getUserInfo(token);
-                this.$router.push({name: "HomeView"});
+                this.$router.push({ name: "HomeView" });
             } else {
-                console.log(
-                            "잘못된 ID 또는 password를 입력하셨습니다."
-                        );
-                        this.loginErrorMsg =
-                            "잘못된 ID 또는 password를 입력하셨습니다.";
+                console.log("잘못된 ID 또는 password를 입력하셨습니다.");
+                this.loginErrorMsg = "잘못된 ID 또는 password를 입력하셨습니다.";
             }
         },
     },
