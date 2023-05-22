@@ -135,7 +135,7 @@ import { register } from "@/api/member.js";
 
 export default {
     mixins: [validationMixin],
-    name: "RegisterView",
+    name: "RegisterMember",
     components: {
         HeroSection,
     },
