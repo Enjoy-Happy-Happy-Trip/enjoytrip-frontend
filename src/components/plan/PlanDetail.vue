@@ -10,7 +10,7 @@
                 <b-row>
                     <b-col>
                         <!-- 1. attraction list -->
-                        <b-table striped hover :items="attractions" :fields="fields">
+                        <b-table responsive hover :items="attractions" :fields="fields">
                             <template #cell(index)="data">
                                 {{ data.index + 1 }}
                             </template>
@@ -61,7 +61,6 @@ export default {
         findPlanById(
             planId,
             ({ data }) => {
-                console.log(data);
                 this.plan = data;
             },
             (error) => {
@@ -72,7 +71,6 @@ export default {
         findPlanDetailsById(
             planId,
             ({ data }) => {
-                console.log(data);
                 this.attractions = data;
             },
             (error) => {
