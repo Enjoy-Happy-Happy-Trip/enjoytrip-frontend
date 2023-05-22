@@ -97,7 +97,6 @@ export default {
                 await this.getUserInfo(token);
                 this.$router.push({ name: "HomeView" });
             } else {
-                console.log("잘못된 ID 또는 password를 입력하셨습니다.");
                 this.loginErrorMsg = "잘못된 ID 또는 password를 입력하셨습니다.";
             }
         },

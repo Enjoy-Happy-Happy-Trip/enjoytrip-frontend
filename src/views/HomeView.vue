@@ -93,7 +93,6 @@ export default {
     },
     beforeRouteLeave(to, from, next) {
         clearTimeout(this.timer);
-        // console.log(this.timer);
         next();
     },
     methods: {

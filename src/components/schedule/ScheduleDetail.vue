@@ -78,7 +78,6 @@ export default {
 
         api.get(`/plan/mydetail/${schedule_id}`)
             .then(({ data }) => {
-                console.log(data);
                 this.article = data;
                 this.attractions = data.attractions;
             })

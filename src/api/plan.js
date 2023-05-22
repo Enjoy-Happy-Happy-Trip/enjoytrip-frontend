@@ -15,7 +15,7 @@ function findPlanDetailsById(planId, success, fail) {
 }
 
 function findUnSharedSchedulesByUserId(userId, success, fail) {
-    api.get(`/plan/getmyplan/${userId}?onlyShared=true`).then(success).catch(fail);
+    api.get(`/plan/getmyplan/${userId}?unshared=true`).then(success).catch(fail);
 }
 
 function savePlan(plan, success, fail) {

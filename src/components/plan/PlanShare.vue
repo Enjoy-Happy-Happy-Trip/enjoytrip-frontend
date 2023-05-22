@@ -53,7 +53,7 @@
                         "
                         class="dc-error-msg"
                     >
-                        여행 계획을 입력해주세요.
+                        여행 이름을 입력해주세요.
                     </div>
                 </b-form-group>
 
@@ -137,7 +137,6 @@ export default {
         findUnSharedSchedulesByUserId(
             this.userInfo.user_id,
             ({ data }) => {
-                console.log(data);
                 this.schedules = this.makeScheduleList(data);
             },
             (error) => {
@@ -158,8 +157,6 @@ export default {
         },
         onSubmit() {
             this.$v.$touch();
-            console.log(this.$v);
-            console.log(this.planForm);
             this.showValidationErrorMsg = true;
             if (this.$v.$invalid) {
                 return;
@@ -168,7 +165,6 @@ export default {
             savePlan(
                 this.planForm,
                 (response) => {
-                    console.log(response);
                     this.$router.push({ name: "planList" });
                 },
                 (error) => {
