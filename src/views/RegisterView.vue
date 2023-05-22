@@ -136,6 +136,7 @@ import HeroSection from "@/components/HeroSection.vue";
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
 import { sameAs } from "@/util/validator.js";
+import { register } from "@/api/member.js";
 
 export default {
     mixins: [validationMixin],
@@ -184,6 +185,17 @@ export default {
                 return;
             }
             console.log(this.form);
+            register(
+                this.form,
+                (response) => {
+                    console.log(response);
+                    alert("회원이 되신걸 진심으로 환영합니다!");
+                    this.$router.push({ name: "LoginView" });
+                },
+                (error) => {
+                    console.log(error);
+                }
+            );
         },
         offValidationErrorMsg() {
             this.showValidationErrorMsg = false;
