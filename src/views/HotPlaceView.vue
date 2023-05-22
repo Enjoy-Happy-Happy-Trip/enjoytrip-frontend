@@ -6,6 +6,6 @@
 
 <script>
 export default {
-    name: "ReviewView",
+    name: "HotPlaceView",
 };
 </script>

@@ -44,9 +44,8 @@ export default {
     data() {
         return {
             fields: [
-                "index",
-                { key: "index", label: "번호" },
-                { key: "schedule_title", label: "제목", sortable: true },
+                { key: "index", label: "No" },
+                { key: "schedule_title", label: "제목" },
                 { key: "start_date", label: "시작일", sortable: true },
                 { key: "end_date", label: "종료일", sortable: true },
             ], // Table column labels

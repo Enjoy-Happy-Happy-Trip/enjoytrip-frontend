@@ -52,7 +52,6 @@ export default {
 
         api.get(`/board/detail/${article_no}`)
             .then(({ data }) => {
-                console.log(data);
                 this.article = data;
             })
             .catch((error) => {
