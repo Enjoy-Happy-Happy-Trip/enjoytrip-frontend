@@ -175,15 +175,12 @@ export default {
             this.$v.$touch();
             this.$v.confirm_password.$touch();
             this.showValidationErrorMsg = true;
-            console.log(this.$v);
             if (this.$v.$invalid) {
                 return;
             }
-            console.log(this.form);
             register(
                 this.form,
                 (response) => {
-                    console.log(response);
                     alert("회원이 되신걸 진심으로 환영합니다!");
                     this.$router.push({ name: "LoginView" });
                 },

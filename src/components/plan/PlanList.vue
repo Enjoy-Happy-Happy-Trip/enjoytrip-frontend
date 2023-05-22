@@ -36,7 +36,6 @@ export default {
     created() {
         getAllPlans(
             ({ data }) => {
-                // console.log(data);
                 this.plans = data;
                 this.addPlanNo(1); // 이후에 페이지마다 시작번호를 다르게 한다.
             },
