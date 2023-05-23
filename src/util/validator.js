@@ -1,5 +1,3 @@
-function sameAs(origin, compare) {
-    return origin === compare;
-}
+const sameAs = (compare) => (value) => value === compare;
 
 export { sameAs };
