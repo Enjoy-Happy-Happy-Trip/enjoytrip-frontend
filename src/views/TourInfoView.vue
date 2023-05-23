@@ -56,7 +56,6 @@
                     <kakao-map
                         ref="map"
                         :positions="positions"
-                        @map-updated="updateMap"
                     ></kakao-map>
                     <!-- kakao map end -->
 
@@ -89,7 +88,7 @@
                         </template>
                         <template #cell(actions)="row" v-if="userInfo">
                             <button
-                                @click="callAddPlan(row.item.title, row.item.contentId)"
+                                @click="callAddPlan(row.item)"
                                 class="btn btn-warning"
                                 style="width: 80px"
                             >
@@ -224,8 +223,9 @@ export default {
                     console.log(error);
                 });
         },
-        callAddPlan(title, contentId) {
-            this.$refs.planList.addPlan(title, contentId);
+        callAddPlan(item) {
+            this.callMoveCenter(item);
+            this.$refs.planList.addPlan(item.title, item.contentId);
         },
         setCursorPointer() {
             this.$refs.cursorImage.style.cursor = "pointer";
@@ -284,9 +284,6 @@ export default {
             this.pageNavInfo.currentPage = 1;
             this.changePage(this.pageNavInfo.currentPage);
         },
-        updateMap(map) {
-            this.map = map;
-        },
         makeSearchUrl(page) {
             let areaCode = this.sido;
             let gugunCode = this.gugun;
@@ -301,16 +298,6 @@ export default {
             searchUrl += "&pageNo=" + page;
             return searchUrl;
         },
-        //     // 지도에 표시할 선을 생성합니다
-        //     var polyline = new window.kakao.maps.Polyline({
-        //         path: this.linePath, // 선을 구성하는 좌표배열 입니다
-        //         strokeWeight: 5, // 선의 두께 입니다
-        //         strokeColor: "#FFAE00", // 선의 색깔입니다
-        //         strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-        //         strokeStyle: "solid", // 선의 스타일입니다
-        //     });
-
-        //     polyline.setMap(this.map);
         showModal(title, contentId) {
             this.modalTitle = title;
             this.modalContendId = contentId;

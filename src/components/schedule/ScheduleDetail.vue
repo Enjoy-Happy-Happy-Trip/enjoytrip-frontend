@@ -11,7 +11,35 @@
                 </div>
             </div>
         </div>
-        <table class="table table-bordered" id="user-schedule">
+
+        <div class="itinerary ml-3 mt-2">
+            <div class="itinerary-item">
+                <div class="itinerary-label">번호</div>
+                <div class="itinerary-value">{{ article.schedule_id }}</div>
+            </div>
+            <div class="itinerary-item">
+                <div class="itinerary-label">작성자</div>
+                <div class="itinerary-value">{{ article.user_id }}</div>
+            </div>
+            <div class="itinerary-item">
+                <div class="itinerary-label">제목</div>
+                <div class="itinerary-value">{{ article.schedule_title }}</div>
+            </div>
+            <div class="itinerary-item">
+                <div class="itinerary-label">시작일</div>
+                <div class="itinerary-value">{{ article.start_date }}</div>
+            </div>
+            <div class="itinerary-item">
+                <div class="itinerary-label">종료일</div>
+                <div class="itinerary-value">{{ article.end_date }}</div>
+            </div>
+        </div>
+
+        <div class="kakaoMap mt-3 ml-3">
+            <kakao-map ref="map" :attractions="attractions"></kakao-map>
+        </div>
+
+        <!-- <table class="table table-bordered" id="user-schedule">
             <tr>
                 <th>번호</th>
                 <td>{{ article.schedule_id }}</td>
@@ -32,18 +60,17 @@
                 <th>종료일</th>
                 <td>{{ article.end_date }}</td>
             </tr>
-        </table>
-        <table style="margin-top: 40px">
+        </table> -->
+        <table class="ml-3 mt-2">
             <thead>
                 <td colspan="2" style="text-align: center; font-size: x-large">
                     장소
                 </td>
             </thead>
             <tbody>
-                <template v-for="(attraction, index) in attractions">
+                <template v-for="attraction in attractions">
                     <schedule-attraction
                         :attraction="attraction"
-                        :index="index"
                         :key="attraction.contentId"
                     >
                     </schedule-attraction>
@@ -56,30 +83,37 @@
 <script>
 import { apiInstance } from "@/api/http";
 import ScheduleAttraction from "@/components/schedule/ScheduleAttraction.vue";
+import KakaoMap from "@/components/tour/KakaoMap.vue";
 
 const api = apiInstance();
-
-// import Vue from "vue";
-// Vue.prototype.$EventBus = new Vue();
 
 export default {
     name: "ScheduleDetail",
     components: {
         ScheduleAttraction,
+        KakaoMap,
     },
     data() {
         return {
             article: {},
-            attractions: {},
+            attractions: [],
         };
     },
     created() {
         let schedule_id = this.$route.params.schedule_id;
-
         api.get(`/plan/mydetail/${schedule_id}`)
             .then(({ data }) => {
                 this.article = data;
                 this.attractions = data.attractions;
+
+                if (window.kakao && window.kakao.maps) {
+                    this.$refs.map.displayMarker(
+                        this.$refs.map.convertMarker(this.attractions)
+                    );
+                    this.$refs.map.displayLine(
+                        this.$refs.map.convertLine(this.attractions)
+                    );
+                }
             })
             .catch((error) => {
                 console.log(error);
@@ -88,4 +122,31 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.itinerary {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+}
+
+.itinerary-item {
+    display: flex;
+    gap: 10px;
+}
+
+.itinerary-label {
+    width: 100px;
+    font-weight: bold;
+}
+
+.itinerary-value {
+    flex: 1;
+}
+
+.kakaoMap {
+    width: 60%;
+    align-content: center;
+    justify-content: center;
+}
+</style>

@@ -7,6 +7,7 @@ export default {
     name: "KakaoMap",
     props: {
         positions: [],
+        attractions: [],
     },
     data() {
         return {
@@ -21,7 +22,7 @@ export default {
             this.loadScript();
         }
 
-        this.$emit("map-updated", this.map);
+        this.$emit("mountComplete");
     },
     methods: {
         /*
@@ -30,7 +31,46 @@ export default {
 			여행 계획 -> 순서 변경
 			후기 작성
 			*/
-        
+        convertMarker(positions) {
+            let markers = [];
+
+            positions.forEach((area) => {
+                let markerInfo = {
+                    title: area.title,
+                    contenttypeid: area.contentTypeId,
+                    latlng: new window.kakao.maps.LatLng(
+                        area.latitude,
+                        area.longitude
+                    ),
+                };
+                markers.push(markerInfo);
+            });
+
+            return markers;
+        },
+        convertLine(positions) {
+            let linePath = [];
+
+            positions.forEach((area) => {
+                linePath.push(
+                    new window.kakao.maps.LatLng(area.latitude, area.longitude)
+                );
+            });
+
+            return linePath;
+        },
+        displayLine(linePath) {
+            // 지도에 표시할 선을 생성합니다
+            var polyline = new window.kakao.maps.Polyline({
+                path: linePath, // 선을 구성하는 좌표배열 입니다
+                strokeWeight: 5, // 선의 두께 입니다
+                strokeColor: "#FFAE00", // 선의 색깔입니다
+                strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                strokeStyle: "solid", // 선의 스타일입니다
+            });
+
+            polyline.setMap(this.map);
+        },
         displayMarker(positions) {
             // 마커 이미지의 이미지 주소입니다
             // var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
@@ -93,6 +133,11 @@ export default {
 
             if (this.markers.length > 0) {
                 this.displayMarker(this.positions);
+            }
+
+            if (this.attractions) {
+                this.displayMarker(this.convertMarker(this.attractions));
+                this.displayLine(this.convertLine(this.attractions));
             }
         },
     },
