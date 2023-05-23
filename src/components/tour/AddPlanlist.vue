@@ -122,6 +122,7 @@ export default {
     methods: {
         deletePlan(idx) {
             this.plans.splice(idx, 1);
+            this.contentIds.splice(idx, 1);
         },
         resetPlan() {
             this.plans = [];
