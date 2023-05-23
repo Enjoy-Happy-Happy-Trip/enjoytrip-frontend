@@ -4,7 +4,7 @@ import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import Login from "@/components/authentication/Login.vue";
 import FindPwd from "@/components/authentication/FindPwd.vue";
-import ResetPwd from "@/components/authentication/ResetPwd.vue"
+import ResetPwd from "@/components/authentication/ResetPwd.vue";
 import RegisterMember from "@/components/authentication/Register.vue";
 import MyScheduleView from "@/views/MyScheduleView.vue";
 import ScheduleDetail from "@/components/schedule/ScheduleDetail.vue";
@@ -68,7 +68,7 @@ const routes = [
                 component: FindPwd,
             },
             {
-                path: "resetPwd",
+                path: "/resetPwd",
                 name: "ResetPwd",
                 component: ResetPwd,
             },
@@ -117,14 +117,6 @@ const routes = [
         path: "/tourinfo",
         name: "TourInfoView",
         component: TourInfoView,
-    },
-    {
-        path: "/login",
-        name: "LoginView",
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ "../views/LoginView.vue"),
     },
     {
         path: "/schedule",
