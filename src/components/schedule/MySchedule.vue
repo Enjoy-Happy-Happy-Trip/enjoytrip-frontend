@@ -1,9 +1,41 @@
 <template>
     <div>
+        <b-button-group class="button mb-3">
+            <b-button
+                v-if="selectedOption === 0"
+                @click="planList"
+                variant="info"
+            >
+                예정된 일정
+            </b-button>
+            <b-button v-else @click="planList" variant="success">
+                완료된 일정
+            </b-button>
+        </b-button-group>
+        <b-input-group class="mb-3">
+            <b-form-select v-model="selectedField">
+                <option value="" disabled selected>검색 조건</option>
+                <option
+                    v-for="field in filteredFields"
+                    :key="field.key"
+                    :value="field.key"
+                >
+                    {{ field.label }}
+                </option>
+            </b-form-select>
+            <b-form-input
+                v-model="searchQuery"
+                placeholder="Search"
+                @keyup.enter="searchKeyword"
+            ></b-form-input>
+            <b-input-group-append>
+                <b-button @click="searchKeyword">검색</b-button>
+            </b-input-group-append>
+        </b-input-group>
         <b-table
             hover
             responsive
-            :items="articles"
+            :items="filteredItems"
             :fields="modifiedFields"
             :per-page="perPage"
             :current-page="currentPage"
@@ -48,22 +80,25 @@
         ></b-pagination>
 
         <b-modal id="share-modal" title="여행 계획 공유하기">
-                <schedule-share-modal :planId="modalPlanId" ref="shareModal"></schedule-share-modal>
-                <template #modal-footer="{ cancel }">
-                    <b-button size="sm" variant="danger" @click="cancel()">
-                        취소
-                    </b-button>
-                    <b-button size="sm" variant="success" @click="shareSchedule">
-                        등록
-                    </b-button>
-                </template>
-            </b-modal>
+            <schedule-share-modal
+                :planId="modalPlanId"
+                ref="shareModal"
+            ></schedule-share-modal>
+            <template #modal-footer="{ cancel }">
+                <b-button size="sm" variant="danger" @click="cancel()">
+                    취소
+                </b-button>
+                <b-button size="sm" variant="success" @click="shareSchedule">
+                    등록
+                </b-button>
+            </template>
+        </b-modal>
     </div>
 </template>
 
 <script>
 import { apiInstance } from "@/api/http";
-import ScheduleShareModal from '@/components/schedule/ScheduleShareModal.vue';
+import ScheduleShareModal from "@/components/schedule/ScheduleShareModal.vue";
 import { savePlan } from "@/api/plan.js";
 import { mapState } from "vuex";
 
@@ -73,10 +108,6 @@ export default {
     name: "MySchedule",
     components: {
         ScheduleShareModal,
-    },
-    props: {
-        articles: [],
-        option: Number,
     },
     computed: {
         ...mapState("memberStore", ["userInfo"]),
@@ -95,9 +126,19 @@ export default {
                 return this.fields;
             }
         },
+        filteredFields() {
+            return this.fields.filter(
+                (field) =>
+                    field.key !== "index" &&
+                    field.key !== "start_date" &&
+                    field.key !== "end_date"
+            );
+        },
     },
     data() {
         return {
+            searchQuery: "",
+            selectedField: "",
             fields: [
                 { key: "index", label: "No" },
                 { key: "schedule_title", label: "제목" },
@@ -111,9 +152,32 @@ export default {
             sortBy: "", // Sort column
             sortDesc: false, // Sort order (ascending or descending)
             modalPlanId: 0,
+            filteredItems: [],
+            articles: [],
+            selectedOption: 1,
         };
     },
+    created() {
+        this.planList();
+    },
     methods: {
+        resetSearchQuery() {
+            this.searchQuery = "";
+        },
+        searchKeyword() {
+            if (!this.selectedField || !this.searchQuery) {
+                this.filteredItems = this.articles;
+                return;
+            }
+
+            const filtered = this.articles.filter((item) =>
+                String(item[this.selectedField])
+                    .toLowerCase()
+                    .includes(this.searchQuery.toLowerCase())
+            );
+
+            this.filteredItems = filtered;
+        },
         showPlan(item) {
             this.$router.push(`/schedule/detail/${item.schedule_id}`);
         },
@@ -150,7 +214,27 @@ export default {
                     console.log(error);
                 }
             );
-        }
+        },
+        planList() {
+            this.resetSearchQuery();
+            
+            if (this.selectedOption === 0) {
+                this.selectedOption = 1;
+            } else {
+                this.selectedOption = 0;
+            }
+
+            api.get(
+                `/plan/getplans/${this.userInfo.user_id}?time=${this.selectedOption}`
+            )
+                .then(({ data }) => {
+                    this.articles = data;
+                    this.filteredItems = data;
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
     },
 };
 </script>

@@ -8,23 +8,7 @@
                     <div class="col-sm-10">
                         <div class="row mb-5">
                             <div class="table-responsive" style="width: 100%">
-                                <b-button-group class="button mb-3">
-                                    <b-button
-                                        v-if="selectedOption === 0"
-                                        @click="planList"
-                                        variant="primary"
-                                    >
-                                        예정된 일정
-                                    </b-button>
-                                    <b-button
-                                        v-else
-                                        @click="planList"
-                                        variant="success"
-                                    >
-                                        완료된 일정
-                                    </b-button>
-                                </b-button-group>
-                                <my-schedule :articles="articles" :option="selectedOption"></my-schedule>
+                                <my-schedule></my-schedule>
                             </div>
                         </div>
                     </div>
@@ -55,29 +39,11 @@ export default {
     },
     data() {
         return {
-            articles: [],
-            selectedOption: 1,
         };
     },
     created() {
-        this.planList();
     },
     methods: {
-        planList() {
-            if(this.selectedOption === 0) {
-                this.selectedOption = 1;
-            } else {
-                this.selectedOption = 0;
-            }
-
-            api.get(`/plan/getplans/${this.userInfo.user_id}?time=${this.selectedOption}`)
-                .then(({ data }) => {
-                    this.articles = data;
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        },
     },
 };
 </script>
