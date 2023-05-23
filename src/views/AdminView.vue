@@ -1,17 +1,13 @@
 <template>
     <div>
-        <hero-section title="Admin Page"></hero-section>
+        <router-view></router-view>
     </div>
 </template>
 
 <script>
-import HeroSection from "@/components/HeroSection.vue";
-
 export default {
     name: "AdminView",
-    components: {
-        HeroSection,
-    },
+    components: {},
     data() {
         return {
             message: "",
