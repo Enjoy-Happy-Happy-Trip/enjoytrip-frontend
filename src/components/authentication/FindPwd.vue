@@ -150,18 +150,18 @@ export default {
             if (this.$v.form.$invalid) {
                 return;
             }
-            // this.showAuthCodeInput = true;
-            confirmUserToFindPwd(
-                this.form,
-                (response) => {
-                    console.log(response);
-                    this.showAuthCodeInput = true;
-                    this.authCode = response.data;
-                },
-                (error) => {
-                    console.log(error);
-                }
-            );
+            this.showAuthCodeInput = true;
+            // confirmUserToFindPwd(
+            //     this.form,
+            //     (response) => {
+            //         console.log(response);
+            //         this.showAuthCodeInput = true;
+            //         this.authCode = response.data;
+            //     },
+            //     (error) => {
+            //         console.log(error);
+            //     }
+            // );
         },
         offValidationErrorMsg() {
             this.showValidationErrorMsg = false;
@@ -169,8 +169,15 @@ export default {
         confirmAuthCode() {
             this.showValidationErrorMsg = true;
             this.$v.authCodeInput.$touch();
-            console.log(this.$v.authCodeInput);
-            this.$router.push(`/resetPwd`);
+            if (this.$v.authCodeInput.$invalid) {
+                return;
+            }
+            this.$router.push({
+                name: "ResetPwd",
+                params: {
+                    userId: this.form.user_id,
+                },
+            });
         },
     },
 };
