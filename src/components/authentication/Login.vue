@@ -6,11 +6,17 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div>
-                        <form class="signin-form" data-aos="fade-up" data-aos-delay="200">
+                        <form
+                            class="signin-form"
+                            data-aos="fade-up"
+                            data-aos-delay="200"
+                        >
                             <div class="row justify-content-center">
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label class="text-black" for="user_id">ID</label>
+                                        <label class="text-black" for="user_id"
+                                            >ID</label
+                                        >
                                         <input
                                             type="text"
                                             class="form-control"
@@ -21,7 +27,9 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label class="text-black" for="user_password"
+                                        <label
+                                            class="text-black"
+                                            for="user_password"
                                             >Password</label
                                         >
                                         <input
@@ -45,14 +53,16 @@
                                 >
                                     Sign In
                                 </button>
-                                <a :href="this.$backUrl('/member/findpassword.jsp')"
-                                    >Forgot password?</a
+                                <router-link to="/findPwd"
+                                    >Forgot your password?</router-link
                                 >
                             </div>
                         </form>
                         <div class="row justify-content-center">
                             <p class="text-black mt-5">Not a member yet?</p>
-                            <router-link to="/register" class="btn btn-primary btn-lg btn-block"
+                            <router-link
+                                to="/register"
+                                class="btn btn-primary btn-lg btn-block"
                                 >Register</router-link
                             >
                         </div>
@@ -96,7 +106,8 @@ export default {
                 await this.getUserInfo(token);
                 this.$router.push({ name: "HomeView" });
             } else {
-                this.loginErrorMsg = "잘못된 ID 또는 password를 입력하셨습니다.";
+                this.loginErrorMsg =
+                    "잘못된 ID 또는 password를 입력하셨습니다.";
             }
         },
     },
