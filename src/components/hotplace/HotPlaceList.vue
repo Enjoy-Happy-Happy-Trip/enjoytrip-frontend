@@ -21,30 +21,63 @@
                 >
                     <div class="hotplace-card">
                         <div class="hotplace-image">
-                            <img :src="hotplace.firstImage ? hotplace.firstImage : require('@/assets/No_image_available.png')" />
+                            <img
+                                :src="
+                                    hotplace.firstImage
+                                        ? hotplace.firstImage
+                                        : require('@/assets/No_image_available.png')
+                                "
+                            />
                         </div>
-                        <div class="hotplace-details" style="min-height: 200px; max-height:300px">
+                        <div
+                            class="hotplace-details"
+                            style="min-height: 200px; max-height: 300px"
+                        >
                             <h4>{{ hotplace.title }}</h4>
                             <p>{{ hotplace.addr }}</p>
-                            <p class="review-count">추천수 : {{ hotplace.review_count }}</p>
+                            <p class="review-count">
+                                추천수 : {{ hotplace.review_count }}
+                            </p>
+                            <b-button
+                                variant="info"
+                                class="btn-bottom-left"
+                                @click="showModal(hotplace.contentId)"
+                                >상세보기</b-button
+                            >
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <b-modal id="detail-modal" title="장소 상세 정보">
+            <place-detail-modal
+                :contentId="modalContentId"
+                ref="detailModal"
+            ></place-detail-modal>
+            <template #modal-footer="{ cancel }">
+                <b-button size="sm" variant="info" @click="cancel()">
+                    확인
+                </b-button>
+            </template>
+        </b-modal>
     </div>
 </template>
 
 <script>
 import { apiInstance } from "@/api/http";
+import PlaceDetailModal from "@/components/tour/PlaceDetailModal.vue";
 
 const api = apiInstance();
 
 export default {
     name: "HotPlaceList",
+    components: {
+        PlaceDetailModal,
+    },
     data() {
         return {
             hotplaces: [],
+            modalContentId: 0,
         };
     },
     created() {
@@ -55,6 +88,12 @@ export default {
             .catch((error) => {
                 console.log(error);
             });
+    },
+    methods: {
+        showModal(contentId) {
+            this.modalContentId = contentId;
+            this.$bvModal.show("detail-modal");
+        },
     },
 };
 </script>
@@ -77,11 +116,17 @@ export default {
 }
 
 .review-count {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  background-color: #fff;
-  padding: 5px;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: #fff;
+    padding: 5px;
+}
+
+.btn-bottom-left {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
 }
 
 </style>
