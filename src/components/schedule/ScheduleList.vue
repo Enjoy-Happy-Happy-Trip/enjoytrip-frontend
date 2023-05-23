@@ -24,7 +24,7 @@
                                         완료된 일정
                                     </b-button>
                                 </b-button-group>
-                                <my-schedule :articles="articles"></my-schedule>
+                                <my-schedule :articles="articles" :option="selectedOption"></my-schedule>
                             </div>
                         </div>
                     </div>

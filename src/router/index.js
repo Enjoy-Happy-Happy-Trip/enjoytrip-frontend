@@ -34,6 +34,12 @@ const onlyAuthUser = async (to, from, next) => {
     }
     if (!checkToken || checkUserInfo === null) {
         alert("로그인이 필요한 페이지입니다!!");
+
+        this.userLogout(this.userInfo.userid);
+        sessionStorage.removeItem("access-token"); //저장된 토큰 없애기
+        sessionStorage.removeItem("refresh-token"); //저장된 토큰 없애기
+        if (this.$route.path != "/") this.$router.push({ name: "HomeView" });
+        
         // next({ name: "login" });
         router.push({ name: "LoginView" });
     } else {
