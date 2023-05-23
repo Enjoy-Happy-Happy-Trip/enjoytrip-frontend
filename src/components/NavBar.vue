@@ -32,7 +32,7 @@
                         </li>
                         <li>
                             <router-link to="/hotplace">HotPlace</router-link>
-                        </li>                        
+                        </li>
 
                         <!-- 로그인이 안되어 있을 때 : SignIn-->
                         <li v-if="!userInfo">
@@ -46,7 +46,7 @@
                                 <a>Plans</a>
                             </router-link>
                         </li>
-                        
+
                         <li v-if="userInfo && userInfo.user_id !== 'admin'">
                             <router-link to="/schedule">
                                 <a>My Schedule</a>
@@ -60,7 +60,7 @@
 
                         <!-- 관리자 로그인이 되어 있을 때 : admin page-->
                         <li v-if="userInfo && userInfo.user_id === 'admin'">
-                            <a href="${root}/member/memberlist">Admin Page</a>
+                            <router-link to="/admin">Admin Page</router-link>
                         </li>
 
                         <!-- 공통 로그인이 되어 있을 때 (마지막): 로그아웃 -->
