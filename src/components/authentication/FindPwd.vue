@@ -91,6 +91,9 @@
                 </div>
             </b-form>
         </b-container>
+
+        <!--
+            this is for debugs
         <div>
             {{ this.form }}
             {{ this.authCode }}
@@ -99,7 +102,8 @@
         <div>
             {{ this.authCode }}
             {{ this.authCodeInput }}
-        </div>
+        </div> 
+        -->
     </div>
 </template>
 
@@ -127,7 +131,7 @@ export default {
             showValidationErrorMsg: false,
             showAuthCodeInput: false,
             authCodeInput: "",
-            authCode: "123456",
+            authCode: "",
             domains: ["naver.com", "ssafy.com", "google.com"],
         };
     },

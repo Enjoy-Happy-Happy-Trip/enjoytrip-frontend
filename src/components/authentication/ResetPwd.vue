@@ -51,7 +51,9 @@
                 </div>
             </b-form>
         </b-container>
-        <div>재설정 할 아이디 : {{ form.user_id }}</div>
+        <!-- this is for debug
+            <div>재설정 할 아이디 : {{ form.user_id }}</div> 
+        -->
     </div>
 </template>
 
