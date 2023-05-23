@@ -150,18 +150,19 @@ export default {
             if (this.$v.form.$invalid) {
                 return;
             }
-            this.showAuthCodeInput = true;
-            // confirmUserToFindPwd(
-            //     this.form,
-            //     (response) => {
-            //         console.log(response);
-            //         this.showAuthCodeInput = true;
-            //         this.authCode = response.data;
-            //     },
-            //     (error) => {
-            //         console.log(error);
-            //     }
-            // );
+            // this.showAuthCodeInput = true;
+            confirmUserToFindPwd(
+                this.form,
+                (response) => {
+                    console.log(response);
+                    this.showAuthCodeInput = true;
+                    this.form.user_id = response.data.userId;
+                    this.authCode = response.data.authCode;
+                },
+                (error) => {
+                    console.log(error);
+                }
+            );
         },
         offValidationErrorMsg() {
             this.showValidationErrorMsg = false;
