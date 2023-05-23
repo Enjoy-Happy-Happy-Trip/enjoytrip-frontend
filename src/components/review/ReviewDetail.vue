@@ -11,42 +11,57 @@
                 </div>
             </div>
         </div>
-        <table class="table table-bordered" id="user-schedule">
-            <tr>
-                <th>리뷰번호</th>
-                <td>{{ article.review_id }}</td>
-            </tr>
-            <tr>
-                <th>작성자</th>
-                <td>{{ article.user_id }}</td>
-            </tr>
-            <tr>
-                <th>장소 이름</th>
-                <td>{{ article.title }}</td>
-            </tr>
-            <tr>
-                <th>리뷰 내용</th>
-                <td>{{ article.user_review }}</td>
-            </tr>
-            <tr>
-                <th>등록일</th>
-                <td>{{ article.register_time }}</td>
-            </tr>
-        </table>
+        <b-container class="dc-container">
+            <div class="review-container">
+                <table class="table table-bordered" id="user-schedule">
+                    <tr>
+                        <th>리뷰번호</th>
+                        <td>{{ article.review_id }}</td>
+                    </tr>
+                    <tr>
+                        <th>작성자</th>
+                        <td>{{ article.user_id }}</td>
+                    </tr>
+                    <tr>
+                        <th>장소 이름</th>
+                        <td>{{ article.title }}</td>
+                    </tr>
+                    <tr>
+                        <th>리뷰 내용</th>
+                        <td>{{ article.user_review }}</td>
+                    </tr>
+                    <tr>
+                        <th>등록일</th>
+                        <td>{{ article.register_time }}</td>
+                    </tr>
+                </table>
+                <div class="button-container">
+                    <b-button v-show="this.userInfo.user_id === article.user_id"
+                        class="delButton"
+                        variant="danger"
+                        @click="deleteReview()"
+                        >삭제</b-button
+                    >
+                </div>
+            </div>
+        </b-container>
     </div>
 </template>
 
 <script>
-import { apiInstance } from '@/api/http';
+import { apiInstance } from "@/api/http";
+import { mapState, mapGetters } from "vuex";
 
+const memberStore = "memberStore";
 const api = apiInstance();
-
-// import Vue from "vue";
-// Vue.prototype.$EventBus = new Vue();
 
 export default {
     name: "ReviewDetail",
     components: {},
+    computed: {
+        ...mapState(memberStore, ["isLogin", "userInfo"]),
+        ...mapGetters(["checkUserInfo"]),
+    },
     data() {
         return {
             article: {},
@@ -63,7 +78,39 @@ export default {
                 console.log(error);
             });
     },
+    methods: {
+        deleteReview() {
+            api.delete(`/place/${this.article.review_id}/${this.article.content_id}`)
+                .then(() => {
+                    alert("리뷰 삭제 완료!!");
+                    this.$router.push(`/review`);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        }
+    }
 };
 </script>
 
-<style></style>
+<style>
+.review-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: relative;
+}
+
+.button-container {
+  margin-top: auto;
+  align-self: flex-end;
+  position: sticky;
+  bottom: 20px;
+  z-index: 1;
+}
+
+.delButton {
+  margin-left: auto;
+}
+</style>
