@@ -28,4 +28,8 @@ async function confirmUserToFindPwd(findForm, success, fail) {
     await api.post(`/member/resetPwd`, findForm).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout, register, confirmUserToFindPwd };
+async function resetUserPwd(resetForm, success, fail) {
+    await api.put(`/member/${resetForm.user_id}`, resetForm).then(success).catch(fail);
+}
+
+export { login, findById, tokenRegeneration, logout, register, confirmUserToFindPwd, resetUserPwd };
