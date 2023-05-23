@@ -60,7 +60,48 @@
 
                         <!-- 관리자 로그인이 되어 있을 때 : admin page-->
                         <li v-if="userInfo && userInfo.user_id === 'admin'">
-                            <router-link to="/admin">Admin Page</router-link>
+                            <!-- <router-link to="/admin">Admin Page</router-link> -->
+                            <!-- <b-dropdown
+                                split
+                                variant="transparent"
+                                text-variant="light"
+                                id="admin-menu"
+                                text="Admin Page"
+                                class="m-md-2"
+                            >
+                                <b-dropdown-item variant="transparent"
+                                    ><router-link to="/admin/announcement"
+                                        >공지사항 관리</router-link
+                                    ></b-dropdown-item
+                                >
+                                <b-dropdown-item variant="transparent"
+                                    ><router-link to="/admin/memberManager"
+                                        >회원 관리</router-link
+                                    ></b-dropdown-item
+                                >
+                            </b-dropdown> -->
+                            <div id="admin-menu" class="dropdown">
+                                <button
+                                    class="btn dropdown-toggle navbar-btn bg-transparent"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    Admin Page
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <router-link to="/admin/announcement"
+                                            >공지사항 관리</router-link
+                                        >
+                                    </li>
+                                    <li>
+                                        <router-link to="/admin/memberManager"
+                                            >회원 관리</router-link
+                                        >
+                                    </li>
+                                </ul>
+                            </div>
                         </li>
 
                         <!-- 공통 로그인이 되어 있을 때 (마지막): 로그아웃 -->
@@ -125,4 +166,26 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.navbar-btn {
+    font-size: 14px;
+    padding: 10px 15px;
+    display: inline-block;
+    text-decoration: none !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+#admin-menu a {
+    color: black;
+}
+
+#admin-menu > button {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.dropdown-menu > li {
+    margin: 0.5rem auto;
+    font-size: 0.9em;
+    text-align: center;
+}
+</style>
