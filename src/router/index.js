@@ -19,6 +19,7 @@ import PlanList from "@/components/plan/PlanList.vue";
 import PlanDetail from "@/components/plan/PlanDetail.vue";
 import PlanShare from "@/components/plan/PlanShare.vue";
 import HotPlaceList from "@/components/hotplace/HotPlaceList.vue";
+import AdminView from "@/views/AdminView.vue";
 
 import store from "@/store";
 
@@ -39,9 +40,43 @@ const onlyAuthUser = async (to, from, next) => {
         sessionStorage.removeItem("access-token"); //저장된 토큰 없애기
         sessionStorage.removeItem("refresh-token"); //저장된 토큰 없애기
         if (this.$route.path != "/") this.$router.push({ name: "HomeView" });
-        
+
         // next({ name: "login" });
         router.push({ name: "LoginView" });
+    } else {
+        next();
+    }
+};
+
+// TODO: onlyAuthUser와 중복코드 제거해보기
+const onlyAdmin = async (to, from, next) => {
+    const checkUserInfo = store.getters["memberStore/checkUserInfo"];
+    const checkToken = store.getters["memberStore/checkToken"];
+    let token = sessionStorage.getItem("access-token");
+
+    // 토큰 체크
+    if (checkUserInfo !== null && token) {
+        await store.dispatch("memberStore/getUserInfo", token);
+    }
+
+    // 유효하지 않은 토큰이거나 유저 정보가 없다면 vuex의 로그인 정보 초기화 하고 로그인 페이지로 이동
+    if (!checkToken || checkUserInfo === null) {
+        alert("로그인이 필요한 페이지입니다!!");
+
+        this.userLogout(this.userInfo.userid);
+        sessionStorage.removeItem("access-token"); //저장된 토큰 없애기
+        sessionStorage.removeItem("refresh-token"); //저장된 토큰 없애기
+        if (this.$route.path !== "/") this.$router.push({ name: "HomeView" });
+
+        // next({ name: "login" });
+        router.push({ name: "LoginView" });
+    }
+
+    // user_id가 admin이 아니라면 Home으로 라우팅
+    if (checkUserInfo.user_id !== "admin") {
+        alert("admin만 접근할 수 있습니다!");
+        this.$router.push({ name: "HomeView" });
+        return;
     } else {
         next();
     }
@@ -163,6 +198,12 @@ const routes = [
                 component: ReviewDetail,
             },
         ],
+    },
+    {
+        path: "/admin",
+        name: "Admin",
+        beforeEnter: onlyAdmin,
+        component: AdminView,
     },
 ];
 
