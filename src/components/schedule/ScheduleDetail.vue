@@ -14,10 +14,6 @@
 
         <div class="itinerary ml-3 mt-2">
             <div class="itinerary-item">
-                <div class="itinerary-label">번호</div>
-                <div class="itinerary-value">{{ article.schedule_id }}</div>
-            </div>
-            <div class="itinerary-item">
                 <div class="itinerary-label">작성자</div>
                 <div class="itinerary-value">{{ article.user_id }}</div>
             </div>
@@ -39,28 +35,6 @@
             <kakao-map ref="map" :attractions="attractions"></kakao-map>
         </div>
 
-        <!-- <table class="table table-bordered" id="user-schedule">
-            <tr>
-                <th>번호</th>
-                <td>{{ article.schedule_id }}</td>
-            </tr>
-            <tr>
-                <th>작성자</th>
-                <td>{{ article.user_id }}</td>
-            </tr>
-            <tr>
-                <th>제목</th>
-                <td>{{ article.schedule_title }}</td>
-            </tr>
-            <tr>
-                <th>시작일</th>
-                <td>{{ article.start_date }}</td>
-            </tr>
-            <tr>
-                <th>종료일</th>
-                <td>{{ article.end_date }}</td>
-            </tr>
-        </table> -->
         <table class="ml-3 mt-2">
             <thead>
                 <td colspan="2" style="text-align: center; font-size: x-large">

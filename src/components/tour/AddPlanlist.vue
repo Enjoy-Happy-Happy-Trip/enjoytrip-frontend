@@ -125,6 +125,7 @@ export default {
         },
         resetPlan() {
             this.plans = [];
+            this.contentIds = [];
         },
         addPlan(placeTitle, contentId) {
             if (this.plans.length < 10) {
