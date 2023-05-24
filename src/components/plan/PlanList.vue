@@ -5,7 +5,7 @@
             <!-- 검색 및 글쓰기 버튼이 들어갈 box -->
             <div>
                 <b-button
-                    v-show="this.userInfo.user_id !== 'admin'"
+                    v-show="this.userInfo && this.userInfo.user_id !== 'admin'"
                     class="button mb-3"
                     variant="outline-primary"
                     @click="gotoPlanShare"

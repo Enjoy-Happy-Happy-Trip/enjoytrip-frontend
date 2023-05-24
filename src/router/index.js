@@ -40,17 +40,30 @@ const onlyAuthUser = async (to, from, next) => {
     }
     if (!checkToken || checkUserInfo === null) {
         alert("로그인이 필요한 페이지입니다!!");
-
-        this.userLogout(this.userInfo.userid);
-        sessionStorage.removeItem("access-token"); //저장된 토큰 없애기
-        sessionStorage.removeItem("refresh-token"); //저장된 토큰 없애기
-        if (this.$route.path != "/") this.$router.push({ name: "HomeView" });
-
         // next({ name: "login" });
-        router.push({ name: "LoginView" });
+        router.push({name: "LoginView"}).catch(error => {
+            if (error.name != "NavigationDuplicated") {
+              throw error;
+            }
+          });
     } else {
         next();
     }
+};
+
+const signOutUser = async (to, from, next) => {
+    const checkUserInfo = store.getters["memberStore/checkUserInfo"];
+    await store.dispatch("memberStore/userLogout", checkUserInfo.user_id);
+
+    sessionStorage.removeItem("access-token"); //저장된 토큰 없애기
+    sessionStorage.removeItem("refresh-token"); //저장된 토큰 없애기
+
+    router.push({name: "HomeView"}).catch(error => {
+        if (error.name != "NavigationDuplicated") {
+          throw error;
+        }
+      });
+    next();
 };
 
 // TODO: onlyAuthUser와 중복코드 제거해보기
@@ -67,20 +80,22 @@ const onlyAdmin = async (to, from, next) => {
     // 유효하지 않은 토큰이거나 유저 정보가 없다면 vuex의 로그인 정보 초기화 하고 로그인 페이지로 이동
     if (!checkToken || checkUserInfo === null) {
         alert("로그인이 필요한 페이지입니다!!");
-
-        this.userLogout(this.userInfo.userid);
-        sessionStorage.removeItem("access-token"); //저장된 토큰 없애기
-        sessionStorage.removeItem("refresh-token"); //저장된 토큰 없애기
-        if (this.$route.path !== "/") this.$router.push({ name: "HomeView" });
-
         // next({ name: "login" });
-        router.push({ name: "LoginView" });
+        router.push({name: "LoginView"}).catch(error => {
+            if (error.name != "NavigationDuplicated") {
+              throw error;
+            }
+          });
     }
 
     // user_id가 admin이 아니라면 Home으로 라우팅
     if (checkUserInfo.user_id !== "admin") {
         alert("admin만 접근할 수 있습니다!");
-        this.$router.push({ name: "HomeView" });
+        router.push({name: "HomeView"}).catch(error => {
+            if (error.name != "NavigationDuplicated") {
+              throw error;
+            }
+          });
         return;
     } else {
         next();
@@ -91,6 +106,11 @@ const routes = [
     {
         path: "/",
         name: "HomeView",
+        component: HomeView,
+    },
+    {
+        path: "/signout",
+        beforeEnter: signOutUser,
         component: HomeView,
     },
     {
