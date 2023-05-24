@@ -64,6 +64,15 @@
         </div>
         <div class="text-right mt-3">
             <button
+                v-if="modify"
+                class="btn btn-outline-success"
+                id="modifyPlan"
+                @click="modifySchedule"
+            >
+                계획 수정
+            </button>
+            <button
+                v-else
                 class="btn btn-outline-success"
                 id="savePlan"
                 @click="savePlan"
@@ -84,12 +93,16 @@
 <script>
 import { apiInstance } from "@/api/http";
 import { mapState, mapGetters } from "vuex";
+import { findScheduleById, modifyScheduleById } from "@/api/plan.js";
 
 const memberStore = "memberStore";
 const api = apiInstance();
 
 export default {
     name: "AddPlanlist",
+    props: {
+        scheduleId: String,
+    },
     data() {
         return {
             planTitle: "",
@@ -98,7 +111,36 @@ export default {
             plans: [],
             contentIds: [],
             minStartDate: "",
+            modify: false,
+            hasPlanListModified: false,
         };
+    },
+    created() {
+        // console.log(`created -> id : ${this.scheduleId}`);
+        if (this.scheduleId) {
+            // console.log("여행 계획 수정입니다!");
+            this.modify = true;
+            // scheduleId의 정보를 가져옵니다.
+            findScheduleById(
+                this.scheduleId,
+                ({ data }) => {
+                    console.log(data);
+                    this.planTitle = data.schedule_title;
+                    this.startDate = data.start_date;
+                    this.endDate = data.end_date;
+                    this.plans = data.attractions.map(
+                        (attraction) => attraction.title
+                    );
+                    this.contentIds = data.attractions.map(
+                        (attraction) => attraction.contentId
+                    );
+                    console.log(this.contentIds);
+                },
+                (error) => {
+                    console.log(error);
+                }
+            );
+        }
     },
     computed: {
         ...mapState(memberStore, ["isLogin", "userInfo"]),
@@ -115,6 +157,7 @@ export default {
         },
     },
     mounted() {
+        // console.log(`mounted -> id : ${this.scheduleId}`);
         // const today = new Date();
         // const year = today.getFullYear();
         // const month = String(today.getMonth() + 1).padStart(2, "0");
@@ -125,6 +168,7 @@ export default {
         deletePlan(idx) {
             this.plans.splice(idx, 1);
             this.contentIds.splice(idx, 1);
+            this.hasPlanListModified = true; // modify 기능을 위함
         },
         resetPlan() {
             this.plans = [];
@@ -138,6 +182,7 @@ export default {
                         return;
                     }
                 }
+                this.hasPlanListModified = true; // modify 기능을 위함
                 this.plans.push(placeTitle);
                 this.contentIds.push(contentId);
             } else {
@@ -181,6 +226,33 @@ export default {
                 .catch((error) => {
                     console.log(error);
                 });
+        },
+        modifySchedule() {
+            console.log(`plan modified : ${this.hasPlanListModified}`);
+            const schedule = {
+                schedule_id: this.scheduleId,
+                user_id: this.userInfo.user_id,
+                schedule_title: this.planTitle,
+                start_date: this.startDate,
+                end_date: this.endDate,
+                attractions: this.contentIds.map((id) => {
+                    return {
+                        contentId: id,
+                    };
+                }),
+            };
+            modifyScheduleById(
+                this.scheduleId,
+                schedule,
+                this.hasPlanListModified,
+                (response) => {
+                    console.log(response);
+                    this.$router.push({ name: "HomeView" });
+                },
+                (error) => {
+                    console.log(error);
+                }
+            );
         },
     },
 };

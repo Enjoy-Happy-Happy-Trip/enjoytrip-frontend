@@ -9,7 +9,11 @@
                 </b-row>
 
                 <!-- 제목 -->
-                <b-form-group label-cols-lg="3" label="subject" label-for="subject">
+                <b-form-group
+                    label-cols-lg="3"
+                    label="subject"
+                    label-for="subject"
+                >
                     <b-form-input
                         id="subject"
                         v-model="form.subject"
@@ -18,7 +22,10 @@
                     >
                     </b-form-input>
                     <div
-                        v-show="showValidationErrorMsg && !this.$v.form.subject.required"
+                        v-show="
+                            showValidationErrorMsg &&
+                            !this.$v.form.subject.required
+                        "
                         class="dc-error-msg"
                     >
                         제목을 입력해주세요.
@@ -27,7 +34,11 @@
 
                 <!-- 내용 -->
                 <!-- 등록할 plan description -->
-                <b-form-group label-cols-lg="3" label="content" label-for="content">
+                <b-form-group
+                    label-cols-lg="3"
+                    label="content"
+                    label-for="content"
+                >
                     <b-form-textarea
                         id="content"
                         v-model="form.content"
@@ -36,7 +47,10 @@
                         @input="offValidationErrorMsg"
                     ></b-form-textarea>
                     <div
-                        v-show="showValidationErrorMsg && !this.$v.form.content.required"
+                        v-show="
+                            showValidationErrorMsg &&
+                            !this.$v.form.content.required
+                        "
                         class="dc-error-msg"
                     >
                         여행에 대한 설명을 적어주세요.
@@ -46,7 +60,12 @@
                     <b-button type="submit" variant="primary" class="mx-2">{{
                         modify ? "수정하기" : "등록하기"
                     }}</b-button>
-                    <b-button variant="danger" @click="modifyCancel" class="mx-2">취소</b-button>
+                    <b-button
+                        variant="danger"
+                        @click="modifyCancel"
+                        class="mx-2"
+                        >취소</b-button
+                    >
                 </div>
             </b-form>
         </b-container>
@@ -80,6 +99,13 @@ export default {
                 content: "",
             },
             showValidationErrorMsg: false,
+            announcementManagerRoutingInfo: {
+                name: "AnnouncementManager",
+                params: {
+                    isAdmin: true,
+                    heroTitle: "공지사항 관리",
+                },
+            },
         };
     },
     validations() {
@@ -101,6 +127,7 @@ export default {
         if (this.modify) {
             findAnnoncementById(
                 this.form.article_no,
+                !this.modify,
                 ({ data }) => {
                     this.form.subject = data.subject;
                     this.form.content = data.content;
@@ -128,7 +155,7 @@ export default {
                     this.form,
                     (response) => {
                         console.log(response);
-                        this.$router.push({ name: "AnnouncementManager" });
+                        this.$router.push(this.announcementManagerRoutingInfo);
                     },
                     (error) => {
                         console.log(error);
@@ -141,7 +168,7 @@ export default {
                     this.form,
                     (response) => {
                         console.log(response);
-                        this.$router.push({ name: "AnnouncementManager" });
+                        this.$router.push(this.announcementManagerRoutingInfo);
                     },
                     (error) => {
                         console.log(error);
@@ -150,7 +177,7 @@ export default {
             }
         },
         modifyCancel() {
-            this.$router.push({ name: "AnnouncementManager" });
+            this.$router.push(this.announcementManagerRoutingInfo);
         },
         offValidationErrorMsg() {
             this.showValidationErrorMsg = false;
