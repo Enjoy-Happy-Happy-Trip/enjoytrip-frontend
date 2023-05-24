@@ -18,4 +18,14 @@ function modifyAnnouncementById(form, success, fail) {
     api.put(`/announcement/${form.article_no}`, form).then(success).catch(fail);
 }
 
-export { findAllAnouncements, deleteAnnouncementById, findAnnoncementById, modifyAnnouncementById };
+function addAnnouncement(form, success, fail) {
+    api.post(`/announcement`, form).then(success).catch(fail);
+}
+
+export {
+    findAllAnouncements,
+    deleteAnnouncementById,
+    findAnnoncementById,
+    modifyAnnouncementById,
+    addAnnouncement,
+};

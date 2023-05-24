@@ -1,9 +1,9 @@
 <template>
     <div>
-        <hero-section title="공지사항 수정"></hero-section>
+        <hero-section :title="heroTitle"></hero-section>
         <b-container class="dc-container">
             <b-form @submit.prevent="onSubmit">
-                <b-row>
+                <b-row v-show="modify">
                     <b-col cols="3">articleNo</b-col>
                     <b-col>{{ form.article_no }}</b-col>
                 </b-row>
@@ -43,7 +43,9 @@
                     </div>
                 </b-form-group>
                 <div class="dc-form-btn-container">
-                    <b-button type="submit" variant="primary" class="mx-2">수정하기</b-button>
+                    <b-button type="submit" variant="primary" class="mx-2">{{
+                        modify ? "수정하기" : "등록하기"
+                    }}</b-button>
                     <b-button variant="danger" @click="modifyCancel" class="mx-2">취소</b-button>
                 </div>
             </b-form>
@@ -59,7 +61,8 @@ import HeroSection from "@/components/HeroSection.vue";
 import { findAnnoncementById } from "@/api/announcement.js";
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
-import { modifyAnnouncementById } from "@/api/announcement.js";
+import { addAnnouncement, modifyAnnouncementById } from "@/api/announcement.js";
+import { mapState } from "vuex";
 
 export default {
     mixins: [validationMixin],
@@ -69,6 +72,8 @@ export default {
     },
     data() {
         return {
+            heroTitle: "",
+            modify: false,
             form: {
                 article_no: null,
                 subject: "",
@@ -85,19 +90,27 @@ export default {
             },
         };
     },
+    computed: {
+        ...mapState("memberStore", ["userInfo"]),
+    },
     created() {
+        this.heroTitle = this.$route.params.heroTitle;
         this.form.article_no = this.$route.params.articleNo;
-        findAnnoncementById(
-            this.form.article_no,
-            ({ data }) => {
-                this.form.subject = data.subject;
-                this.form.content = data.content;
-            },
-            (error) => {
-                console.log("modify announcement error!");
-                console.log(error);
-            }
-        );
+        this.modify = this.$route.params.modify;
+
+        if (this.modify) {
+            findAnnoncementById(
+                this.form.article_no,
+                ({ data }) => {
+                    this.form.subject = data.subject;
+                    this.form.content = data.content;
+                },
+                (error) => {
+                    console.log("modify announcement error!");
+                    console.log(error);
+                }
+            );
+        }
     },
     methods: {
         onSubmit() {
@@ -109,16 +122,32 @@ export default {
             }
             console.log("Pass Validations!");
 
-            modifyAnnouncementById(
-                this.form,
-                (response) => {
-                    console.log(response);
-                    this.$router.push({ name: "AnnouncementManager" });
-                },
-                (error) => {
-                    console.log(error);
-                }
-            );
+            if (this.modify) {
+                // 공지사항 수정 페이지라면
+                modifyAnnouncementById(
+                    this.form,
+                    (response) => {
+                        console.log(response);
+                        this.$router.push({ name: "AnnouncementManager" });
+                    },
+                    (error) => {
+                        console.log(error);
+                    }
+                );
+            } else {
+                // 공지사항 등록 페이지라면
+                this.form["user_id"] = this.userInfo.user_id;
+                addAnnouncement(
+                    this.form,
+                    (response) => {
+                        console.log(response);
+                        this.$router.push({ name: "AnnouncementManager" });
+                    },
+                    (error) => {
+                        console.log(error);
+                    }
+                );
+            }
         },
         modifyCancel() {
             this.$router.push({ name: "AnnouncementManager" });

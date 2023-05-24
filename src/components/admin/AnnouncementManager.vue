@@ -15,6 +15,9 @@
                     </b-button>
                 </template>
             </b-table>
+            <div class="dc-form-btn-container">
+                <b-button variant="primary" @click="addAnouncement">공지사항 등록</b-button>
+            </div>
         </b-container>
     </div>
 </template>
@@ -78,7 +81,21 @@ export default {
             this.$router.push({
                 name: "AnnouncementForm",
                 params: {
+                    heroTitle: "공지사항 수정",
                     articleNo: row.item.article_no,
+                    modify: true,
+                },
+            });
+        },
+
+        addAnouncement() {
+            // 글 등록 페이지로 이동
+            console.log("공지사항 등록");
+            this.$router.push({
+                name: "AnnouncementForm",
+                params: {
+                    heroTitle: "공지사항 등록",
+                    modify: false,
                 },
             });
         },
