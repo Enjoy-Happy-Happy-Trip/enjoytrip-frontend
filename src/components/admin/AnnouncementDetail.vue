@@ -2,7 +2,6 @@
     <div>
         <hero-section title="공지사항 상세보기"></hero-section>
         <b-container class="dc-container">
-            <p class="text-start thinner">No. {{ announcement.article_no }}</p>
             <h1>{{ announcement.subject }}</h1>
             <hr />
             <b-row class="thinner">
