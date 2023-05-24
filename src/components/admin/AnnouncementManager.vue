@@ -2,7 +2,7 @@
     <div>
         <hero-section title="공지사항 관리"></hero-section>
         <b-container class="dc-container">
-            <b-table hover :items="announcements" :fields="fields">
+            <b-table hover :items="announcements" :fields="fields" @row-clicked="showDetail">
                 <template #cell(edit)="row">
                     <b-button variant="transparent" @click="editAnnouncement(row)">
                         <i class="fa-regular fa-pen-to-square"></i>
@@ -96,6 +96,16 @@ export default {
                 params: {
                     heroTitle: "공지사항 등록",
                     modify: false,
+                },
+            });
+        },
+
+        showDetail(item) {
+            console.log(item);
+            this.$router.push({
+                name: "AnnouncementDetail",
+                params: {
+                    article_no: item.article_no,
                 },
             });
         },
