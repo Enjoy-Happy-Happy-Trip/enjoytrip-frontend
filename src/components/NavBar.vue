@@ -51,9 +51,7 @@
 
                         <!-- 일반 사용자 로그인이 되어 있을 때 : My Schedule-->
                         <li v-if="userInfo">
-                            <router-link to="/plan">
-                                Plans
-                            </router-link>
+                            <router-link to="/plan"> Plans </router-link>
                         </li>
 
                         <li v-if="userInfo && userInfo.user_id !== 'admin'">
@@ -101,7 +99,7 @@
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
                                 >
-                                    <a style="color: white;">Admin Page</a>
+                                    <a style="color: white">Admin Page</a>
                                 </button>
                                 <ul class="dropdown-menu">
                                     <!-- <li>
@@ -160,7 +158,7 @@ export default {
                 },
                 admin: {
                     isAdmin: true,
-                    heroTitle: "공지사항 등록",
+                    heroTitle: "공지사항 관리",
                 },
             },
         };

@@ -32,4 +32,22 @@ async function resetUserPwd(resetForm, success, fail) {
     await api.put(`/member/${resetForm.user_id}`, resetForm).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout, register, confirmUserToFindPwd, resetUserPwd };
+async function findAllUsers(success, fail) {
+    await api.get(`/member`).then(success).catch(fail);
+}
+
+async function deleteUserById(id, success, fail) {
+    await api.delete(`/member/${id}`).then(success).catch(fail);
+}
+
+export {
+    login,
+    findById,
+    tokenRegeneration,
+    logout,
+    register,
+    confirmUserToFindPwd,
+    resetUserPwd,
+    findAllUsers,
+    deleteUserById,
+};
