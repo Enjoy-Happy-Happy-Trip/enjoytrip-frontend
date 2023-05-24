@@ -10,4 +10,12 @@ function deleteAnnouncementById(id, success, fail) {
     api.delete(`/announcement/${id}`).then(success).catch(fail);
 }
 
-export { findAllAnouncements, deleteAnnouncementById };
+function findAnnoncementById(id, success, fail) {
+    api.get(`/announcement/${id}`).then(success).catch(fail);
+}
+
+function modifyAnnouncementById(form, success, fail) {
+    api.put(`/announcement/${form.article_no}`, form).then(success).catch(fail);
+}
+
+export { findAllAnouncements, deleteAnnouncementById, findAnnoncementById, modifyAnnouncementById };
