@@ -3,13 +3,15 @@
         <hero-section title="공지사항 관리"></hero-section>
         <b-container class="dc-container">
             <b-table hover :items="announcements" :fields="fields">
+                <template #cell(edit)="row">
+                    <b-button variant="transparent" @click="editAnnouncement(row)">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </b-button>
+                </template>
+
                 <template #cell(delete)="row">
-                    <b-button
-                        variant="transparent"
-                        @click="deleteAnnouncement(row)"
-                        class="delete-btn"
-                    >
-                        <img :src="require('@/assets/trashbin.jpg')" />
+                    <b-button variant="transparent" @click="deleteAnnouncement(row)">
+                        <i class="fa-solid fa-trash"></i>
                     </b-button>
                 </template>
             </b-table>
@@ -28,7 +30,7 @@ export default {
     },
     data() {
         return {
-            fields: ["article_no", "subject", "user_id", "register_time", "hit", "delete"],
+            fields: ["article_no", "subject", "user_id", "register_time", "hit", "edit", "delete"],
             announcements: [],
             deleteConfirm: null,
         };
@@ -71,18 +73,17 @@ export default {
                 }
             );
         },
+
+        editAnnouncement(row) {
+            this.$router.push({
+                name: "AnnouncementForm",
+                params: {
+                    articleNo: row.item.article_no,
+                },
+            });
+        },
     },
 };
 </script>
 
-<style scoped>
-.delete-btn {
-    border: none;
-}
-
-.delete-btn img {
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-}
-</style>
+<style scoped></style>
