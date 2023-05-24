@@ -21,7 +21,7 @@
 
 <script>
 import HeroSection from "@/components/HeroSection.vue";
-import { findAllUsers } from "@/api/member.js";
+import { findAllUsers, deleteUserById } from "@/api/member.js";
 
 export default {
     name: "MemberManager",
@@ -48,6 +48,29 @@ export default {
         deleteUser(row) {
             console.log("delete!!");
             console.log(row);
+            this.$bvModal
+                .msgBoxConfirm("Are you sure?")
+                .then((value) => {
+                    this.deleteConfirm = value;
+                    if (this.deleteConfirm) {
+                        this.requestDelete(row.item.user_id);
+                        this.users.splice(row.index, 1);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
+        requestDelete(id) {
+            deleteUserById(
+                id,
+                (response) => {
+                    console.log(response);
+                },
+                (error) => {
+                    console.log(error);
+                }
+            );
         },
     },
 };
