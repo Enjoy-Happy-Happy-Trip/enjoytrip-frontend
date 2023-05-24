@@ -3,6 +3,9 @@
         <hero-section :title="this.$route.params.heroTitle"></hero-section>
         <b-container class="dc-container">
             <b-table hover :items="announcements" :fields="fields" @row-clicked="showDetail">
+                <template #cell(No)="row">
+                    {{ row.index + 1 }}
+                </template>
                 <template #cell(edit)="row">
                     <b-button variant="transparent" @click="editAnnouncement(row)">
                         <i class="fa-regular fa-pen-to-square"></i>
@@ -35,7 +38,7 @@ export default {
     data() {
         return {
             isAdmin: false,
-            fields: ["article_no", "subject", "user_id", "register_time", "hit"],
+            fields: ["No", "subject", "user_id", "register_time", "hit"],
             announcements: [],
             deleteConfirm: null,
         };
