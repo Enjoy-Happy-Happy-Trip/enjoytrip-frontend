@@ -24,6 +24,7 @@ import AnnouncementManager from "@/components/admin/AnnouncementManager.vue";
 import AnnouncementForm from "@/components/admin/AnnouncementForm.vue";
 import AnnouncementDetail from "@/components/admin/AnnouncementDetail.vue";
 import MemberManager from "@/components/admin/MemberManager.vue";
+import BoardView from "@/views/BoardView.vue";
 
 import store from "@/store";
 
@@ -204,6 +205,24 @@ const routes = [
         ],
     },
     {
+        path: "/board",
+        name: "Board",
+        component: BoardView,
+        children: [
+            {
+                path: "announcement",
+                name: "Announcements",
+                component: AnnouncementManager,
+                children: [],
+            },
+            {
+                path: "announcementdetail",
+                name: "AnnouncementDetail",
+                component: AnnouncementDetail,
+            },
+        ],
+    },
+    {
         path: "/admin",
         name: "Admin",
         beforeEnter: onlyAdmin,
@@ -212,7 +231,6 @@ const routes = [
             {
                 path: "announcement",
                 name: "AnnouncementManager",
-                beforeEnter: onlyAdmin,
                 component: AnnouncementManager,
                 children: [],
             },
@@ -230,8 +248,7 @@ const routes = [
             },
             {
                 path: "announcementdetail",
-                name: "AnnouncementDetail",
-                beforeEnter: onlyAdmin,
+                name: "AnnouncementDetailForAdmin",
                 component: AnnouncementDetail,
             },
         ],
