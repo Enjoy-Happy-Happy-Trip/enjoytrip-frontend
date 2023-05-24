@@ -1,55 +1,94 @@
 <template>
     <div>
         <hero-section title="여행 계획 상세 보기"></hero-section>
-        <b-container class="dc-container">
-            <h1 class="font-weight-bold">{{ plan.plan_title }}</h1>
-            <hr />
-            <p class="user">작성자 : {{ plan.user_id }}</p>
-            <hr />
-            <b-container>
-                <b-row>
-                    <b-col>
-                        <!-- 1. attraction list -->
-                        <b-table responsive hover :items="attractions" :fields="fields">
-                            <template #cell(index)="data">
-                                {{ data.index + 1 }}
+        <div class="itinerary mt-3">
+            <div class="itinerary-section">
+                <div class="itinerary-item">
+                    <div class="itinerary-label">작성자</div>
+                    <div class="itinerary-value">{{ plan.user_id }}</div>
+                </div>
+                <div class="itinerary-item">
+                    <div class="itinerary-label">제목</div>
+                    <div class="itinerary-value">
+                        {{ plan.plan_title }}
+                    </div>
+                </div>
+                <div class="itinerary-desc">
+                    <div class="itinerary-label">설명</div>
+                    <div class="itinerary-value">{{ plan.plan_desc }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="contents">
+            <div class="centered">
+                <div class="row" style="margin:0">
+                    <div class="kakaoMap col-md-7 mt-3" id="focusMap">
+                        <kakao-map
+                            ref="map"
+                            :attractions="attractions"
+                        ></kakao-map>
+                    </div>
+
+                    <div class="table-container col-md-5 mt-3" style="padding:0">
+                        <b-table
+                            no-border-collapse
+                            sticky-header="700px"
+                            hover
+                            responsive
+                            :items="attractions"
+                            :fields="fields"
+                            @row-clicked="callMoveCenter"
+                        >
+                            <template #cell(image)="row">
+                                <img
+                                    :src="
+                                        row.item.firstImage
+                                            ? row.item.firstImage
+                                            : require('@/assets/No_image_available.png')
+                                    "
+                                    ref="cursorImage"
+                                    width="100px"
+                                    height="100px"
+                                    style="cursor: pointer"
+                                />
+                            </template>
+                            <template #cell(index)="row">
+                                {{ row.index + 1 }}
+                            </template>
+                            <template #cell(name)="row">
+                                {{ row.item.title }}
+                            </template>
+                            <template #cell(address)="row">
+                                {{ row.item.addr }}
                             </template>
                         </b-table>
-                    </b-col>
-
-                    <b-col>
-                        <!-- 2. description -->
-                        <div class="rounded border p-2">
-                            <h3>description</h3>
-                            <p>{{ plan.plan_desc }}</p>
-                        </div>
-                    </b-col>
-                </b-row>
-            </b-container>
-        </b-container>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 import HeroSection from "@/components/HeroSection.vue";
+import KakaoMap from "@/components/tour/KakaoMap.vue";
 import { findPlanById, findPlanDetailsById } from "@/api/plan.js";
 
 export default {
     name: "PlanDetail",
     components: {
         HeroSection,
+        KakaoMap,
     },
     data() {
         return {
             message: "",
             fields: [
-                { key: "index", label: "No.", thClass: "w10" },
-                {
-                    key: "title",
-                    label: "관광지 목록",
-                    class: "text-center",
-                    thClass: "w90",
-                },
+                { key: "index", label: "No" },
+                { key: "image", label: "대표이미지" },
+                { key: "name", label: "관광지명" },
+                { key: "address", label: "주소" },
             ],
             plan: {},
             attractions: [],
@@ -72,22 +111,73 @@ export default {
             planId,
             ({ data }) => {
                 this.attractions = data;
+
+                if (window.kakao && window.kakao.maps) {
+                    this.$refs.map.displayMarker(
+                        this.$refs.map.convertMarker(this.attractions)
+                    );
+                    this.$refs.map.displayLine(
+                        this.$refs.map.convertLine(this.attractions)
+                    );
+                }
             },
             (error) => {
                 console.log(error);
             }
         );
     },
-    methods: {},
+    methods: {
+        callMoveCenter(item) {
+            const kakaoMap = this.$refs.map;
+            kakaoMap.moveCenter(item.latitude, item.longitude);
+        },
+    },
 };
 </script>
 
 <style scoped>
-.user {
-    text-align: right;
+.itinerary {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.itinerary-section {
+    display: flex;
+    width: 80%;
+    text-align: center;
+    border: 2px solid #000000;
+}
+
+.itinerary-item {
+    width: 25%;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.itinerary-desc {
+    width: 50%;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.itinerary-label {
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.itinerary-value {
+    margin-top: 15px;
 }
 
 .contents {
     display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.centered {
+    width: 80%;
+    text-align: center;
 }
 </style>

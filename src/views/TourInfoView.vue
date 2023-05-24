@@ -7,7 +7,11 @@
                 <!-- 중앙 center content end -->
                 <div :class="userInfo ? 'col-md-7' : 'col-md-10'">
                     <!-- 관광지 검색 start -->
-                    <form class="d-flex my-3" onsubmit="return false;" role="search">
+                    <form
+                        class="d-flex my-3"
+                        onsubmit="return false;"
+                        role="search"
+                    >
                         <select
                             v-model="sido"
                             @change="getGugun"
@@ -23,7 +27,10 @@
                         >
                             <option value="0">구/군 선택</option>
                         </select>
-                        <select id="search-content-id" class="userselect form-select me-2">
+                        <select
+                            id="search-content-id"
+                            class="userselect form-select me-2"
+                        >
                             <option value="0" selected>관광지 유형</option>
                             <option value="12">관광지</option>
                             <option value="14">문화시설</option>
@@ -53,10 +60,7 @@
                     </form>
 
                     <!-- kakao map start -->
-                    <kakao-map
-                        ref="map"
-                        :positions="positions"
-                    ></kakao-map>
+                    <kakao-map ref="map" :positions="positions"></kakao-map>
                     <!-- kakao map end -->
 
                     <b-table
@@ -86,22 +90,22 @@
                         <template #cell(address)="row">
                             {{ row.item.addr }}
                         </template>
+                        <template #cell(detail)="row">
+                            <button
+                                @click="showDetailModal(row.item.contentId)"
+                                class="btn btn-warning"
+                                style="width: 90px"
+                            >
+                                상세보기
+                            </button>
+                        </template>
                         <template #cell(actions)="row" v-if="userInfo">
                             <button
                                 @click="callAddPlan(row.item)"
                                 class="btn btn-warning"
-                                style="width: 80px"
+                                style="width: 60px"
                             >
                                 추가
-                            </button>
-                        </template>
-                        <template #cell(review)="row" v-if="userInfo">
-                            <button
-                                @click="showModal(row.item.title, row.item.contentId)"
-                                class="btn btn-warning scrollto"
-                                style="width: 120px"
-                            >
-                                Review 쓰기
                             </button>
                         </template>
                     </b-table>
@@ -131,14 +135,14 @@
             <!-- 중앙 content end -->
 
             <!-- Modal -->
-            <b-modal id="review-modal" title="리뷰 쓰기">
-                <tour-review-modal :title="modalTitle" ref="reviewModal"></tour-review-modal>
+            <b-modal id="detail-modal" title="장소 상세 정보">
+                <place-detail-modal
+                    :contentId="modalContentId"
+                    ref="detailModal"
+                ></place-detail-modal>
                 <template #modal-footer="{ cancel }">
-                    <b-button size="sm" variant="danger" @click="cancel()">
-                        취소
-                    </b-button>
-                    <b-button size="sm" variant="success" @click="submitReview">
-                        등록
+                    <b-button size="sm" variant="info" @click="cancel()">
+                        확인
                     </b-button>
                 </template>
             </b-modal>
@@ -149,8 +153,8 @@
 <script>
 import AddPlanlist from "@/components/tour/AddPlanlist.vue";
 import KakaoMap from "@/components/tour/KakaoMap.vue";
-import TourReviewModal from "@/components/tour/TourReviewModal.vue";
 import HeroSection from "@/components/HeroSection.vue";
+import PlaceDetailModal from "@/components/tour/PlaceDetailModal.vue";
 import { mapState, mapGetters } from "vuex";
 import { apiInstance } from "@/api/http";
 
@@ -166,8 +170,8 @@ export default {
                 { key: "image", label: "대표이미지" },
                 { key: "name", label: "관광지명" },
                 { key: "address", label: "주소" },
+                { key: "detail", label: "" },
                 { key: "actions", label: "", sortable: false },
-                { key: "review", label: "", sortable: false },
             ],
             pageNavInfo: {
                 currentPage: 1,
@@ -186,8 +190,7 @@ export default {
             places: [],
             visited: [],
             cnt: 1,
-            modalTitle: null,
-            modalContendId: null,
+            modalContentId: null,
             sido: "0",
             gugun: "0",
             hideTable: false,
@@ -203,25 +206,13 @@ export default {
     components: {
         AddPlanlist,
         KakaoMap,
-        TourReviewModal,
         HeroSection,
+        PlaceDetailModal,
     },
     methods: {
-        submitReview() {
-            const userReview = {
-                content_id: this.modalContendId,
-                user_review: this.$refs.reviewModal.getReview(),
-                user_id: this.userInfo.user_id,
-            };
-
-            api.post(`/place/writereview`, userReview)
-                .then(() => {
-                    alert("리뷰 등록 성공!!");
-                    window.location.reload();
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+        showDetailModal(contentId) {
+            this.modalContentId = contentId;
+            this.$bvModal.show("detail-modal");
         },
         callAddPlan(item) {
             this.callMoveCenter(item);
@@ -287,7 +278,8 @@ export default {
         makeSearchUrl(page) {
             let areaCode = this.sido;
             let gugunCode = this.gugun;
-            let contentTypeId = document.getElementById("search-content-id").value;
+            let contentTypeId =
+                document.getElementById("search-content-id").value;
             let keyword = document.getElementById("search-keyword").value;
             let searchUrl = "/attraction/?";
 
@@ -297,11 +289,6 @@ export default {
             searchUrl += "&keyword=" + keyword;
             searchUrl += "&pageNo=" + page;
             return searchUrl;
-        },
-        showModal(title, contentId) {
-            this.modalTitle = title;
-            this.modalContendId = contentId;
-            this.$bvModal.show("review-modal");
         },
         changePage(page) {
             let searchUrl = this.makeSearchUrl(page);
@@ -315,7 +302,10 @@ export default {
                     let markerInfo = {
                         title: area.title,
                         contenttypeid: area.contentTypeId,
-                        latlng: new window.kakao.maps.LatLng(area.latitude, area.longitude),
+                        latlng: new window.kakao.maps.LatLng(
+                            area.latitude,
+                            area.longitude
+                        ),
                     };
                     this.positions.push(markerInfo);
                 });

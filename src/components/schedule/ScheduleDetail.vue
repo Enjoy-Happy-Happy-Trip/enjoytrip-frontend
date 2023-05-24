@@ -12,65 +12,136 @@
             </div>
         </div>
 
-        <div class="itinerary ml-3 mt-2">
-            <div class="itinerary-item">
-                <div class="itinerary-label">작성자</div>
-                <div class="itinerary-value">{{ article.user_id }}</div>
-            </div>
-            <div class="itinerary-item">
-                <div class="itinerary-label">제목</div>
-                <div class="itinerary-value">{{ article.schedule_title }}</div>
-            </div>
-            <div class="itinerary-item">
-                <div class="itinerary-label">시작일</div>
-                <div class="itinerary-value">{{ article.start_date }}</div>
-            </div>
-            <div class="itinerary-item">
-                <div class="itinerary-label">종료일</div>
-                <div class="itinerary-value">{{ article.end_date }}</div>
+        <div class="itinerary mt-2">
+            <div class="itinerary-section">
+                <div class="itinerary-item">
+                    <div class="itinerary-label">작성자</div>
+                    <div class="itinerary-value">{{ article.user_id }}</div>
+                </div>
+                <div class="itinerary-item">
+                    <div class="itinerary-label">제목</div>
+                    <div class="itinerary-value">
+                        {{ article.schedule_title }}
+                    </div>
+                </div>
+                <div class="itinerary-item">
+                    <div class="itinerary-label">시작일</div>
+                    <div class="itinerary-value">{{ article.start_date }}</div>
+                </div>
+                <div class="itinerary-item">
+                    <div class="itinerary-label">종료일</div>
+                    <div class="itinerary-value">{{ article.end_date }}</div>
+                </div>
             </div>
         </div>
 
-        <div class="kakaoMap mt-3 ml-3">
-            <kakao-map ref="map" :attractions="attractions"></kakao-map>
+        <div class="contents">
+            <div class="centered">
+                <div class="row" style="margin:0">
+                    <div class="kakaoMap col-md-7 mt-3" id="focusMap">
+                        <kakao-map
+                            ref="map"
+                            :attractions="attractions"
+                        ></kakao-map>
+                    </div>
+
+                    <div class="table-container col-md-5 mt-3" style="padding:0">
+                        <b-table
+                        no-border-collapse
+                            sticky-header="700px"
+                            hover
+                            responsive
+                            :items="attractions"
+                            :fields="fields"
+                            @row-clicked="callMoveCenter"
+                        >
+                            <template #cell(image)="row">
+                                <img
+                                    :src="
+                                        row.item.firstImage
+                                            ? row.item.firstImage
+                                            : require('@/assets/No_image_available.png')
+                                    "
+                                    ref="cursorImage"
+                                    width="100px"
+                                    height="100px"
+                                    style="cursor: pointer"
+                                />
+                            </template>
+                            <template #cell(index)="row">
+                                {{ row.index + 1 }}
+                            </template>
+                            <template #cell(name)="row">
+                                {{ row.item.title }}
+                            </template>
+                            <template #cell(address)="row">
+                                {{ row.item.addr }}
+                            </template>
+                            <template #cell(review)="row">
+                                <button
+                                    v-if="article.end_date < today"
+                                    @click="
+                                        showModal(
+                                            row.item.title,
+                                            row.item.contentId
+                                        )
+                                    "
+                                    class="btn btn-warning scrollto"
+                                    style="width: 120px"
+                                >
+                                    Review 쓰기
+                                </button>
+                            </template>
+                        </b-table>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <table class="ml-3 mt-2">
-            <thead>
-                <td colspan="2" style="text-align: center; font-size: x-large">
-                    장소
-                </td>
-            </thead>
-            <tbody>
-                <template v-for="attraction in attractions">
-                    <schedule-attraction
-                        :attraction="attraction"
-                        :key="attraction.contentId"
-                    >
-                    </schedule-attraction>
-                </template>
-            </tbody>
-        </table>
+        <b-modal id="review-modal" title="리뷰 쓰기">
+            <tour-review-modal
+                :title="modalTitle"
+                ref="reviewModal"
+            ></tour-review-modal>
+            <template #modal-footer="{ cancel }">
+                <b-button size="sm" variant="danger" @click="cancel()">
+                    취소
+                </b-button>
+                <b-button size="sm" variant="success" @click="submitReview">
+                    등록
+                </b-button>
+            </template>
+        </b-modal>
     </div>
 </template>
 
 <script>
 import { apiInstance } from "@/api/http";
-import ScheduleAttraction from "@/components/schedule/ScheduleAttraction.vue";
 import KakaoMap from "@/components/tour/KakaoMap.vue";
+import TourReviewModal from "@/components/tour/TourReviewModal.vue";
 
 const api = apiInstance();
 
 export default {
     name: "ScheduleDetail",
     components: {
-        ScheduleAttraction,
         KakaoMap,
+        TourReviewModal,
     },
     data() {
         return {
             article: {},
             attractions: [],
+            fields: [
+                { key: "index", label: "No" },
+                { key: "image", label: "대표이미지" },
+                { key: "name", label: "관광지명" },
+                { key: "address", label: "주소" },
+                { key: "review", label: "", sortable: false },
+            ],
+            modalTitle: null,
+            modalContentId: null,
+            today: new Date().toISOString().split("T")[0],
         };
     },
     created() {
@@ -93,34 +164,77 @@ export default {
                 console.log(error);
             });
     },
+    methods: {
+        submitReview() {
+            const userReview = {
+                content_id: this.modalContentId,
+                user_review: this.$refs.reviewModal.getReview(),
+                user_id: this.userInfo.user_id,
+            };
+
+            api.post(`/place/writereview`, userReview)
+                .then(() => {
+                    alert("리뷰 등록 성공!!");
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        callMoveCenter(item) {
+            const kakaoMap = this.$refs.map;
+            kakaoMap.moveCenter(item.latitude, item.longitude);
+        },
+        showModal(title, contentId) {
+            this.modalTitle = title;
+            this.modalContentId = contentId;
+            this.$bvModal.show("review-modal");
+        },
+    },
 };
 </script>
 
 <style>
 .itinerary {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.itinerary-section {
+    display: flex;
+    width: 80%;
+    text-align: center;
+    border: 2px solid #000000;
 }
 
 .itinerary-item {
-    display: flex;
-    gap: 10px;
+    width: 25%;
+    text-align: center;
+    margin-bottom: 15px;
 }
 
 .itinerary-label {
-    width: 100px;
     font-weight: bold;
+    margin-top: 15px;
 }
 
 .itinerary-value {
-    flex: 1;
+    margin-top: 15px;
 }
 
-.kakaoMap {
-    width: 60%;
-    align-content: center;
+.contents {
+    display: flex;
     justify-content: center;
+    align-items: center;
+}
+
+.centered {
+    width: 80%;
+    text-align: center;
+}
+
+#focusMap {
+    padding: 0;
 }
 </style>

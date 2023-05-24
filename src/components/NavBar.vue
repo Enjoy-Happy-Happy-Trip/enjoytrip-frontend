@@ -43,13 +43,13 @@
                         <!-- 일반 사용자 로그인이 되어 있을 때 : MyPlans, Reviews-->
                         <li v-if="userInfo && userInfo.user_id !== 'admin'">
                             <router-link to="/plan">
-                                <a>Plans</a>
+                                Plans
                             </router-link>
                         </li>
 
                         <li v-if="userInfo && userInfo.user_id !== 'admin'">
                             <router-link to="/schedule">
-                                <a>My Schedule</a>
+                                My Schedule
                             </router-link>
                         </li>
 
