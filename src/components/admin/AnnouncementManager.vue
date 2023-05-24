@@ -1,6 +1,6 @@
 <template>
     <div>
-        <hero-section title="공지사항 관리"></hero-section>
+        <hero-section :title="this.$route.params.heroTitle"></hero-section>
         <b-container class="dc-container">
             <b-table hover :items="announcements" :fields="fields" @row-clicked="showDetail">
                 <template #cell(edit)="row">
@@ -15,10 +15,11 @@
                     </b-button>
                 </template>
             </b-table>
-            <div class="dc-form-btn-container">
+            <div v-show="isAdmin" class="dc-form-btn-container">
                 <b-button variant="primary" @click="addAnouncement">공지사항 등록</b-button>
             </div>
         </b-container>
+        <!-- <div>isAdmin : {{ isAdmin }}</div> -->
     </div>
 </template>
 
@@ -33,12 +34,18 @@ export default {
     },
     data() {
         return {
-            fields: ["article_no", "subject", "user_id", "register_time", "hit", "edit", "delete"],
+            isAdmin: false,
+            fields: ["article_no", "subject", "user_id", "register_time", "hit"],
             announcements: [],
             deleteConfirm: null,
         };
     },
     created() {
+        this.isAdmin = this.$route.params.isAdmin;
+        if (this.isAdmin) {
+            this.fields.push("edit");
+            this.fields.push("delete");
+        }
         findAllAnouncements(
             ({ data }) => {
                 console.log(data);
@@ -103,9 +110,10 @@ export default {
         showDetail(item) {
             console.log(item);
             this.$router.push({
-                name: "AnnouncementDetail",
+                name: this.isAdmin ? "AnnouncementDetailForAdmin" : "AnnouncementDetail",
                 params: {
                     article_no: item.article_no,
+                    viewCountUpdate: !this.isAdmin,
                 },
             });
         },

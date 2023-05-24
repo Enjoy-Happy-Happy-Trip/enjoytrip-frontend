@@ -38,6 +38,7 @@ export default {
     },
     created() {
         this.article_no = this.$route.params.article_no;
+        this.viewCountUpdate = this.$route.params.viewCountUpdate;
         findAnnoncementById(
             this.article_no,
             this.viewCountUpdate,

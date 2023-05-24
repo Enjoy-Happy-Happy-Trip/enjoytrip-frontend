@@ -28,6 +28,15 @@
 
                         <!-- 공통 : Board, TourInfo -->
                         <li>
+                            <router-link
+                                :to="{
+                                    name: 'Announcements',
+                                    params: announcementParams.user,
+                                }"
+                                >공지사항</router-link
+                            >
+                        </li>
+                        <li>
                             <router-link to="/tourinfo">TourInfo</router-link>
                         </li>
                         <li>
@@ -42,15 +51,11 @@
 
                         <!-- 일반 사용자 로그인이 되어 있을 때 : MyPlans, Reviews-->
                         <li v-if="userInfo && userInfo.user_id !== 'admin'">
-                            <router-link to="/plan">
-                                Plans
-                            </router-link>
+                            <router-link to="/plan"> Plans </router-link>
                         </li>
 
                         <li v-if="userInfo && userInfo.user_id !== 'admin'">
-                            <router-link to="/schedule">
-                                My Schedule
-                            </router-link>
+                            <router-link to="/schedule"> My Schedule </router-link>
                         </li>
 
                         <li v-if="userInfo && userInfo.user_id !== 'admin'">
@@ -90,8 +95,17 @@
                                     Admin Page
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li>
+                                    <!-- <li>
                                         <router-link to="/admin/announcement"
+                                            >공지사항 관리</router-link
+                                        >
+                                    </li> -->
+                                    <li>
+                                        <router-link
+                                            :to="{
+                                                name: 'AnnouncementManager',
+                                                params: announcementParams.admin,
+                                            }"
                                             >공지사항 관리</router-link
                                         >
                                     </li>
@@ -138,7 +152,16 @@ export default {
     components: {},
     data() {
         return {
-            message: "",
+            announcementParams: {
+                user: {
+                    isAdmin: false,
+                    heroTitle: "공지사항",
+                },
+                admin: {
+                    isAdmin: true,
+                    heroTitle: "공지사항 등록",
+                },
+            },
         };
     },
     computed: {
