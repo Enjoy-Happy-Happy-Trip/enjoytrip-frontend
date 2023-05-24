@@ -37,17 +37,14 @@
 
         <div class="contents">
             <div class="centered">
-                <div class="row" style="margin:0">
+                <div class="row" style="margin: 0">
                     <div class="kakaoMap col-md-7 mt-3" id="focusMap">
-                        <kakao-map
-                            ref="map"
-                            :attractions="attractions"
-                        ></kakao-map>
+                        <kakao-map ref="map" :attractions="attractions"></kakao-map>
                     </div>
 
-                    <div class="table-container col-md-5 mt-3" style="padding:0">
+                    <div class="table-container col-md-5 mt-3" style="padding: 0">
                         <b-table
-                        no-border-collapse
+                            no-border-collapse
                             sticky-header="700px"
                             hover
                             responsive
@@ -80,12 +77,7 @@
                             <template #cell(review)="row">
                                 <button
                                     v-if="article.end_date < today"
-                                    @click="
-                                        showModal(
-                                            row.item.title,
-                                            row.item.contentId
-                                        )
-                                    "
+                                    @click="showModal(row.item.title, row.item.contentId)"
                                     class="btn btn-warning scrollto"
                                     style="width: 120px"
                                 >
@@ -99,17 +91,10 @@
         </div>
 
         <b-modal id="review-modal" title="리뷰 쓰기">
-            <tour-review-modal
-                :title="modalTitle"
-                ref="reviewModal"
-            ></tour-review-modal>
+            <tour-review-modal :title="modalTitle" ref="reviewModal"></tour-review-modal>
             <template #modal-footer="{ cancel }">
-                <b-button size="sm" variant="danger" @click="cancel()">
-                    취소
-                </b-button>
-                <b-button size="sm" variant="success" @click="submitReview">
-                    등록
-                </b-button>
+                <b-button size="sm" variant="danger" @click="cancel()"> 취소 </b-button>
+                <b-button size="sm" variant="success" @click="submitReview"> 등록 </b-button>
             </template>
         </b-modal>
     </div>
@@ -152,12 +137,8 @@ export default {
                 this.attractions = data.attractions;
 
                 if (window.kakao && window.kakao.maps) {
-                    this.$refs.map.displayMarker(
-                        this.$refs.map.convertMarker(this.attractions)
-                    );
-                    this.$refs.map.displayLine(
-                        this.$refs.map.convertLine(this.attractions)
-                    );
+                    this.$refs.map.displayMarker(this.$refs.map.convertMarker(this.attractions));
+                    this.$refs.map.displayLine(this.$refs.map.convertLine(this.attractions));
                 }
             })
             .catch((error) => {
@@ -236,5 +217,22 @@ export default {
 
 #focusMap {
     padding: 0;
+}
+
+.b-table-sticky-header::-webkit-scrollbar {
+    width: 10px;
+}
+
+.b-table-sticky-header::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.b-table-sticky-header::-webkit-scrollbar-thumb {
+    background: #3838389d;
+    border-radius: 45px;
+}
+
+.b-table-sticky-header::-webkit-scrollbar-thumb:hover {
+    background: #303030;
 }
 </style>
