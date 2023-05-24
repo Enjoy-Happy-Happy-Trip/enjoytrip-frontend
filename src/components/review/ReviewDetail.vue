@@ -36,7 +36,7 @@
                     </tr>
                 </table>
                 <div class="button-container">
-                    <b-button v-show="this.userInfo.user_id === article.user_id"
+                    <b-button v-show="(this.userInfo.user_id === article.user_id) || this.userInfo.user_id === 'admin'"
                         class="delButton"
                         variant="danger"
                         @click="deleteReview()"

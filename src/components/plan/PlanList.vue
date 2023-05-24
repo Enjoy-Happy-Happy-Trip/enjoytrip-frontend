@@ -5,6 +5,7 @@
             <!-- 검색 및 글쓰기 버튼이 들어갈 box -->
             <div>
                 <b-button
+                    v-show="this.userInfo.user_id !== 'admin'"
                     class="button mb-3"
                     variant="outline-primary"
                     @click="gotoPlanShare"
@@ -56,7 +57,10 @@
 
 <script>
 import HeroSection from "@/components/HeroSection.vue";
+import { mapState, mapGetters } from "vuex";
 import { getAllPlans } from "@/api/plan.js";
+
+const memberStore = "memberStore";
 
 export default {
     name: "PlanList",
@@ -84,6 +88,8 @@ export default {
         };
     },
     computed: {
+        ...mapState(memberStore, ["isLogin", "userInfo"]),
+        ...mapGetters(["checkUserInfo"]),
         filteredFields() {
             return this.fields.filter(
                 (field) =>

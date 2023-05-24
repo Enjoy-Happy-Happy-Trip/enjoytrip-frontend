@@ -26,7 +26,7 @@
                             <a>{{ userInfo.user_name }}({{ userInfo.user_id }})님 환영합니다</a>
                         </li>
 
-                        <!-- 공통 : Board, TourInfo -->
+                        <!-- 공통 : HotPlace, TourInfo -->
                         <li>
                             <router-link to="/tourinfo">TourInfo</router-link>
                         </li>
@@ -40,8 +40,8 @@
                             <!-- <a href="/login">Sign In</a> -->
                         </li>
 
-                        <!-- 일반 사용자 로그인이 되어 있을 때 : MyPlans, Reviews-->
-                        <li v-if="userInfo && userInfo.user_id !== 'admin'">
+                        <!-- 일반 사용자 로그인이 되어 있을 때 : My Schedule-->
+                        <li v-if="userInfo">
                             <router-link to="/plan">
                                 Plans
                             </router-link>
@@ -53,9 +53,16 @@
                             </router-link>
                         </li>
 
-                        <li v-if="userInfo && userInfo.user_id !== 'admin'">
+                        <li v-if="userInfo">
                             <router-link to="/review">Reviews</router-link>
                             <!-- <a href="${root}/reviews.html">Reviews</a> -->
+                        </li>
+                        <!-- 공통 로그인이 되어 있을 때 (마지막): 로그아웃 -->
+                        <li v-if="userInfo">
+                            <!-- <a @click.prevent="signout" :href="this.$backUrl('/member/signout')"
+                                >Sign Out</a
+                            > -->
+                            <a @click.prevent="onClickLogout" href="#none">Sign Out</a>
                         </li>
 
                         <!-- 관리자 로그인이 되어 있을 때 : admin page-->
@@ -87,7 +94,7 @@
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
                                 >
-                                    Admin Page
+                                    <a style="color: white;">Admin Page</a>
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
@@ -102,14 +109,6 @@
                                     </li>
                                 </ul>
                             </div>
-                        </li>
-
-                        <!-- 공통 로그인이 되어 있을 때 (마지막): 로그아웃 -->
-                        <li v-if="userInfo">
-                            <!-- <a @click.prevent="signout" :href="this.$backUrl('/member/signout')"
-                                >Sign Out</a
-                            > -->
-                            <a @click.prevent="onClickLogout" href="#none">Sign Out</a>
                         </li>
                     </ul>
 
