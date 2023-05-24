@@ -86,6 +86,13 @@
                                 </button>
                             </template>
                         </b-table>
+                        <div class="dc-form-btn-container-">
+                            <b-button
+                                @click="modifySchedule"
+                                variant="outline-warning"
+                                >수정하기</b-button
+                            >
+                        </div>
                     </div>
                 </div>
             </div>
@@ -188,6 +195,16 @@ export default {
             this.modalTitle = title;
             this.modalContentId = contentId;
             this.$bvModal.show("review-modal");
+        },
+        modifySchedule() {
+            const routingParams = {
+                modify: true,
+                scheduleId: this.$route.params.schedule_id,
+            };
+            this.$router.push({
+                name: "TourInfoView",
+                params: routingParams,
+            });
         },
     },
 };

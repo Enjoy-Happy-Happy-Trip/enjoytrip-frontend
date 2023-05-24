@@ -1,6 +1,6 @@
 <template>
     <div>
-        <hero-section title="전국 관광지 정보"></hero-section>
+        <hero-section :title="heroSectionTitle"></hero-section>
         <div class="container" style="max-width: 100% !important">
             <div class="row">
                 <div class="col-md-1"></div>
@@ -126,7 +126,10 @@
                 <!-- 중앙 right content start -->
                 <div id="rightContent" class="col-md-3" v-show="userInfo">
                     <div>
-                        <add-planlist ref="planList"></add-planlist>
+                        <add-planlist
+                            :scheduleId="scheduleId"
+                            ref="planList"
+                        ></add-planlist>
                     </div>
                 </div>
                 <div class="col-md-1"></div>
@@ -165,6 +168,7 @@ export default {
     name: "TourInfoView",
     data() {
         return {
+            heroSectionTitle: "전국 관광지 정보",
             placesData: [], // Your data array containing the place objects
             fields: [
                 { key: "image", label: "대표이미지" },
@@ -194,10 +198,20 @@ export default {
             sido: "0",
             gugun: "0",
             hideTable: false,
+            // 여행계획을 수정할 때만 null이 아님
+            modify: null,
+            scheduleId: null,
         };
     },
     created() {
         this.getSido();
+        // route의 params가 있다면 여행 계획 수정으로 들어온것
+        // from ScheduleDetail
+        this.modify = this.$route.params.modify;
+        if (this.modify) {
+            this.heroSectionTitle = "여행 계획 수정하기";
+            this.scheduleId = this.$route.params.scheduleId;
+        }
     },
     computed: {
         ...mapState(memberStore, ["isLogin", "userInfo"]),

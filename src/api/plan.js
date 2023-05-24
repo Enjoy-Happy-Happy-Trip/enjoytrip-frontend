@@ -26,4 +26,12 @@ function savePlan(plan, success, fail) {
     api.put(`/plan/${plan.plan_id}`, plan).then(success).catch(fail);
 }
 
-export { getAllPlans, deletePlanById, findPlanById, findPlanDetailsById, findUnSharedSchedulesByUserId, savePlan };
+function findScheduleById(id, success, fail) {
+    api.get(`/plan/mydetail/${id}`).then(success).catch(fail);
+}
+
+function modifyScheduleById(id, schedule, hasPlanListModified, success, fail) {
+    api.put(`/plan/myplan/${id}?planmodified=${hasPlanListModified}`, schedule).then(success).catch(fail);
+}
+
+export { getAllPlans, deletePlanById, findPlanById, findPlanDetailsById, findUnSharedSchedulesByUserId, savePlan, findScheduleById, modifyScheduleById };
