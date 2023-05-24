@@ -17,12 +17,22 @@
                     <div class="itinerary-label">설명</div>
                     <div class="itinerary-value">{{ plan.plan_desc }}</div>
                 </div>
+                <b-button
+                    v-show="
+                        this.userInfo.user_id === plan.user_id ||
+                        this.userInfo.user_id === 'admin'
+                    "
+                    class="delButton mt-2 mb-2 me-3"
+                    variant="danger"
+                    @click="deletePlan()"
+                    >삭제</b-button
+                >
             </div>
         </div>
 
         <div class="contents">
             <div class="centered">
-                <div class="row" style="margin:0">
+                <div class="row" style="margin: 0">
                     <div class="kakaoMap col-md-7 mt-3" id="focusMap">
                         <kakao-map
                             ref="map"
@@ -30,7 +40,10 @@
                         ></kakao-map>
                     </div>
 
-                    <div class="table-container col-md-5 mt-3" style="padding:0">
+                    <div
+                        class="table-container col-md-5 mt-3"
+                        style="padding: 0"
+                    >
                         <b-table
                             no-border-collapse
                             sticky-header="700px"
@@ -73,13 +86,25 @@
 <script>
 import HeroSection from "@/components/HeroSection.vue";
 import KakaoMap from "@/components/tour/KakaoMap.vue";
-import { findPlanById, findPlanDetailsById } from "@/api/plan.js";
+import { mapState, mapGetters } from "vuex";
+
+const memberStore = "memberStore";
+
+import {
+    deletePlanById,
+    findPlanById,
+    findPlanDetailsById,
+} from "@/api/plan.js";
 
 export default {
     name: "PlanDetail",
     components: {
         HeroSection,
         KakaoMap,
+    },
+    computed: {
+        ...mapState(memberStore, ["isLogin", "userInfo"]),
+        ...mapGetters(["checkUserInfo"]),
     },
     data() {
         return {
@@ -130,6 +155,18 @@ export default {
         callMoveCenter(item) {
             const kakaoMap = this.$refs.map;
             kakaoMap.moveCenter(item.latitude, item.longitude);
+        },
+        deletePlan() {
+            deletePlanById(
+                this.plan.plan_id,
+                () => {
+                    alert("계획 삭제 성공!!");
+                    this.$router.push(`/plan`);
+                },
+                (error) => {
+                    console.log(error);
+                }
+            );
         },
     },
 };
