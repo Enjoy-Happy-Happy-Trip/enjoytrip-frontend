@@ -99,6 +99,13 @@ export default {
                 content: "",
             },
             showValidationErrorMsg: false,
+            announcementManagerRoutingInfo: {
+                name: "AnnouncementManager",
+                params: {
+                    isAdmin: true,
+                    heroTitle: "공지사항 관리",
+                },
+            },
         };
     },
     validations() {
@@ -148,7 +155,7 @@ export default {
                     this.form,
                     (response) => {
                         console.log(response);
-                        this.$router.push({ name: "AnnouncementManager" });
+                        this.$router.push(this.announcementManagerRoutingInfo);
                     },
                     (error) => {
                         console.log(error);
@@ -161,7 +168,7 @@ export default {
                     this.form,
                     (response) => {
                         console.log(response);
-                        this.$router.push({ name: "AnnouncementManager" });
+                        this.$router.push(this.announcementManagerRoutingInfo);
                     },
                     (error) => {
                         console.log(error);
@@ -170,7 +177,7 @@ export default {
             }
         },
         modifyCancel() {
-            this.$router.push({ name: "AnnouncementManager" });
+            this.$router.push(this.announcementManagerRoutingInfo);
         },
         offValidationErrorMsg() {
             this.showValidationErrorMsg = false;
