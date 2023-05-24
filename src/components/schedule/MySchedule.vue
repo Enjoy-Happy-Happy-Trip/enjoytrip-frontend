@@ -208,6 +208,7 @@ export default {
             savePlan(
                 mySchedule,
                 (response) => {
+                    alert("계획 공유 성공!!");
                     this.$router.push({ name: "planList" });
                 },
                 (error) => {
