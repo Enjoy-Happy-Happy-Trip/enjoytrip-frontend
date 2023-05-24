@@ -14,22 +14,24 @@
         >
         </b-form-input>
         <form class="d-flex my-3" onsubmit="return false;">
-            <b-form-input
-                class="form-input me-2"
-                type="date"
-                id="start_date"
-                name="start_date"
-                v-model="startDate"
-                :min="minStartDate"
-            ></b-form-input>
-            <b-form-input
-                class="form-input me-2"
-                type="date"
-                id="end_date"
-                name="end_date"
-                v-model="endDate"
-                :min="minEndDate"
-            ></b-form-input>
+            <b-input-group>
+                <b-form-input
+                    class="form-input me-2"
+                    type="date"
+                    id="start_date"
+                    name="start_date"
+                    v-model="startDate"
+                    :min="minStartDate"
+                ></b-form-input>
+                <b-form-input
+                    class="form-input me-2"
+                    type="date"
+                    id="end_date"
+                    name="end_date"
+                    v-model="endDate"
+                    :min="minEndDate"
+                ></b-form-input>
+            </b-input-group>
             <div id="planListDetail"></div>
         </form>
         <div id="addedPlan">

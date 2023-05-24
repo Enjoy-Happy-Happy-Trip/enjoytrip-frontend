@@ -58,13 +58,13 @@
             </template>
             <template #cell()="row">
                 <b-button
-                    v-if="option === 0"
+                    v-if="selectedOption === 0"
                     variant="danger"
                     @click="deleteSchedule(row.item.plan_id)"
                     >삭제</b-button
                 >
                 <b-button
-                    v-if="option === 1"
+                    v-if="selectedOption === 1 && row.item.shared === 0" 
                     variant="info"
                     @click="showModal(row.item.plan_id)"
                     >공유</b-button
@@ -112,12 +112,12 @@ export default {
     computed: {
         ...mapState("memberStore", ["userInfo"]),
         modifiedFields() {
-            if (this.option === 0) {
+            if (this.selectedOption === 0) {
                 return this.fields.concat({
                     key: "delete_button",
                     label: "삭제",
                 });
-            } else if (this.option === 1) {
+            } else if (this.selectedOption === 1) {
                 return this.fields.concat({
                     key: "share_button",
                     label: "공유",
