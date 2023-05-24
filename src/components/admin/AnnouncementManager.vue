@@ -51,7 +51,6 @@ export default {
         }
         findAllAnouncements(
             ({ data }) => {
-                console.log(data);
                 this.announcements = data;
             },
             (error) => {
