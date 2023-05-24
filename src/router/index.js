@@ -22,6 +22,7 @@ import HotPlaceList from "@/components/hotplace/HotPlaceList.vue";
 import AdminView from "@/views/AdminView.vue";
 import AnnouncementManager from "@/components/admin/AnnouncementManager.vue";
 import AnnouncementForm from "@/components/admin/AnnouncementForm.vue";
+import AnnouncementDetail from "@/components/admin/AnnouncementDetail.vue";
 import MemberManager from "@/components/admin/MemberManager.vue";
 
 import store from "@/store";
@@ -226,6 +227,12 @@ const routes = [
                 name: "AnnouncementForm",
                 beforeEnter: onlyAdmin,
                 component: AnnouncementForm,
+            },
+            {
+                path: "announcementdetail",
+                name: "AnnouncementDetail",
+                beforeEnter: onlyAdmin,
+                component: AnnouncementDetail,
             },
         ],
     },

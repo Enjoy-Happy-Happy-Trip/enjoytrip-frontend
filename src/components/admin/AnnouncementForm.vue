@@ -51,8 +51,8 @@
             </b-form>
         </b-container>
 
-        <div>수정할 공지사항 번호 : {{ form.article_no }}</div>
-        <div>{{ this.form }}</div>
+        <!-- <div>수정할 공지사항 번호 : {{ form.article_no }}</div>
+        <div>{{ this.form }}</div> -->
     </div>
 </template>
 
