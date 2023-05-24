@@ -21,6 +21,7 @@ import PlanShare from "@/components/plan/PlanShare.vue";
 import HotPlaceList from "@/components/hotplace/HotPlaceList.vue";
 import AdminView from "@/views/AdminView.vue";
 import AnnouncementManager from "@/components/admin/AnnouncementManager.vue";
+import AnnouncementForm from "@/components/admin/AnnouncementForm.vue";
 import MemberManager from "@/components/admin/MemberManager.vue";
 
 import store from "@/store";
@@ -212,12 +213,19 @@ const routes = [
                 name: "AnnouncementManager",
                 beforeEnter: onlyAdmin,
                 component: AnnouncementManager,
+                children: [],
             },
             {
                 path: "memberManager",
                 name: "MemberManager",
                 beforeEnter: onlyAdmin,
                 component: MemberManager,
+            },
+            {
+                path: "announcementform",
+                name: "AnnouncementForm",
+                beforeEnter: onlyAdmin,
+                component: AnnouncementForm,
             },
         ],
     },
