@@ -24,7 +24,7 @@
                     :min="minStartDate"
                 ></b-form-input>
                 <b-form-input
-                    class="form-input me-2"
+                    class="form-input"
                     type="date"
                     id="end_date"
                     name="end_date"

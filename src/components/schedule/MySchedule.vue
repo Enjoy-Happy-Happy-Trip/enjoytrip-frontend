@@ -115,12 +115,12 @@ export default {
             if (this.selectedOption === 0) {
                 return this.fields.concat({
                     key: "delete_button",
-                    label: "삭제",
+                    label: "",
                 });
             } else if (this.selectedOption === 1) {
                 return this.fields.concat({
                     key: "share_button",
-                    label: "공유",
+                    label: "",
                 });
             } else {
                 return this.fields;
@@ -239,4 +239,5 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+</style>
