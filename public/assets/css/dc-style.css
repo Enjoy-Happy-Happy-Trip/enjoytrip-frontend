@@ -1,19 +1,30 @@
 .dc-container {
     margin: 5% auto;
-    font-family: 'KCC-Ganpan', sans-serif;
+    font-family: "KCC-Ganpan", sans-serif;
 }
 
 .dc-error-msg {
     color: red;
 }
 
-div, h1, h2, h3, h4, p, a {
-    font-family: 'KCC-Ganpan', sans-serif;
+.dc-form-btn-container {
+    text-align: center;
+}
+
+div,
+h1,
+h2,
+h3,
+h4,
+p,
+a {
+    font-family: "KCC-Ganpan", sans-serif;
 }
 
 @font-face {
-    font-family: 'KCC-Ganpan';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/KCC-Ganpan.woff2') format('woff2');
+    font-family: "KCC-Ganpan";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/KCC-Ganpan.woff2")
+        format("woff2");
     font-weight: lighter;
     font-style: italic;
 }
