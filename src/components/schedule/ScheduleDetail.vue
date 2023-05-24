@@ -1,16 +1,6 @@
 <template>
     <div class="hello">
-        <div class="hero hero-inner">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-6 mx-auto text-center">
-                        <div class="intro-wrap">
-                            <h1 class="mb-0">상세 계획</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <hero-section title="상세 계획"></hero-section>
 
         <div class="itinerary mt-2">
             <div class="itinerary-section">
@@ -39,10 +29,16 @@
             <div class="centered">
                 <div class="row" style="margin: 0">
                     <div class="kakaoMap col-md-7 mt-3" id="focusMap">
-                        <kakao-map ref="map" :attractions="attractions"></kakao-map>
+                        <kakao-map
+                            ref="map"
+                            :attractions="attractions"
+                        ></kakao-map>
                     </div>
 
-                    <div class="table-container col-md-5 mt-3" style="padding: 0">
+                    <div
+                        class="table-container col-md-5 mt-3"
+                        style="padding: 0"
+                    >
                         <b-table
                             no-border-collapse
                             sticky-header="700px"
@@ -77,7 +73,12 @@
                             <template #cell(review)="row">
                                 <button
                                     v-if="article.end_date < today"
-                                    @click="showModal(row.item.title, row.item.contentId)"
+                                    @click="
+                                        showModal(
+                                            row.item.title,
+                                            row.item.contentId
+                                        )
+                                    "
                                     class="btn btn-warning scrollto"
                                     style="width: 120px"
                                 >
@@ -91,25 +92,35 @@
         </div>
 
         <b-modal id="review-modal" title="리뷰 쓰기">
-            <tour-review-modal :title="modalTitle" ref="reviewModal"></tour-review-modal>
+            <tour-review-modal
+                :title="modalTitle"
+                ref="reviewModal"
+            ></tour-review-modal>
             <template #modal-footer="{ cancel }">
-                <b-button size="sm" variant="danger" @click="cancel()"> 취소 </b-button>
-                <b-button size="sm" variant="success" @click="submitReview"> 등록 </b-button>
+                <b-button size="sm" variant="danger" @click="cancel()">
+                    취소
+                </b-button>
+                <b-button size="sm" variant="success" @click="submitReview">
+                    등록
+                </b-button>
             </template>
         </b-modal>
     </div>
 </template>
 
 <script>
+import HeroSection from "@/components/HeroSection.vue";
 import { apiInstance } from "@/api/http";
 import KakaoMap from "@/components/tour/KakaoMap.vue";
 import TourReviewModal from "@/components/tour/TourReviewModal.vue";
+import { mapState } from "vuex";
 
 const api = apiInstance();
 
 export default {
     name: "ScheduleDetail",
     components: {
+        HeroSection,
         KakaoMap,
         TourReviewModal,
     },
@@ -129,6 +140,9 @@ export default {
             today: new Date().toISOString().split("T")[0],
         };
     },
+    computed: {
+        ...mapState("memberStore", ["userInfo"]),
+    },
     created() {
         let schedule_id = this.$route.params.schedule_id;
         api.get(`/plan/mydetail/${schedule_id}`)
@@ -137,8 +151,12 @@ export default {
                 this.attractions = data.attractions;
 
                 if (window.kakao && window.kakao.maps) {
-                    this.$refs.map.displayMarker(this.$refs.map.convertMarker(this.attractions));
-                    this.$refs.map.displayLine(this.$refs.map.convertLine(this.attractions));
+                    this.$refs.map.displayMarker(
+                        this.$refs.map.convertMarker(this.attractions)
+                    );
+                    this.$refs.map.displayLine(
+                        this.$refs.map.convertLine(this.attractions)
+                    );
                 }
             })
             .catch((error) => {
