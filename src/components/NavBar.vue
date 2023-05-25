@@ -45,7 +45,9 @@
 
                         <!-- 로그인이 안되어 있을 때 : SignIn-->
                         <li v-if="!userInfo">
-                            <router-link to="/authentication/login">Sign In</router-link>
+                            <router-link to="/authentication/login"
+                                >Sign In</router-link
+                            >
                         </li>
 
                         <!-- 일반 사용자 로그인이 되어 있을 때 : My Schedule-->
@@ -54,7 +56,9 @@
                         </li>
 
                         <li v-if="userInfo && userInfo.user_id !== 'admin'">
-                            <router-link to="/schedule"> My Schedule </router-link>
+                            <router-link to="/schedule">
+                                My Schedule
+                            </router-link>
                         </li>
 
                         <li v-if="userInfo">
@@ -70,21 +74,28 @@
                                     aria-expanded="false"
                                 >
                                     <a style="color: rgba(255, 255, 255, 0.7)"
-                                        >{{ userInfo.user_name }}({{ userInfo.user_id }})님</a
+                                        >{{ userInfo.user_name }}({{
+                                            userInfo.user_id
+                                        }})님</a
                                     >
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
                                         <router-link
                                             :to="{
-                                                name: 'AnnouncementManager',
-                                                params: announcementParams.admin,
+                                                name: 'RegisterMember',
+                                                params: {
+                                                    heroTitle: '내 정보 수정',
+                                                    modify: true,
+                                                },
                                             }"
                                             >내 정보 수정</router-link
                                         >
                                     </li>
                                     <li>
-                                        <router-link to="/signout">Sign out</router-link>
+                                        <router-link to="/signout"
+                                            >Sign out</router-link
+                                        >
                                     </li>
                                 </ul>
                             </div>

@@ -29,7 +29,7 @@ async function confirmUserToFindPwd(findForm, success, fail) {
 }
 
 async function resetUserPwd(resetForm, success, fail) {
-    await api.put(`/member/${resetForm.user_id}`, resetForm).then(success).catch(fail);
+    await api.put(`/member/password/${resetForm.user_id}`, resetForm).then(success).catch(fail);
 }
 
 async function findAllUsers(success, fail) {
@@ -44,6 +44,14 @@ async function checkDuplicateId(id, success, fail) {
     await api.get(`/member/check/${id}`).then(success).catch(fail);
 }
 
+async function findByIdWithoutToken (user_id, success, fail) {
+    await api.get(`/member/${user_id}`).then(success).catch(fail);
+}
+
+async function updateUserById(updateForm, success, fail) {
+    await api.put(`/member/${updateForm.user_id}`, updateForm).then(success).catch(fail);
+}
+
 export {
     login,
     findById,
@@ -55,4 +63,6 @@ export {
     findAllUsers,
     deleteUserById,
     checkDuplicateId,
+    findByIdWithoutToken,
+    updateUserById
 };

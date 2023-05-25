@@ -32,6 +32,14 @@ const memberStore = {
             state.isLogin = true;
             state.userInfo = userInfo;
         },
+        SET_USER_NAME: (state, userName) => {
+            state.userInfo.user_name = userName;
+        },
+        SET_USER_EMAIL: (state, emailId, emailDomain) => {
+            state.userInfo.emailId = emailId;
+            state.userInfo.emailDomain = emailDomain;
+            state.userInfo.email = emailId + '@' + emailDomain;
+        }
     },
     actions: {
         async userConfirm({ commit }, user) {
