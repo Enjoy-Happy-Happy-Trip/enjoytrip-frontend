@@ -61,7 +61,13 @@
                         <div class="row justify-content-center">
                             <p class="text-black mt-5">Not a member yet?</p>
                             <router-link
-                                to="/register"
+                                :to="{
+                                    name: 'RegisterMember',
+                                    params: {
+                                        heroTitle: '회원 등록',
+                                        modify: false,
+                                    },
+                                }"
                                 class="btn btn-primary btn-lg btn-block"
                                 >Register</router-link
                             >
