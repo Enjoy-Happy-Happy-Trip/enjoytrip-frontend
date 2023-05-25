@@ -78,12 +78,12 @@ export default {
         return {
             users: [],
             fields: [
-                { key: "No", label: "No"},
-                { key: "user_id", label: "아이디"},
-                { key: "user_name", label: "이름"},
-                { key: "email", label: "이메일"},
-                { key: "join_date", label: "가입일", sortable: true},
-                { key: "delete", label: "탈퇴"},
+                { key: "No", label: "No" },
+                { key: "user_id", label: "아이디" },
+                { key: "user_name", label: "이름" },
+                { key: "email", label: "이메일" },
+                { key: "join_date", label: "가입일", sortable: true },
+                { key: "delete", label: "탈퇴" },
             ],
             article_index: 1,
             perPage: 10,
@@ -136,7 +136,10 @@ export default {
                     this.deleteConfirm = value;
                     if (this.deleteConfirm) {
                         this.requestDelete(row.item.user_id);
-                        this.users.splice(row.index, 1);
+                        this.users.splice(
+                            row.index + (this.currentPage - 1) * 10,
+                            1
+                        );
                     }
                 })
                 .catch((err) => {
