@@ -39,7 +39,12 @@
                     {{ row.item.email_id }}@{{ row.item.email_domain }}
                 </template>
                 <template #cell(delete)="row">
-                    <b-button variant="transparent" @click="deleteUser(row)">
+                    <b-button
+                        variant="transparent"
+                        @click="deleteUser(row)"
+                        :disabled="row.item.user_id === 'admin'"
+                        style="border: none"
+                    >
                         <i class="fa-solid fa-user-minus"></i>
                     </b-button>
                 </template>
