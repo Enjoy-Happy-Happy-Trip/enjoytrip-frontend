@@ -10,7 +10,7 @@ function deleteAnnouncementById(id, success, fail) {
     api.delete(`/announcement/${id}`).then(success).catch(fail);
 }
 
-function findAnnoncementById(id, viewCountUpdate, success, fail) {
+function findAnnouncementById(id, viewCountUpdate, success, fail) {
     api.get(`/announcement/${id}?viewcount=${viewCountUpdate}`).then(success).catch(fail);
 }
 
@@ -25,7 +25,7 @@ function addAnnouncement(form, success, fail) {
 export {
     findAllAnouncements,
     deleteAnnouncementById,
-    findAnnoncementById,
+    findAnnouncementById,
     modifyAnnouncementById,
     addAnnouncement,
 };
