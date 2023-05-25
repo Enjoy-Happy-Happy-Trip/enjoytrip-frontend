@@ -1,6 +1,6 @@
 <template>
     <div>
-        <hero-section title="여행 계획 게시판"></hero-section>
+        <hero-section title="공유 게시판"></hero-section>
         <b-container class="dc-container">
             <!-- 검색 및 글쓰기 버튼이 들어갈 box -->
             <div>

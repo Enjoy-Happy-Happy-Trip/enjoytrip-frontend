@@ -5,7 +5,7 @@
                 <div class="row align-items-center">
                     <div class="col-lg-6 mx-auto text-center">
                         <div class="intro-wrap">
-                            <h1 class="mb-0">리뷰 게시판</h1>
+                            <h1 class="mb-0">여행지 리뷰</h1>
                         </div>
                     </div>
                 </div>

@@ -34,9 +34,25 @@
                         <th>등록일</th>
                         <td>{{ article.register_time }}</td>
                     </tr>
+                    <tr>
+                        <th>사진</th>
+                        <td>
+                            <img
+                                :src="
+                                    article.image
+                                        ? article.image
+                                        : require('@/assets/No_image_available.png')
+                                "
+                            />
+                        </td>
+                    </tr>
                 </table>
                 <div class="button-container">
-                    <b-button v-show="(this.userInfo.user_id === article.user_id) || this.userInfo.user_id === 'admin'"
+                    <b-button
+                        v-show="
+                            this.userInfo.user_id === article.user_id ||
+                            this.userInfo.user_id === 'admin'
+                        "
                         class="delButton"
                         variant="danger"
                         @click="deleteReview()"
@@ -80,37 +96,39 @@ export default {
     },
     methods: {
         deleteReview() {
-            api.delete(`/place/${this.article.review_id}/${this.article.content_id}`)
+            api.delete(
+                `/place/${this.article.review_id}/${this.article.content_id}`
+            )
                 .then(() => {
                     alert("리뷰 삭제 완료!!");
                     this.$router.push(`/review`);
                 })
                 .catch((error) => {
                     console.log(error);
-                })
-        }
-    }
+                });
+        },
+    },
 };
 </script>
 
 <style>
 .review-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    position: relative;
 }
 
 .button-container {
-  margin-top: auto;
-  align-self: flex-end;
-  position: sticky;
-  bottom: 20px;
-  z-index: 1;
+    margin-top: auto;
+    align-self: flex-end;
+    position: sticky;
+    bottom: 20px;
+    z-index: 1;
 }
 
 .delButton {
-  margin-left: auto;
+    margin-left: auto;
 }
 </style>

@@ -102,7 +102,7 @@ export default {
                 { key: "No", label: "No" },
                 { key: "subject", label: "제목" },
                 { key: "user_id", label: "아이디" },
-                { key: "register_time", label: "등록일" },
+                { key: "register_time", label: "등록일", sortable: true},
                 { key: "hit", label: "조회수" },
             ],
             announcements: [],
