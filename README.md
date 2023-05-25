@@ -1,4 +1,4 @@
-# trippractice
+# HaoHaoTrip
 
 ## Project setup
 ```
