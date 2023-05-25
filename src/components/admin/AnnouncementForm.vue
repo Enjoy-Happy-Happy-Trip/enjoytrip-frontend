@@ -74,7 +74,7 @@
 
 <script>
 import HeroSection from "@/components/HeroSection.vue";
-import { findAnnoncementById } from "@/api/announcement.js";
+import { findAnnouncementById } from "@/api/announcement.js";
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
 import { addAnnouncement, modifyAnnouncementById } from "@/api/announcement.js";
@@ -122,7 +122,7 @@ export default {
         this.modify = this.$route.params.modify;
 
         if (this.modify) {
-            findAnnoncementById(
+            findAnnouncementById(
                 this.form.article_no,
                 !this.modify,
                 ({ data }) => {
