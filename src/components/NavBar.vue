@@ -46,7 +46,6 @@
                         <!-- 로그인이 안되어 있을 때 : SignIn-->
                         <li v-if="!userInfo">
                             <router-link to="/authentication/login">Sign In</router-link>
-                            <!-- <a href="/login">Sign In</a> -->
                         </li>
 
                         <!-- 일반 사용자 로그인이 되어 있을 때 : My Schedule-->
@@ -60,38 +59,14 @@
 
                         <li v-if="userInfo">
                             <router-link to="/review">Reviews</router-link>
-                            <!-- <a href="${root}/reviews.html">Reviews</a> -->
                         </li>
                         <!-- 공통 로그인이 되어 있을 때 (마지막): 로그아웃 -->
                         <li v-if="userInfo">
-                            <!-- <a @click.prevent="signout" :href="this.$backUrl('/member/signout')"
-                                >Sign Out</a
-                            > -->
                             <router-link to="/signout">Sign Out</router-link>
                         </li>
 
                         <!-- 관리자 로그인이 되어 있을 때 : admin page-->
                         <li v-if="userInfo && userInfo.user_id === 'admin'">
-                            <!-- <router-link to="/admin">Admin Page</router-link> -->
-                            <!-- <b-dropdown
-                                split
-                                variant="transparent"
-                                text-variant="light"
-                                id="admin-menu"
-                                text="Admin Page"
-                                class="m-md-2"
-                            >
-                                <b-dropdown-item variant="transparent"
-                                    ><router-link to="/admin/announcement"
-                                        >공지사항 관리</router-link
-                                    ></b-dropdown-item
-                                >
-                                <b-dropdown-item variant="transparent"
-                                    ><router-link to="/admin/memberManager"
-                                        >회원 관리</router-link
-                                    ></b-dropdown-item
-                                >
-                            </b-dropdown> -->
                             <div id="admin-menu" class="dropdown">
                                 <button
                                     class="btn dropdown-toggle navbar-btn bg-transparent"
@@ -102,11 +77,6 @@
                                     <a style="color: white">Admin Page</a>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <!-- <li>
-                                        <router-link to="/admin/announcement"
-                                            >공지사항 관리</router-link
-                                        >
-                                    </li> -->
                                     <li>
                                         <router-link
                                             :to="{
@@ -141,7 +111,6 @@
 </template>
 
 <script>
-// import axios from "axios";
 import { mapState, mapGetters, mapActions } from "vuex";
 
 const memberStore = "memberStore";
@@ -170,7 +139,6 @@ export default {
     created() {},
     methods: {
         ...mapActions(memberStore, ["userLogout"]),
-        // ...mapMutations(memberStore, ["SET_IS_LOGIN", "SET_USER_INFO"]),
     },
 };
 </script>

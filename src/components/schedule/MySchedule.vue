@@ -144,13 +144,13 @@ export default {
                 { key: "schedule_title", label: "제목" },
                 { key: "start_date", label: "시작일", sortable: true },
                 { key: "end_date", label: "종료일", sortable: true },
-            ], // Table column labels
+            ],
             article_index: 1,
-            perPage: 10, // Number of items per page
-            currentPage: 1, // Current page
-            totalRows: 0, // Total number of rows
-            sortBy: "", // Sort column
-            sortDesc: false, // Sort order (ascending or descending)
+            perPage: 10,
+            currentPage: 1,
+            totalRows: 0,
+            sortBy: "", 
+            sortDesc: false,
             modalPlanId: 0,
             filteredItems: [],
             articles: [],

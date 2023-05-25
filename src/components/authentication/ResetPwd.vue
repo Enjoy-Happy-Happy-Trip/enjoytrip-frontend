@@ -51,9 +51,6 @@
                 </div>
             </b-form>
         </b-container>
-        <!-- this is for debug
-            <div>재설정 할 아이디 : {{ form.user_id }}</div> 
-        -->
     </div>
 </template>
 
@@ -104,7 +101,6 @@ export default {
             resetUserPwd(
                 this.form,
                 (response) => {
-                    console.log(response);
                     this.$router.push({ name: "Login" });
                 },
                 (error) => {

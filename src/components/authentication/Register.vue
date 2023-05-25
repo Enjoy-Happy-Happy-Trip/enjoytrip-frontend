@@ -225,9 +225,7 @@ export default {
             checkDuplicateId(
                 this.form.user_id,
                 ({ data }) => {
-                    console.log(data);
                     this.isUniqueId = data;
-                    // console.log(this.isUniqueId);
                 },
                 (error) => {
                     console.log(error);

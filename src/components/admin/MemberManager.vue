@@ -86,11 +86,11 @@ export default {
                 { key: "delete", label: "탈퇴"},
             ],
             article_index: 1,
-            perPage: 10, // Number of items per page
-            currentPage: 1, // Current page
-            totalRows: 0, // Total number of rows
-            sortBy: "", // Sort column
-            sortDesc: false, // Sort order (ascending or descending)
+            perPage: 10,
+            currentPage: 1,
+            totalRows: 0,
+            sortBy: "",
+            sortDesc: false,
             filteredItems: [],
             searchQuery: "",
             selectedField: "",

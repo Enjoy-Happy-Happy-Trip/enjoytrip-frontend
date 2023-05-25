@@ -61,6 +61,6 @@ export default {
 
 <style>
 .modal-dialog {
-    min-width: 50%; /* New width for default modal */
+    min-width: 50%;
 }
 </style>

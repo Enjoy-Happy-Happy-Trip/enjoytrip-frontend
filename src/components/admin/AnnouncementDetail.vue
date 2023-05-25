@@ -14,7 +14,6 @@
             <p class="content">
                 {{ announcement.content }}
             </p>
-            <!-- <div>detail article no : {{ article_no }}</div> -->
         </b-container>
     </div>
 </template>

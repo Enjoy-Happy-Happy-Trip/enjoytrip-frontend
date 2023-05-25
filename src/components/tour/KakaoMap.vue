@@ -25,12 +25,6 @@ export default {
         this.$emit("mountComplete");
     },
     methods: {
-        /*
-			공지사항
-			롤 부여
-			여행 계획 -> 순서 변경
-			후기 작성
-			*/
         convertMarker(positions) {
             let markers = [];
 
@@ -60,7 +54,6 @@ export default {
             return linePath;
         },
         displayLine(linePath) {
-            // 지도에 표시할 선을 생성합니다
             var polyline = new window.kakao.maps.Polyline({
                 path: linePath, // 선을 구성하는 좌표배열 입니다
                 strokeWeight: 10, // 선의 두께 입니다

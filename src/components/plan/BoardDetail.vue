@@ -36,8 +36,6 @@
 import { apiInstance } from '@/api/http';
 
 const api = apiInstance();
-// import Vue from "vue";
-// Vue.prototype.$EventBus = new Vue();
 
 export default {
     name: "BoardDetail",

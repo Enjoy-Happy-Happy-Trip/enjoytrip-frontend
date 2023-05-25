@@ -12,10 +12,6 @@
 </template>
 
 <script>
-// import http from "@/api/http.js";
-// import Vue from "vue";
-// Vue.prototype.$EventBus = new Vue();
-
 export default {
     name: "BoardArticle",
     props: {
