@@ -22,9 +22,9 @@
                         class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right"
                     >
                         <!-- 공통 로그인이 되어 있을 때 : 닉네임 메시지 -->
-                        <li v-if="userInfo">
+                        <!-- <li v-if="userInfo">
                             <a>{{ userInfo.user_name }}({{ userInfo.user_id }})님 환영합니다</a>
-                        </li>
+                        </li> -->
 
                         <!-- 공통 : HotPlace, TourInfo -->
                         <li>
@@ -62,7 +62,32 @@
                         </li>
                         <!-- 공통 로그인이 되어 있을 때 (마지막): 로그아웃 -->
                         <li v-if="userInfo">
-                            <router-link to="/signout">Sign Out</router-link>
+                            <div id="admin-menu" class="dropdown">
+                                <button
+                                    class="btn dropdown-toggle navbar-btn bg-transparent"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    <a style="color: rgba(255, 255, 255, 0.7)"
+                                        >{{ userInfo.user_name }}({{ userInfo.user_id }})님</a
+                                    >
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <router-link
+                                            :to="{
+                                                name: 'AnnouncementManager',
+                                                params: announcementParams.admin,
+                                            }"
+                                            >내 정보 수정</router-link
+                                        >
+                                    </li>
+                                    <li>
+                                        <router-link to="/signout">Sign out</router-link>
+                                    </li>
+                                </ul>
+                            </div>
                         </li>
 
                         <!-- 관리자 로그인이 되어 있을 때 : admin page-->
