@@ -121,7 +121,6 @@ export default {
             findScheduleById(
                 this.scheduleId,
                 ({ data }) => {
-                    console.log(data);
                     this.planTitle = data.schedule_title;
                     this.startDate = data.start_date;
                     this.endDate = data.end_date;
@@ -153,7 +152,6 @@ export default {
         },
     },
     mounted() {
-        console.log(`mounted -> id : ${this.scheduleId}`);
         const today = new Date();
         const year = today.getFullYear();
         const month = String(today.getMonth() + 1).padStart(2, "0");

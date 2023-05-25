@@ -15,7 +15,7 @@
                 <div class="site-navigation">
                     <router-link to="/">
                         <a href="#none" class="logo m-0"
-                            >Enjoy Trip <span class="text-primary"></span
+                            >HaoHao Trip <span class="text-primary"></span
                         ></a>
                     </router-link>
                     <ul
