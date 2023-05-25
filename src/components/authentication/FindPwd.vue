@@ -164,9 +164,9 @@ export default {
             this.$v.form.$touch();
             this.showValidationErrorMsg = true;
             if (this.$v.form.$invalid) {
-                this.authCode = "";
                 return;
             }
+            this.authCode = "";
             confirmUserToFindPwd(
                 this.form,
                 (response) => {
