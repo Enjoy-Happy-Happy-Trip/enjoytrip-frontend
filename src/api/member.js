@@ -40,6 +40,10 @@ async function deleteUserById(id, success, fail) {
     await api.delete(`/member/${id}`).then(success).catch(fail);
 }
 
+async function checkDuplicateId(id, success, fail) {
+    await api.get(`/member/check/${id}`).then(success).catch(fail);
+}
+
 export {
     login,
     findById,
@@ -50,4 +54,5 @@ export {
     resetUserPwd,
     findAllUsers,
     deleteUserById,
+    checkDuplicateId,
 };

@@ -7,6 +7,10 @@
     color: red;
 }
 
+.dc-success-msg {
+    color: rgb(0, 172, 0);
+}
+
 .dc-form-btn-container {
     text-align: center;
 }
