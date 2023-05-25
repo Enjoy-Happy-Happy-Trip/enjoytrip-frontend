@@ -13,7 +13,10 @@
                     >
                     </b-form-input>
                     <div
-                        v-show="showValidationErrorMsg && !this.$v.form.user_id.required"
+                        v-show="
+                            showValidationErrorMsg &&
+                            !this.$v.form.user_id.required
+                        "
                         class="dc-error-msg"
                     >
                         아이디를 입력해주세요.
@@ -21,7 +24,11 @@
                 </b-form-group>
 
                 <!-- 이메일 입력 -->
-                <b-form-group label-cols-lg="3" label="Email" label-for="userEmail">
+                <b-form-group
+                    label-cols-lg="3"
+                    label="Email"
+                    label-for="userEmail"
+                >
                     <b-row>
                         <b-col>
                             <b-form-input
@@ -45,16 +52,28 @@
                     </b-row>
 
                     <div
-                        v-show="showValidationErrorMsg && !this.$v.form.email_id.required"
+                        v-show="
+                            showValidationErrorMsg &&
+                            !this.$v.form.email_id.required
+                        "
                         class="dc-error-msg"
                     >
                         이메일 아이디를 입력해주세요.
                     </div>
                     <div
-                        v-show="showValidationErrorMsg && !this.$v.form.email_domain.required"
+                        v-show="
+                            showValidationErrorMsg &&
+                            !this.$v.form.email_domain.required
+                        "
                         class="dc-error-msg"
                     >
                         도메인을 골라주세요.
+                    </div>
+                    <div
+                        v-show="showValidationErrorMsg && authCode === 'FAIL'"
+                        class="dc-error-msg"
+                    >
+                        가입 정보가 존재하지 않습니다.
                     </div>
                 </b-form-group>
 
@@ -74,20 +93,27 @@
                         >
                         </b-form-input>
                         <b-input-group-append>
-                            <b-button variant="outline-success" @click="confirmAuthCode"
+                            <b-button
+                                variant="outline-success"
+                                @click="confirmAuthCode"
                                 >인증하기</b-button
                             >
                         </b-input-group-append>
                     </b-input-group>
                     <div
-                        v-show="showValidationErrorMsg && !$v.authCodeInput.validAuthCode"
+                        v-show="
+                            showValidationErrorMsg &&
+                            !$v.authCodeInput.validAuthCode
+                        "
                         class="dc-error-msg"
                     >
                         인증코드가 올바르지 않습니다.
                     </div>
                 </b-form-group>
                 <div class="text-center">
-                    <b-button type="submit" variant="primary">비밀번호 찾기</b-button>
+                    <b-button type="submit" variant="primary"
+                        >비밀번호 찾기</b-button
+                    >
                 </div>
             </b-form>
         </b-container>
@@ -138,14 +164,19 @@ export default {
             this.$v.form.$touch();
             this.showValidationErrorMsg = true;
             if (this.$v.form.$invalid) {
+                this.authCode = "";
                 return;
             }
             confirmUserToFindPwd(
                 this.form,
                 (response) => {
+                    console.log(response);
+                    this.authCode = response.data.authCode;
+                    if (this.authCode === "FAIL") {
+                        return;
+                    }
                     this.showAuthCodeInput = true;
                     this.form.user_id = response.data.userId;
-                    this.authCode = response.data.authCode;
                 },
                 (error) => {
                     console.log(error);
@@ -156,6 +187,7 @@ export default {
             this.showValidationErrorMsg = false;
         },
         confirmAuthCode() {
+            console.log(this.authCode);
             this.showValidationErrorMsg = true;
             this.$v.authCodeInput.$touch();
             if (this.$v.authCodeInput.$invalid) {
