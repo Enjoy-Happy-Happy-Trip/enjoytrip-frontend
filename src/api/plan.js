@@ -34,4 +34,8 @@ function modifyScheduleById(id, schedule, hasPlanListModified, success, fail) {
     api.put(`/plan/myplan/${id}?planmodified=${hasPlanListModified}`, schedule).then(success).catch(fail);
 }
 
-export { getAllPlans, deletePlanById, findPlanById, findPlanDetailsById, findUnSharedSchedulesByUserId, savePlan, findScheduleById, modifyScheduleById };
+function scrapPlan(scheduleForm, success, fail) {
+    api.post(`/plan/${scheduleForm.plan_id}`, scheduleForm).then(success).catch(fail);
+}
+
+export { getAllPlans, deletePlanById, findPlanById, findPlanDetailsById, findUnSharedSchedulesByUserId, savePlan, findScheduleById, modifyScheduleById, scrapPlan };

@@ -1,3 +1,7 @@
 const sameAs = (compare) => (value) => value === compare;
 
-export { sameAs };
+const afterTime = (compare) => (value) => {
+    return new Date(value) > new Date(compare);
+}
+
+export { sameAs, afterTime };
