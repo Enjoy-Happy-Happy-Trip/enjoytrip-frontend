@@ -21,7 +21,7 @@
 
 <script>
 import HeroSection from "@/components/HeroSection.vue";
-import { findAnnoncementById } from "@/api/announcement.js";
+import { findAnnouncementById } from "@/api/announcement.js";
 
 export default {
     name: "AnnouncementDetail",
@@ -38,7 +38,7 @@ export default {
     created() {
         this.article_no = this.$route.params.article_no;
         this.viewCountUpdate = this.$route.params.viewCountUpdate;
-        findAnnoncementById(
+        findAnnouncementById(
             this.article_no,
             this.viewCountUpdate,
             ({ data }) => {
