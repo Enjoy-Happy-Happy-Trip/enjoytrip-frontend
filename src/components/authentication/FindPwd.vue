@@ -91,19 +91,6 @@
                 </div>
             </b-form>
         </b-container>
-
-        <!--
-            this is for debugs
-        <div>
-            {{ this.form }}
-            {{ this.authCode }}
-            show : {{ this.showAuthCodeInput }}
-        </div>
-        <div>
-            {{ this.authCode }}
-            {{ this.authCodeInput }}
-        </div> 
-        -->
     </div>
 </template>
 
@@ -148,17 +135,14 @@ export default {
     created() {},
     methods: {
         onSubmit() {
-            console.log(this.$v);
             this.$v.form.$touch();
             this.showValidationErrorMsg = true;
             if (this.$v.form.$invalid) {
                 return;
             }
-            // this.showAuthCodeInput = true;
             confirmUserToFindPwd(
                 this.form,
                 (response) => {
-                    console.log(response);
                     this.showAuthCodeInput = true;
                     this.form.user_id = response.data.userId;
                     this.authCode = response.data.authCode;

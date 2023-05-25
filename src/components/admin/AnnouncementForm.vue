@@ -69,9 +69,6 @@
                 </div>
             </b-form>
         </b-container>
-
-        <!-- <div>수정할 공지사항 번호 : {{ form.article_no }}</div>
-        <div>{{ this.form }}</div> -->
     </div>
 </template>
 
@@ -133,7 +130,6 @@ export default {
                     this.form.content = data.content;
                 },
                 (error) => {
-                    console.log("modify announcement error!");
                     console.log(error);
                 }
             );
@@ -144,17 +140,14 @@ export default {
             this.showValidationErrorMsg = true;
             this.$v.$touch();
             if (this.$v.$invalid) {
-                console.log("Fail Validations!");
                 return;
             }
-            console.log("Pass Validations!");
 
             if (this.modify) {
                 // 공지사항 수정 페이지라면
                 modifyAnnouncementById(
                     this.form,
                     (response) => {
-                        console.log(response);
                         this.$router.push(this.announcementManagerRoutingInfo);
                     },
                     (error) => {
@@ -167,7 +160,6 @@ export default {
                 addAnnouncement(
                     this.form,
                     (response) => {
-                        console.log(response);
                         this.$router.push(this.announcementManagerRoutingInfo);
                     },
                     (error) => {

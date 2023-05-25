@@ -87,10 +87,6 @@
                 </div>
             </b-form>
         </b-container>
-
-        <!-- <div>
-            {{ planForm }}
-        </div> -->
     </div>
 </template>
 

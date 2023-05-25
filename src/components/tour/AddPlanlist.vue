@@ -116,11 +116,8 @@ export default {
         };
     },
     created() {
-        // console.log(`created -> id : ${this.scheduleId}`);
         if (this.scheduleId) {
-            // console.log("여행 계획 수정입니다!");
             this.modify = true;
-            // scheduleId의 정보를 가져옵니다.
             findScheduleById(
                 this.scheduleId,
                 ({ data }) => {
@@ -134,7 +131,6 @@ export default {
                     this.contentIds = data.attractions.map(
                         (attraction) => attraction.contentId
                     );
-                    console.log(this.contentIds);
                 },
                 (error) => {
                     console.log(error);
@@ -157,12 +153,12 @@ export default {
         },
     },
     mounted() {
-        // console.log(`mounted -> id : ${this.scheduleId}`);
-        // const today = new Date();
-        // const year = today.getFullYear();
-        // const month = String(today.getMonth() + 1).padStart(2, "0");
-        // const day = String(today.getDate()).padStart(2, "0");
-        // this.minStartDate = `${year}-${month}-${day}`;
+        console.log(`mounted -> id : ${this.scheduleId}`);
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const day = String(today.getDate()).padStart(2, "0");
+        this.minStartDate = `${year}-${month}-${day}`;
     },
     methods: {
         deletePlan(idx) {
@@ -228,7 +224,6 @@ export default {
                 });
         },
         modifySchedule() {
-            console.log(`plan modified : ${this.hasPlanListModified}`);
             const schedule = {
                 schedule_id: this.scheduleId,
                 user_id: this.userInfo.user_id,
@@ -246,7 +241,6 @@ export default {
                 schedule,
                 this.hasPlanListModified,
                 (response) => {
-                    console.log(response);
                     this.$router.push({ name: "HomeView" });
                 },
                 (error) => {
