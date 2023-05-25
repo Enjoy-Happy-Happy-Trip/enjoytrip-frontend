@@ -43,6 +43,7 @@
                                         ? article.image
                                         : require('@/assets/No_image_available.png')
                                 "
+                                style="max-width:500px; max-height:500px;"
                             />
                         </td>
                     </tr>
