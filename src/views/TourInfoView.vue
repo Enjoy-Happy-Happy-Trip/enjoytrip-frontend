@@ -64,14 +64,17 @@
                     <!-- kakao map end -->
 
                     <b-table
+                        hover
                         v-show="hideTable"
-                        striped
                         responsive
                         :items="placesData"
                         :fields="fields"
                         @row-clicked="callMoveCenter"
                     >
-                        <template #cell(image)="row">
+                        <template #cell(index)="row">
+                            {{ row.index + 1 }}
+                        </template>
+                        <!-- <template #cell(image)="row">
                             <img
                                 :src="
                                     row.item.firstImage
@@ -83,7 +86,7 @@
                                 height="100px"
                                 style="cursor: pointer"
                             />
-                        </template>
+                        </template> -->
                         <template #cell(name)="row">
                             {{ row.item.title }}
                         </template>
@@ -171,7 +174,8 @@ export default {
             heroSectionTitle: "전국 관광지 정보",
             placesData: [], // Your data array containing the place objects
             fields: [
-                { key: "image", label: "대표이미지" },
+                // { key: "image", label: "대표이미지" },
+                { key: "index", label: "No" },
                 { key: "name", label: "관광지명" },
                 { key: "address", label: "주소" },
                 { key: "detail", label: "" },
@@ -283,9 +287,12 @@ export default {
                 });
         },
         searchDataByKeyword() {
-            this.hideTable = true;
-            document.querySelector("table").setAttribute("style", "display: ;");
+            if (this.sido === "0") {
+                alert("시/도 선택은 필수입니다!!");
+                return;
+            }
 
+            this.hideTable = true;
             this.pageNavInfo.currentPage = 1;
             this.changePage(this.pageNavInfo.currentPage);
         },
@@ -309,9 +316,6 @@ export default {
 
             this.positions = [];
             api.get(searchUrl).then(({ data }) => {
-                this.placesData = data.attractionList;
-                this.pageNavInfo = data.pageNav;
-
                 data.attractionList.forEach((area) => {
                     let markerInfo = {
                         title: area.title,
@@ -324,7 +328,14 @@ export default {
                     this.positions.push(markerInfo);
                 });
 
-                this.$refs.map.displayMarker(this.positions);
+                if (this.positions.length > 0) {
+                    this.hideTable = true;
+                    this.placesData = data.attractionList;
+                    this.pageNavInfo = data.pageNav;
+                    this.$refs.map.displayMarker(this.positions);
+                } else {
+                    alert("검색하신 데이터가 존재하지 않습니다");
+                }
             });
         },
     },
