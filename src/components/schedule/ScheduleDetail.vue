@@ -88,6 +88,7 @@
                         </b-table>
                         <div class="dc-form-btn-container-">
                             <b-button
+                                v-show="article.start_date >= today"
                                 @click="modifySchedule"
                                 variant="outline-warning"
                                 >수정하기</b-button
