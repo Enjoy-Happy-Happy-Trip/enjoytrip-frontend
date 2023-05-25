@@ -2,32 +2,33 @@
     <div>
         <hero-section title="여행 계획 상세 보기"></hero-section>
         <div class="itinerary mt-3">
-            <div class="itinerary-section">
-                <div class="itinerary-item">
+            <b-row class="itinerary-section">
+                <b-col cols="2" class="itinerary-item">
                     <div class="itinerary-label">작성자</div>
                     <div class="itinerary-value">{{ plan.user_id }}</div>
-                </div>
-                <div class="itinerary-item">
+                </b-col>
+                <b-col cols="3" class="itinerary-item">
                     <div class="itinerary-label">제목</div>
                     <div class="itinerary-value">
                         {{ plan.plan_title }}
                     </div>
-                </div>
-                <div class="itinerary-desc">
+                </b-col>
+                <b-col class="itinerary-desc">
                     <div class="itinerary-label">설명</div>
                     <div class="itinerary-value">{{ plan.plan_desc }}</div>
-                </div>
-                <b-button
-                    v-show="
-                        this.userInfo.user_id === plan.user_id ||
-                        this.userInfo.user_id === 'admin'
-                    "
-                    class="delButton mt-2 mb-2 me-3"
-                    variant="danger"
-                    @click="deletePlan()"
-                    >삭제</b-button
-                >
-            </div>
+                </b-col>
+                <b-col cols="2" class="itinerary-item">
+                    <div class="itinerary-label">Scrap</div>
+                    <div class="itinerary-value">
+                        <b-button
+                            @click="showScrapModal"
+                            class="scrap-btn"
+                            variant="transparent"
+                            ><i class="fa-regular fa-calendar-plus fa-2xl"></i
+                        ></b-button>
+                    </div>
+                </b-col>
+            </b-row>
         </div>
 
         <div class="contents">
@@ -80,6 +81,96 @@
                 </div>
             </div>
         </div>
+
+        <b-modal id="scrap-modal" centered>
+            <template #modal-title> Scrap Plan </template>
+
+            <!-- schedule form -->
+            <b-form>
+                <!-- 등록할 schedule title -->
+                <b-form-group
+                    label-cols-lg="3"
+                    label="Schedule Title"
+                    label-for="schedule-title"
+                >
+                    <b-form-input
+                        v-model="scheduleForm.schedule_title"
+                        id="schedule-title"
+                        type="text"
+                        @input="offValidationErrorMsg"
+                    ></b-form-input>
+                    <div
+                        v-show="
+                            showValidationErrorMsg &&
+                            !this.$v.scheduleForm.schedule_title.required
+                        "
+                        class="dc-error-msg"
+                    >
+                        여행 이름을 입력해주세요.
+                    </div>
+                </b-form-group>
+                <b-form-group
+                    label-cols-lg="3"
+                    label="Start date"
+                    label-for="start-date"
+                >
+                    <b-form-datepicker
+                        id="start-date"
+                        v-model="scheduleForm.start_date"
+                        placeholder="Choose a date"
+                        @shown="offValidationErrorMsg"
+                    ></b-form-datepicker>
+                    <div
+                        v-show="
+                            showValidationErrorMsg &&
+                            !this.$v.scheduleForm.start_date.required
+                        "
+                        class="dc-error-msg"
+                    >
+                        시작 날짜를 설정해주세요.
+                    </div>
+                </b-form-group>
+                <b-form-group
+                    label-cols-lg="3"
+                    label="End date"
+                    label-for="end-date"
+                >
+                    <b-form-datepicker
+                        id="end-date"
+                        v-model="scheduleForm.end_date"
+                        placeholder="Choose a date"
+                        @shown="offValidationErrorMsg"
+                    ></b-form-datepicker>
+                    <div
+                        v-show="
+                            showValidationErrorMsg &&
+                            !this.$v.scheduleForm.end_date.required
+                        "
+                        class="dc-error-msg"
+                    >
+                        마지막 날짜를 설정해주세요.
+                    </div>
+                    <div
+                        v-show="
+                            showValidationErrorMsg &&
+                            !this.$v.scheduleForm.end_date.after
+                        "
+                        class="dc-error-msg"
+                    >
+                        마지막 날짜는 시작 날짜 이후로 설정해주세요.
+                    </div>
+                </b-form-group>
+            </b-form>
+
+            <template #modal-footer="{ cancel }">
+                <b-button size="sm" variant="success" @click="scrap">
+                    OK
+                </b-button>
+                <b-button size="sm" variant="danger" @click="cancel()">
+                    Cancel
+                </b-button>
+            </template>
+        </b-modal>
     </div>
 </template>
 
@@ -87,6 +178,10 @@
 import HeroSection from "@/components/HeroSection.vue";
 import KakaoMap from "@/components/tour/KakaoMap.vue";
 import { mapState, mapGetters } from "vuex";
+import { validationMixin } from "vuelidate";
+import { required } from "vuelidate/lib/validators";
+import { afterTime } from "@/util/validator.js";
+import { scrapPlan } from "@/api/plan.js";
 
 const memberStore = "memberStore";
 
@@ -97,6 +192,7 @@ import {
 } from "@/api/plan.js";
 
 export default {
+    mixins: [validationMixin],
     name: "PlanDetail",
     components: {
         HeroSection,
@@ -117,6 +213,25 @@ export default {
             ],
             plan: {},
             attractions: [],
+            scheduleForm: {
+                schedule_title: "",
+                plan_id: null,
+                start_date: "",
+                end_date: "",
+            },
+            showValidationErrorMsg: false,
+        };
+    },
+    validations() {
+        return {
+            scheduleForm: {
+                schedule_title: { required },
+                start_date: { required },
+                end_date: {
+                    required,
+                    after: afterTime(this.scheduleForm.start_date),
+                },
+            },
         };
     },
     created() {
@@ -162,6 +277,32 @@ export default {
                 () => {
                     alert("계획 삭제 성공!!");
                     this.$router.push(`/plan`);
+                },
+                (error) => {
+                    console.log(error);
+                }
+            );
+        },
+        showScrapModal() {
+            this.$bvModal.show("scrap-modal");
+        },
+        offValidationErrorMsg() {
+            this.showValidationErrorMsg = false;
+        },
+        scrap() {
+            this.showValidationErrorMsg = true;
+            this.$v.scheduleForm.$touch();
+            console.log(this.$v);
+            if (this.$v.scheduleForm.$invalid) {
+                return;
+            }
+            this.scheduleForm.plan_id = this.plan.plan_id;
+            this.scheduleForm.user_id = this.userInfo.user_id;
+            scrapPlan(
+                this.scheduleForm,
+                (response) => {
+                    console.log(response);
+                    this.$router.push(`/schedule`);
                 },
                 (error) => {
                     console.log(error);
@@ -216,5 +357,9 @@ export default {
 .centered {
     width: 80%;
     text-align: center;
+}
+
+.scrap-btn :hover {
+    color: rgb(62, 62, 254);
 }
 </style>
