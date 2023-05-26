@@ -292,7 +292,6 @@ export default {
         scrap() {
             this.showValidationErrorMsg = true;
             this.$v.scheduleForm.$touch();
-            console.log(this.$v);
             if (this.$v.scheduleForm.$invalid) {
                 return;
             }
@@ -301,7 +300,6 @@ export default {
             scrapPlan(
                 this.scheduleForm,
                 (response) => {
-                    console.log(response);
                     this.$router.push(`/schedule`);
                 },
                 (error) => {
