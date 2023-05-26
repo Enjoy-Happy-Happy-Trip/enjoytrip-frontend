@@ -15,22 +15,22 @@
         </b-form-input>
         <form class="d-flex my-3" onsubmit="return false;">
             <b-input-group>
-                <b-form-input
+                <b-form-datepicker
                     class="form-input me-2"
                     type="date"
                     id="start_date"
                     name="start_date"
                     v-model="startDate"
                     :min="minStartDate"
-                ></b-form-input>
-                <b-form-input
+                ></b-form-datepicker>
+                <b-form-datepicker
                     class="form-input"
                     type="date"
                     id="end_date"
                     name="end_date"
                     v-model="endDate"
                     :min="minEndDate"
-                ></b-form-input>
+                ></b-form-datepicker>
             </b-input-group>
             <div id="planListDetail"></div>
         </form>
@@ -152,11 +152,11 @@ export default {
         },
     },
     mounted() {
-        // const today = new Date();
-        // const year = today.getFullYear();
-        // const month = String(today.getMonth() + 1).padStart(2, "0");
-        // const day = String(today.getDate()).padStart(2, "0");
-        // this.minStartDate = `${year}-${month}-${day}`;
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const day = String(today.getDate()).padStart(2, "0");
+        this.minStartDate = `${year}-${month}-${day}`;
     },
     methods: {
         deletePlan(idx) {
